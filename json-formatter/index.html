@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 格式化器 - 在线 JSON 美化/压缩工具</title>
+<meta name="description" content="免费在线 JSON 格式化器：美化(缩进)、压缩、校验 JSON，支持错误高亮定位。开发者必备的 JSON 工具。">
+<meta name="keywords" content="JSON格式化, JSON美化, JSON压缩, JSON校验, JSON工具">
+<meta property="og:title" content="JSON 格式化器 - 在线 JSON 工具">
+<meta property="og:description" content="免费在线 JSON 格式化/压缩/校验工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7fa;color:#333;line-height:1.6}
+header{background:#1a73e8;color:#fff;padding:24px 0;text-align:center}
+header h1{font-size:28px;margin-bottom:6px}
+header p{font-size:14px;opacity:.9}
+.container{max-width:1100px;margin:24px auto;padding:0 16px}
+.controls{background:#fff;border-radius:8px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.controls button{background:#1a73e8;color:#fff;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-size:14px}
+.controls button:hover{background:#1557b0}
+.controls button.secondary{background:#e8eaed;color:#333}
+.controls button.secondary:hover{background:#d5d8dc}
+.editors{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.editors{grid-template-columns:1fr}}
+.editor-box{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden}
+.editor-box h3{background:#f1f3f4;padding:10px 14px;font-size:14px;border-bottom:1px solid #e0e0e0}
+.editor-box textarea{width:100%;height:420px;border:none;padding:14px;font-family:'Consolas','Monaco',monospace;font-size:14px;resize:vertical;outline:none;white-space:pre;overflow:auto}
+#error{background:#fce4e4;color:#c5221f;padding:10px 14px;border-radius:6px;margin-bottom:12px;display:none;font-size:13px}
+.stats{background:#fff;border-radius:8px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin-top:16px;font-size:13px;color:#666;display:flex;gap:20px;flex-wrap:wrap}
+footer{text-align:center;padding:24px;color:#999;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>JSON 格式化器</h1>
+  <p>在线 JSON 美化、压缩、校验工具 — 支持错误定位</p>
+</header>
+<div class="container">
+  <div id="error"></div>
+  <div class="controls">
+    <button onclick="formatJSON()">美化 (Format)</button>
+    <button onclick="minifyJSON()" class="secondary">压缩 (Minify)</button>
+    <button onclick="validateJSON()" class="secondary">校验 (Validate)</button>
+    <button onclick="copyResult()" class="secondary">复制结果</button>
+    <button onclick="clearAll()" class="secondary">清空</button>
+    <label style="margin-left:auto"><input type="checkbox" id="indent4" onchange="formatJSON()"> 4空格缩进</label>
+  </div>
+  <div class="editors">
+    <div class="editor-box">
+      <h3>输入 JSON</h3>
+      <textarea id="input" placeholder='粘贴或输入 JSON，例如：{"name":"工具","version":1}'></textarea>
+    </div>
+    <div class="editor-box">
+      <h3>输出</h3>
+      <textarea id="output" placeholder="格式化结果将显示在这里"></textarea>
+    </div>
+  </div>
+  <div class="stats">
+    <span>字符: <b id="charCount">0</b></span>
+    <span>行: <b id="lineCount">0</b></span>
+    <span>状态: <b id="status">就绪</b></span>
+  </div>
+</div>
+<footer>
+  <p>© 2026 ToolkitPro — 免费在线 JSON 工具 | <a href="../">返回首页</a></p>
+</footer>
+<script>
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+const errorBox = document.getElementById('error');
+
+input.addEventListener('input', updateStats);
+
+function parseJSON() {
+  errorBox.style.display = 'none';
+  const text = input.value.trim();
+  if (!text) { showError('请输入 JSON 内容'); return null; }
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    showError('JSON 解析错误: ' + e.message);
+    return null;
+  }
+}
+
+function showError(msg) {
+  errorBox.style.display = 'block';
+  errorBox.textContent = '✕ ' + msg;
+  document.getElementById('status').textContent = '错误';
+}
+
+function formatJSON() {
+  const obj = parseJSON();
+  if (obj === null) return;
+  const indent = document.getElementById('indent4').checked ? 4 : 2;
+  output.value = JSON.stringify(obj, null, indent);
+  document.getElementById('status').textContent = '已美化 ✓';
+  updateStats();
+}
+
+function minifyJSON() {
+  const obj = parseJSON();
+  if (obj === null) return;
+  output.value = JSON.stringify(obj);
+  document.getElementById('status').textContent = '已压缩 ✓';
+  updateStats();
+}
+
+function validateJSON() {
+  const obj = parseJSON();
+  if (obj === null) return;
+  output.value = '✓ JSON 有效\n\n' + JSON.stringify(obj, null, 2);
+  document.getElementById('status').textContent = '有效 JSON ✓';
+}
+
+function copyResult() {
+  if (!output.value) { showError('没有可复制的内容'); return; }
+  navigator.clipboard.writeText(output.value).then(() => {
+    document.getElementById('status').textContent = '已复制到剪贴板 ✓';
+  });
+}
+
+function clearAll() {
+  input.value = ''; output.value = '';
+  document.getElementById('status').textContent = '已清空';
+  updateStats();
+}
+
+function updateStats() {
+  const t = input.value;
+  document.getElementById('charCount').textContent = t.length;
+  document.getElementById('lineCount').textContent = t ? t.split('\n').length : 0;
+}
+</script>
+</body>
+</html>
