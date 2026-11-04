@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL 解析器 - URL Parser - 在线工具</title>
+<meta name="description" content="免费在线 URL 解析器。解析 URL 的协议、主机、路径、查询参数、哈希，参数提取，即时解析。">
+<meta name="keywords" content="URL解析, URL Parser, 查询参数, URL参数提取, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; }
+input:focus { outline: none; border-color: #38a169; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 12px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; border: 2px solid #e2e8f0; word-break: break-all; }
+.result .k { color: #718096; font-weight: 600; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>URL 解析器</h1>
+  <p class="sub">解析 URL 的协议、主机、路径、查询参数</p>
+  <div class="toolbox">
+    <label>输入 URL</label>
+    <input id="url" placeholder="https://example.com/path?name=value&id=123#hash" value="https://example.com/path?name=value&id=123#hash">
+    <div class="result" id="out">解析结果...</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function parse() {
+  const u = document.getElementById('url').value.trim();
+  const o = document.getElementById('out');
+  try {
+    const url = new URL(u);
+    let html = '<div><span class="k">协议 Protocol:</span> ' + url.protocol + '</div>';
+    html += '<div><span class="k">主机 Host:</span> ' + url.host + '</div>';
+    html += '<div><span class="k">主机名 Hostname:</span> ' + url.hostname + '</div>';
+    html += '<div><span class="k">端口 Port:</span> ' + (url.port || '(默认)') + '</div>';
+    html += '<div><span class="k">路径 Path:</span> ' + url.pathname + '</div>';
+    html += '<div><span class="k">查询 Query:</span> ' + (url.search || '(无)') + '</div>';
+    html += '<div><span class="k">哈希 Hash:</span> ' + (url.hash || '(无)') + '</div>';
+    html += '<div style="margin-top:8px"><span class="k">查询参数:</span></div>';
+    const params = new URLSearchParams(url.search);
+    if (params.size === 0) html += '<div>  (无参数)</div>';
+    else params.forEach((v, k) => { html += '<div>  ' + k + ' = ' + v + '</div>'; });
+    o.innerHTML = html;
+  } catch (e) { o.textContent = '无效 URL，请输入完整地址（如 https://example.com）'; }
+}
+document.getElementById('url').addEventListener('input', parse);
+parse();
+</script>
+</body>
+</html>
