@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Gradient Generator Guide - 2026 Complete Tutorial</title>
+<meta name="description" content="Complete CSS gradient tutorial 2026: learn linear, radial, conic gradients, color stops, presets, and how to generate beautiful CSS gradients. Free online generator.">
+<meta name="keywords" content="css gradient, gradient generator, linear gradient, radial gradient, conic gradient, css background">
+<link rel="canonical" href="https://dalingdao.github.io/toolkitpro/blog/css-gradient-guide.html">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #fff; color: #1a1a2e; line-height: 1.8; }
+header { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 40px 20px; text-align: center; }
+header h1 { font-size: 2rem; margin-bottom: 8px; }
+header p { opacity: 0.9; }
+.container { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+h2 { font-size: 1.5rem; margin: 30px 0 15px; color: #667eea; border-bottom: 2px solid #eef1f8; padding-bottom: 8px; }
+h3 { font-size: 1.2rem; margin: 20px 0 10px; color: #333; }
+p, li { margin-bottom: 12px; }
+code { background: #f4f5f9; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.9em; color: #e74c3c; }
+pre { background: #f8f9fa; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 15px 0; font-size: 0.9rem; }
+pre code { background: none; color: #333; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+th, td { border: 1px solid #e0e4ea; padding: 10px 12px; text-align: left; }
+th { background: #f8f9fa; }
+.cta { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 20px; border-radius: 12px; text-align: center; margin: 30px 0; }
+.cta a { color: #fff; font-size: 1.2rem; text-decoration: none; font-weight: bold; border: 2px solid #fff; padding: 10px 24px; border-radius: 8px; display: inline-block; }
+.cta a:hover { background: #fff; color: #667eea; }
+.demo { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 20px 0; }
+.demo-box { height: 90px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.75rem; }
+footer { text-align: center; padding: 20px; color: #999; font-size: 0.85rem; border-top: 1px solid #eee; }
+.toc { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+.toc h3 { margin-top: 0; }
+.toc a { color: #667eea; text-decoration: none; display: block; padding: 3px 0; }
+.toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CSS Gradient Generator Guide</h1>
+  <p>2026 Complete Tutorial: Linear, Radial & Conic Gradients</p>
+</header>
+
+<div class="container">
+  <div class="toc">
+    <h3>📖 Table of Contents</h3>
+    <a href="#what">1. What is a CSS Gradient?</a>
+    <a href="#linear">2. Linear Gradients</a>
+    <a href="#radial">3. Radial Gradients</a>
+    <a href="#conic">4. Conic Gradients</a>
+    <a href="#presets">5. Popular Presets</a>
+    <a href="#generator">6. Free Online Generator</a>
+  </div>
+
+  <div class="cta">
+    <h2>🚀 Use the Free Generator</h2>
+    <p>Visual editor with 12 presets, copy CSS in one click</p>
+    <a href="../gradientforge/">Open Gradient Forge →</a>
+  </div>
+
+  <h2 id="what">1. What is a CSS Gradient?</h2>
+  <p><strong>CSS gradients</strong> let you create smooth transitions between colors, replacing image backgrounds with pure CSS. They're fast, responsive, and scalable.</p>
+  <p>Gradients are used for:</p>
+  <ul>
+    <li><strong>Backgrounds</strong> - modern, vibrant page backgrounds</li>
+    <li><strong>Buttons</strong> - eye-catching call-to-action elements</li>
+    <li><strong>Text effects</strong> - gradient text with background-clip</li>
+    <li><strong>Cards</strong> - visual depth and branding</li>
+    <li><strong>Charts</strong> - data visualization</li>
+  </ul>
+
+  <h2 id="linear">2. Linear Gradients</h2>
+  <p><strong>Linear gradients</strong> transition along a straight line.</p>
+  <pre><code>background: linear-gradient(45deg, #667eea, #764ba2);</code></pre>
+  <div class="demo">
+    <div class="demo-box" style="background: linear-gradient(45deg, #667eea, #764ba2)">45deg</div>
+    <div class="demo-box" style="background: linear-gradient(90deg, #ff6b6b, #feca57)">90deg</div>
+    <div class="demo-box" style="background: linear-gradient(135deg, #27ae60, #2ecc71)">135deg</div>
+    <div class="demo-box" style="background: linear-gradient(to bottom, #3498db, #9b59b6)">bottom</div>
+  </div>
+
+  <h2 id="radial">3. Radial Gradients</h2>
+  <p><strong>Radial gradients</strong> transition from a center point outward.</p>
+  <pre><code>background: radial-gradient(circle, #f39c12, #e74c3c);</code></pre>
+  <div class="demo">
+    <div class="demo-box" style="background: radial-gradient(circle, #f39c12, #e74c3c)">circle</div>
+    <div class="demo-box" style="background: radial-gradient(ellipse, #1abc9c, #16a085)">ellipse</div>
+  </div>
+
+  <h2 id="conic">4. Conic Gradients</h2>
+  <p><strong>Conic gradients</strong> rotate around a center point (like a color wheel).</p>
+  <pre><code>background: conic-gradient(from 45deg, red, yellow, green, blue, red);</code></pre>
+  <div class="demo">
+    <div class="demo-box" style="background: conic-gradient(from 45deg, #ff6b6b, #feca57, #27ae60, #3498db, #ff6b6b)">conic</div>
+    <div class="demo-box" style="background: conic-gradient(#ff6b6b, #feca57, #27ae60, #3498db)">color wheel</div>
+  </div>
+
+  <h2 id="presets">5. Popular Presets</h2>
+  <table>
+    <tr><th>Name</th><th>CSS</th></tr>
+    <tr><td>Ocean</td><td><code>linear-gradient(135deg, #2193b0, #6dd5ed)</code></td></tr>
+    <tr><td>Sunset</td><td><code>linear-gradient(135deg, #fa709a, #fee140)</code></td></tr>
+    <tr><td>Purple</td><td><code>linear-gradient(135deg, #667eea, #764ba2)</code></td></tr>
+    <tr><td>Forest</td><td><code>linear-gradient(135deg, #11998e, #38ef7d)</code></td></tr>
+  </table>
+
+  <h2 id="generator">6. Free Online Generator</h2>
+  <p>Use the <a href="../gradientforge/">free Gradient Forge generator</a> to:</p>
+  <ol>
+    <li>Choose linear, radial, or conic gradient type</li>
+    <li>Manage multiple color stops</li>
+    <li>Pick from 12 presets</li>
+    <li>Adjust angle and copy CSS with one click</li>
+  </ol>
+
+  <div class="cta">
+    <h2>📱 Start Creating Gradients</h2>
+    <p>Free, no signup, works offline</p>
+    <a href="../gradientforge/">Open Gradient Forge →</a>
+  </div>
+</div>
+
+<footer>© 2026 ToolkitPro - Free Online Developer Tools | CSS Gradient Guide</footer>
+</body>
+</html>
