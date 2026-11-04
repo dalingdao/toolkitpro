@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Pro - 在线 Markdown 编辑器</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#34d399;--acc2:#38bdf8;--text:#e2e8f0;--muted:#94a3b8;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,var(--acc),var(--acc2));padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+header h1{font-size:18px;color:#fff}
+header .btns button{background:rgba(255,255,255,.2);border:none;color:#fff;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:13px;margin-left:8px}
+header .btns button:hover{background:rgba(255,255,255,.35)}
+main{flex:1;display:flex;overflow:hidden}
+.editor, .preview{flex:1;overflow:auto;padding:16px}
+.editor textarea{width:100%;height:100%;background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:14px;font-family:Consolas,monospace;font-size:14px;resize:none;line-height:1.6}
+.preview{border-left:1px solid var(--border)}
+.preview h1,.preview h2,.preview h3{color:var(--acc);margin:14px 0 8px}
+.preview p{margin:8px 0;line-height:1.7}
+.preview pre{background:var(--card);padding:12px;border-radius:8px;overflow-x:auto;border:1px solid var(--border)}
+.preview code{background:var(--card);padding:2px 5px;border-radius:4px;font-family:Consolas,monospace}
+.preview pre code{padding:0;background:none}
+.preview blockquote{border-left:3px solid var(--acc);padding-left:12px;margin:10px 0;color:var(--muted)}
+.preview ul,.preview ol{margin:8px 0 8px 24px;line-height:1.7}
+.preview table{border-collapse:collapse;margin:10px 0}
+.preview th,.preview td{border:1px solid var(--border);padding:6px 10px}
+.preview th{background:var(--card)}
+.preview img{max-width:100%;border-radius:8px}
+.preview a{color:var(--acc2)}
+.divider{background:var(--border);width:1px}
+#status{position:fixed;bottom:12px;right:12px;background:var(--card);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <h1>📝 Markdown Pro</h1>
+  <div class="btns">
+    <button onclick="copyMD()">复制 Markdown</button>
+    <button onclick="copyHTML()">复制 HTML</button>
+    <button onclick="downloadMD()">下载 .md</button>
+    <button onclick="downloadHTML()">下载 .html</button>
+  </div>
+</header>
+<main>
+  <div class="editor">
+    <textarea id="src" spellcheck="false" placeholder="# 标题&#10;&#10;开始输入 Markdown…"></textarea>
+  </div>
+  <div class="divider"></div>
+  <div class="preview" id="pv"></div>
+</main>
+<div id="status">就绪</div>
+
+<script>
+const src = document.getElementById('src');
+const pv = document.getElementById('pv');
+const defaultMD = `# 欢迎使用 Markdown Pro
+
+一个轻量、纯前端的 Markdown 编辑器。
+
+## 功能
+
+- **实时预览**（右侧）
+- 支持 **加粗**、*斜体*、\`行内代码\`
+- 代码块、表格、列表、引用
+- 一键导出 Markdown / HTML
+
+## 示例代码
+
+\`\`\`js
+function hello() {
+  console.log('Hello, Markdown Pro!');
+}
+\`\`\`
+
+## 表格
+
+| 功能 | 状态 |
+|------|------|
+| 实时预览 | ✅ |
+| 导出 | ✅ |
+
+> 所有数据都在本地浏览器处理，不会上传。
+`;
+src.value = defaultMD;
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function inline(s){
+  return s
+    .replace(/!\[(.*?)\]\((.*?)\)/g,'<img src="$2" alt="$1">')
+    .replace(/\[(.*?)\]\((.*?)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/~~(.+?)~~/g,'<del>$1</del>')
+    .replace(/`(.+?)`/g,'<code>$1</code>');
+}
+function md2html(t){
+  const lines = t.split('\n');
+  let html='', i=0, inCode=false, codeBuf=[], codeLang='', listType=null, inTable=false, tableRows=[];
+  const flushList=()=>{ if(listType){html+='</'+listType+'>';listType=null;} };
+  const flushTable=()=>{ if(inTable){html+=renderTable(tableRows);tableRows=[];inTable=false;} };
+  function renderTable(rows){
+    if(rows.length===0)return'';
+    var data = rows.filter(function(r){ return !r.every(function(c){return /^[-:]+$/.test(c.trim());}); });
+    if(data.length===0)return'';
+    var h='<table>';
+    data.forEach(function(r,idx){
+      h+='<tr>'+r.map(function(c){ return (idx===0?'<th>':'<td>')+inline(esc(c.trim()))+(idx===0?'</th>':'</td>'); }).join('')+'</tr>';
+    });
+    return h+'</table>';
+  }
+  for(; i<lines.length; i++){
+    const l = lines[i];
+    if(/^```/.test(l)){
+      if(!inCode){ inCode=true; codeBuf=[]; codeLang=l.slice(3).trim(); }
+      else { inCode=false; html+='<pre><code class="lang-'+esc(codeLang)+'">'+esc(codeBuf.join('\n'))+'</code></pre>'; }
+      continue;
+    }
+    if(inCode){ codeBuf.push(l); continue; }
+    var isTbl = /^\s*\|/.test(l) && /^\s*\|.*\|\s*$/.test(l);
+    var isUL = /^[-*] /.test(l);
+    var isOL = /^\d+\. /.test(l);
+    if(!isTbl){ flushTable(); }
+    if(!isUL && !isOL){ flushList(); }
+    if(isTbl){ tableRows.push(l.split('|').slice(1,-1).map(function(x){return x.trim();})); inTable=true; continue; }
+    if(/^### /.test(l)){ html+='<h3>'+inline(esc(l.slice(4)))+'</h3>'; continue; }
+    if(/^## /.test(l)){ html+='<h2>'+inline(esc(l.slice(3)))+'</h2>'; continue; }
+    if(/^# /.test(l)){ html+='<h1>'+inline(esc(l.slice(2)))+'</h1>'; continue; }
+    if(/^> /.test(l)){ html+='<blockquote>'+inline(esc(l.slice(2)))+'</blockquote>'; continue; }
+    if(isUL){ if(listType!=='ul'){flushList();listType='ul';html+='<ul>';} html+='<li>'+inline(esc(l.slice(2)))+'</li>'; continue; }
+    if(isOL){ if(listType!=='ol'){flushList();listType='ol';html+='<ol>';} html+='<li>'+inline(esc(l.replace(/^\d+\. /,'')))+'</li>'; continue; }
+    if(/^---+$/.test(l)){ html+='<hr>'; continue; }
+    if(l.trim()===''){ continue; }
+    html+='<p>'+inline(esc(l))+'</p>';
+  }
+  if(inCode) html+='<pre><code class="lang-'+esc(codeLang)+'">'+esc(codeBuf.join('\n'))+'</code></pre>';
+  flushList(); flushTable();
+  return html;
+}
+function render(){ pv.innerHTML = md2html(src.value); updateStatus(); }
+function updateStatus(){ const n=src.value.length; document.getElementById('status').textContent = n + ' 字符 · 纯前端处理'; }
+function copyMD(){ const v=src.value; if(navigator.clipboard) navigator.clipboard.writeText(v).then(()=>toast('已复制 Markdown')); }
+function copyHTML(){ const v=md2html(src.value); if(navigator.clipboard) navigator.clipboard.writeText(v).then(()=>toast('已复制 HTML')); }
+function downloadMD(){ const b=new Blob([src.value],{type:'text/markdown'}); dl(b,'document.md'); }
+function downloadHTML(){ const b=new Blob([md2html(src.value)],{type:'text/html'}); dl(b,'document.html'); }
+function dl(b,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click(); }
+function toast(msg){ const s=document.getElementById('status'); s.textContent=msg; setTimeout(updateStatus,1500); }
+src.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>
