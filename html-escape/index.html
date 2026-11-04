@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 转义器 - HTML Escape/Unescape - 在线工具</title>
+<meta name="description" content="免费在线 HTML 转义/去转义工具。将 &lt;&gt;&amp; 等特殊字符转义为 HTML 实体，或反向解码，即时转换。">
+<meta name="keywords" content="HTML转义, HTML实体, escape, unescape, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 120px; }
+textarea:focus { outline: none; border-color: #d69e2e; }
+.controls { display: flex; gap: 10px; margin: 16px 0; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #d69e2e; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #b7791f; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; word-break: break-all; border: 2px solid #e2e8f0; min-height: 60px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>HTML 转义器</h1>
+  <p class="sub">HTML Escape / Unescape - 特殊字符与 HTML 实体互转</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入包含 < > & " 的文本..."></textarea>
+    <div class="controls">
+      <button class="btn" id="escape">转义 →</button>
+      <button class="btn" id="unescape">← 去转义</button>
+    </div>
+    <label>结果</label>
+    <div class="result" id="output">等待操作...</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function unescapeHtml(s) { return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'"); }
+document.getElementById('escape').addEventListener('click', () => { const v = document.getElementById('input').value; document.getElementById('output').textContent = escapeHtml(v); });
+document.getElementById('unescape').addEventListener('click', () => { const v = document.getElementById('input').value; document.getElementById('output').textContent = unescapeHtml(v); });
+</script>
+</body>
+</html>
