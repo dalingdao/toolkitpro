@@ -79,7 +79,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function copyOutput(){const out=document.getElementById('output').value;if(!out){setStatus('无内容可复制','err');return;}navigator.clipboard.writeText(out).then(()=>setStatus('✅ 已复制到剪贴板','ok')).catch(()=>setStatus('❌ 复制失败','err'));}
 function clearAll(){document.getElementById('input').value='';document.getElementById('output').value='';document.getElementById('treeView').innerHTML='';document.getElementById('status').className='status';document.getElementById('status').textContent='';document.getElementById('stats').textContent='';document.getElementById('outStats').textContent='';}
 // Auto-format on load with sample
-document.getElementById('input').value='{"name":"JSON Studio","version":"1.0","features":["format","validate","minify","csv","tree"],"author":{"email":"kgoto@foxmail.com"},"active":true,"downloads":0}';
+document.getElementById('input').value='{"name":"JSON Studio","version":"1.0","features":["format","validate","minify","csv","tree"],"author":{"email":"example@toolkitpro.dev"},"active":true,"downloads":0}';
 format();
 </script>
 </body>
