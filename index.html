@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToolkitPro Studio - 5款在线开发者工具 | JSON格式化/Markdown编辑器/二维码生成器/配色方案</title>
+<meta name="description" content="5款纯前端在线开发者工具：JSON格式化验证、Markdown编辑器、二维码生成器、配色方案生成器、多合一工具箱。数据不出浏览器，即开即用，无需注册。">
+<meta name="keywords" content="JSON格式化,Markdown编辑器,二维码生成器,配色方案,在线工具,开发者工具,Base64,URL编码,密码生成">
+<meta name="author" content="ToolkitPro">
+<meta property="og:title" content="ToolkitPro Studio - 在线开发者工具集">
+<meta property="og:description" content="5款纯前端在线开发者工具，数据不出浏览器，即开即用。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolkitpro-tools.surge.sh">
+<link rel="canonical" href="https://toolkitpro-tools.surge.sh">
+<style>
+:root{--bg:#0a0e1a;--card:#131825;--acc:#6366f1;--acc2:#8b5cf6;--acc3:#06b6d4;--text:#e2e8f0;--muted:#64748b;--border:#1e293b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.hero{text-align:center;padding:60px 20px 40px;background:radial-gradient(ellipse at center,rgba(99,102,241,.08),transparent 70%)}
+.hero h1{font-size:36px;background:linear-gradient(135deg,var(--acc),var(--acc2),var(--acc3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+.hero p{color:var(--muted);font-size:16px;max-width:600px;margin:0 auto;line-height:1.6}
+.hero .badges{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hero .badge{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 14px;font-size:12px;color:var(--muted)}
+.hero .badge.green{color:#22c55e;border-color:rgba(34,197,94,.3)}
+.grid{max-width:900px;margin:0 auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-decoration:none;color:inherit;transition:all .2s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--c,var(--acc))}
+.card:hover{transform:translateY(-4px);border-color:var(--c,var(--acc));box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.card .icon{font-size:32px;margin-bottom:12px}
+.card h3{font-size:18px;margin-bottom:6px}
+.card p{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:12px}
+.card .tags{display:flex;gap:6px;flex-wrap:wrap}
+.card .tag{background:rgba(99,102,241,.1);color:var(--acc);border-radius:4px;padding:2px 8px;font-size:11px}
+.card .open{position:absolute;bottom:16px;right:16px;color:var(--muted);font-size:12px}
+.card:hover .open{color:var(--c,var(--acc))}
+footer{text-align:center;padding:30px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>🛠️ ToolkitPro Studio</h1>
+  <p>6款纯前端在线开发者工具，数据不出浏览器，即开即用，无需注册。</p>
+  <div class="badges">
+    <span class="badge green">✓ 全部验证通过</span>
+    <span class="badge">纯前端 · 无后端</span>
+    <span class="badge">HTML5 + Vanilla JS</span>
+    <span class="badge">响应式设计</span>
+  </div>
+  <div style="margin-top:20px">
+    <a href="https://ko-fi.com/toolkitpro" target="_blank" style="display:inline-block;background:#ff5e5b;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600">☕ 支持我们 (Ko-fi)</a>
+  </div>
+</div>
+<div class="grid">
+  <a class="card" style="--c:#3b82f6" href="webtoolkit/index.html">
+    <div class="icon">🧰</div>
+    <h3>工具箱 Pro</h3>
+    <p>8合1开发者工具集：文本统计、JSON格式化、URL编解码、Base64、密码生成、时间戳转换、颜色选择器、Markdown预览。</p>
+    <div class="tags"><span class="tag">8工具</span><span class="tag">文本</span><span class="tag">编码</span></div>
+    <span class="open">打开 →</span>
+  </a>
+  <a class="card" style="--c:#8b5cf6" href="mdpro/index.html">
+    <div class="icon">📝</div>
+    <h3>Markdown Pro</h3>
+    <p>在线Markdown编辑器，实时预览，支持标题/加粗/斜体/代码块/表格/列表/引用，导出MD/HTML。</p>
+    <div class="tags"><span class="tag">编辑器</span><span class="tag">实时预览</span><span class="tag">导出</span></div>
+    <span class="open">打开 →</span>
+  </a>
+  <a class="card" style="--c:#a78bfa" href="qrmaster/index.html">
+    <div class="icon">🔲</div>
+    <h3>QR Master</h3>
+    <p>多功能二维码生成器，支持文本/URL/邮箱/电话/SMS/WiFi/vCard，自定义颜色尺寸纠错级别，PNG下载。</p>
+    <div class="tags"><span class="tag">二维码</span><span class="tag">7类型</span><span class="tag">PNG</span></div>
+    <span class="open">打开 →</span>
+  </a>
+  <a class="card" style="--c:#f59e0b" href="colorforge/index.html">
+    <div class="icon">🎨</div>
+    <h3>Color Forge</h3>
+    <p>配色方案生成器，7种配色模式（随机/类似色/互补色/三角色/单色/暖色/冷色），锁定颜色，HEX复制，JSON导出。</p>
+    <div class="tags"><span class="tag">配色</span><span class="tag">7模式</span><span class="tag">HSL</span></div>
+    <span class="open">打开 →</span>
+  </a>
+  <a class="card" style="--c:#22c55e" href="jsonstudio/index.html">
+    <div class="icon">📋</div>
+    <h3>JSON Studio</h3>
+    <p>JSON格式化/验证/压缩/转CSV/树形查看/转义工具，支持嵌套对象数组，开发者必备。</p>
+    <div class="tags"><span class="tag">JSON</span><span class="tag">CSV</span><span class="tag">树形</span></div>
+    <span class="open">打开 →</span>
+  </a>
+  <a class="card" style="--c:#06b6d4" href="regexlab/index.html">
+    <div class="icon">🔬</div>
+    <h3>Regex Lab</h3>
+    <p>正则表达式在线测试器，实时高亮匹配，分组查看，6种示例（邮箱/URL/手机号/IPv4/日期/HTML），速查表。</p>
+    <div class="tags"><span class="tag">正则</span><span class="tag">高亮</span><span class="tag">分组</span></div>
+    <span class="open">打开 →</span>
+  </a>
+</div>
+<footer>
+  ToolkitPro Studio · 6 Tools · Pure Frontend · No Backend · Data Stays in Your Browser<br>
+  <a href="https://ko-fi.com/toolkitpro" target="_blank" style="color:var(--muted);text-decoration:none">☕ Ko-fi</a> ·
+  <a href="mailto:kgoto@foxmail.com" style="color:var(--muted);text-decoration:none">📧 Email</a> ·
+  © 2026 ToolkitPro
+</footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regex Lab - 正则表达式在线测试器</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#06b6d4;--err:#ef4444;--ok:#22c55e;--text:#e2e8f0;--muted:#94a3b8;--border:#334155;--match:#fbbf24;--match-bg:rgba(251,191,36,.2)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+header{text-align:center;margin-bottom:20px}
+header h1{font-size:24px;color:var(--acc)}
+header p{color:var(--muted);font-size:13px;margin-top:4px}
+.container{max-width:900px;margin:0 auto}
+.pattern-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.pattern-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pattern-row .slash{color:var(--muted);font-size:20px;font-family:monospace}
+.pattern-row input[type=text]{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:10px;font-family:'Fira Code',Consolas,monospace;font-size:15px}
+.flags{display:flex;gap:4px;flex-wrap:wrap}
+.flag{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;user-select:none}
+.flag.active{background:var(--acc);color:#0f172a;border-color:var(--acc);font-weight:600}
+textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-family:'Fira Code',Consolas,monospace;font-size:13px;resize:vertical;line-height:1.5}
+label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}
+.output{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px}
+.output-text{font-family:'Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;min-height:100px}
+.match{background:var(--match-bg);color:var(--match);border-radius:3px;padding:0 2px}
+.results{margin-top:12px;font-size:13px}
+.results .stat{color:var(--muted);margin-right:16px}
+.results .count{color:var(--ok);font-weight:600}
+.results .err{color:var(--err)}
+.groups{margin-top:12px}
+.groups table{width:100%;border-collapse:collapse;font-size:12px}
+.groups th,.groups td{border:1px solid var(--border);padding:6px 10px;text-align:left}
+.groups th{color:var(--muted);background:var(--bg)}
+.cheatsheet{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px}
+.cheatsheet h3{font-size:13px;color:var(--muted);margin-bottom:8px}
+.cheatsheet table{width:100%;border-collapse:collapse;font-size:12px}
+.cheatsheet td{padding:4px 8px;border-bottom:1px solid var(--border)}
+.cheatsheet td:first-child{color:var(--acc);font-family:monospace;width:80px}
+.examples{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.examples button{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer}
+.examples button:hover{border-color:var(--acc);color:var(--acc)}
+</style>
+</head>
+<body>
+<header><h1>🔬 Regex Lab</h1><p>正则表达式在线测试器 · 实时匹配 · 分组查看 · 速查表 · 纯前端</p></header>
+<div class="container">
+  <div class="pattern-box">
+    <label>正则表达式</label>
+    <div class="pattern-row">
+      <span class="slash">/</span>
+      <input type="text" id="pattern" value="(\w+)@(\w+)\.(\w+)" oninput="run()" placeholder="输入正则表达式">
+      <span class="slash">/</span>
+      <div class="flags">
+        <span class="flag active" onclick="toggleFlag(this,'g')">g</span>
+        <span class="flag" onclick="toggleFlag(this,'i')">i</span>
+        <span class="flag" onclick="toggleFlag(this,'m')">m</span>
+        <span class="flag" onclick="toggleFlag(this,'s')">s</span>
+        <span class="flag" onclick="toggleFlag(this,'u')">u</span>
+      </div>
+    </div>
+    <div class="examples">
+      <button onclick="loadExample('email')">邮箱</button>
+      <button onclick="loadExample('url')">URL</button>
+      <button onclick="loadExample('phone')">手机号</button>
+      <button onclick="loadExample('ipv4')">IPv4</button>
+      <button onclick="loadExample('date')">日期</button>
+      <button onclick="loadExample('html')">HTML标签</button>
+    </div>
+  </div>
+  <div class="pattern-box">
+    <label>测试文本</label>
+    <textarea id="testText" rows="6" oninput="run()">联系邮箱: alice@example.com 和 bob@test.org
+电话: 13800138000
+网址: https://example.com/path</textarea>
+  </div>
+  <div class="output">
+    <label>匹配结果（高亮显示）</label>
+    <div class="output-text" id="highlighted"></div>
+    <div class="results" id="results"></div>
+    <div class="groups" id="groups"></div>
+  </div>
+  <div class="cheatsheet">
+    <h3>正则速查表</h3>
+    <table>
+      <tr><td>.</td><td>任意字符（除换行）</td></tr>
+      <tr><td>\w \d \s</td><td>字母数字 / 数字 / 空白</td></tr>
+      <tr><td>\W \D \S</td><td>非字母数字 / 非数字 / 非空白</td></tr>
+      <tr><td>[abc]</td><td>字符集合 a/b/c</td></tr>
+      <tr><td>[^abc]</td><td>排除 a/b/c</td></tr>
+      <tr><td>a{3,5}</td><td>a重复3到5次</td></tr>
+      <tr><td>^ $</td><td>行首 / 行尾</td></tr>
+      <tr><td>(...)</td><td>捕获组</td></tr>
+      <tr><td>(?:...)</td><td>非捕获组</td></tr>
+      <tr><td>a|b</td><td>a 或 b</td></tr>
+    </table>
+  </div>
+</div>
+<script>
+function getFlags(){return [...document.querySelectorAll('.flag.active')].map(f=>f.textContent).join('');}
+function toggleFlag(el,flag){el.classList.toggle('active');run();}
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function loadExample(type){const examples={
+  email:{p:'[\\w.]+@[\\w.]+\\.[a-z]{2,}',t:'alice@example.com bob@test.org invalid@email'},
+  url:{p:'https?://[\\w./?=&%-]+',t:'Visit https://example.com/path or http://test.org'},
+  phone:{p:'1[3-9]\\d{9}',t:'电话: 13800138000, 15912345678, 18600000000'},
+  ipv4:{p:'(\\d{1,3}\\.){3}\\d{1,3}',t:'IP: 192.168.1.1 and 10.0.0.1'},
+  date:{p:'(\\d{4})-(\\d{2})-(\\d{2})',t:'日期: 2026-11-04, 2026-01-15, 2025-12-31'},
+  html:{p:'<([a-z]+)[^>]*>.*?</\\1>',t:'<div class="x">content</div> <p>text</p>'}
+};const e=examples[type];if(!e)return;const sp=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;sp.call(document.getElementById('pattern'),e.p);const st=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set;st.call(document.getElementById('testText'),e.t);run();}
+function run(){
+  const pattern=document.getElementById('pattern').value;
+  const text=document.getElementById('testText').value;
+  const flags=getFlags();
+  const results=document.getElementById('results');
+  const groups=document.getElementById('groups');
+  const hl=document.getElementById('highlighted');
+  if(!pattern){hl.innerHTML=escapeHtml(text);results.innerHTML='';groups.innerHTML='';return;}
+  let regex;
+  try{regex=new RegExp(pattern,flags);}catch(e){results.innerHTML='<span class="err">❌ '+escapeHtml(e.message)+'</span>';hl.innerHTML=escapeHtml(text);groups.innerHTML='';return;}
+  const matches=[];
+  if(flags.includes('g')){
+    let m;
+    while((m=regex.exec(text))!==null){
+      matches.push({match:m[0],index:m.index,groups:m.slice(1)});
+      if(m.index===regex.lastIndex)regex.lastIndex++;
+    }
+  }else{
+    const m=regex.exec(text);
+    if(m)matches.push({match:m[0],index:m.index,groups:m.slice(1)});
+  }
+  // Highlight
+  if(matches.length===0){hl.innerHTML=escapeHtml(text)+'<span style="color:var(--muted)"> (无匹配)</span>';results.innerHTML='<span class="stat">匹配数: <span class="count">0</span></span>';groups.innerHTML='';return;}
+  let html='';let lastEnd=0;
+  for(const m of matches){
+    html+=escapeHtml(text.slice(lastEnd,m.index));
+    html+='<span class="match">'+escapeHtml(m.match)+'</span>';
+    lastEnd=m.index+m.match.length;
+  }
+  html+=escapeHtml(text.slice(lastEnd));
+  hl.innerHTML=html;
+  results.innerHTML='<span class="stat">匹配数: <span class="count">'+matches.length+'</span></span><span class="stat">首次位置: '+matches[0].index+'</span>';
+  // Groups
+  if(matches[0]&&matches[0].groups&&matches[0].groups.length>0){
+    let g='<table><tr><th>#</th><th>匹配</th><th>分组</th></tr>';
+    matches.forEach((m,i)=>{
+      g+='<tr><td>'+i+'</td><td>'+escapeHtml(m.match.slice(0,30))+'</td><td>'+m.groups.map((g,j)=>'$'+(j+1)+': '+escapeHtml(String(g).slice(0,20))).join(' | ')+'</td></tr>';
+    });
+    g+='</table>';
+    groups.innerHTML='<label>分组详情</label>'+g;
+  }else{groups.innerHTML='';}
+}
+run();
+</script>
+</body>
+</html>
