@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本转 ASCII 码 - Text to ASCII - 在线工具</title>
+<meta name="description" content="免费在线文本转 ASCII 工具。文本转 ASCII 码、十六进制、二进制，即时转换，一键复制。">
+<meta name="keywords" content="文本转ASCII, ASCII码, 字符编码, 文本转十六进制, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 100px; }
+textarea:focus { outline: none; border-color: #00a3c4; }
+.outs { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 16px; }
+.out { background: #f7fafc; border-radius: 10px; padding: 12px; border: 2px solid #e2e8f0; }
+.out .lbl { font-size: 12px; color: #718096; font-weight: 600; margin-bottom: 4px; }
+.out .val { font-family: 'SF Mono', Consolas, monospace; font-size: 14px; word-break: break-all; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>文本转 ASCII 码</h1>
+  <p class="sub">文本 → ASCII / 十六进制 / 二进制</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入文本...">Hello</textarea>
+    <div class="outs">
+      <div class="out"><div class="lbl">ASCII 码（十进制）</div><div class="val" id="ascii"></div></div>
+      <div class="out"><div class="lbl">十六进制 (Hex)</div><div class="val" id="hex"></div></div>
+      <div class="out"><div class="lbl">二进制 (Binary)</div><div class="val" id="bin"></div></div>
+    </div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function update() {
+  const t = document.getElementById('input').value;
+  const arr = [...t];
+  document.getElementById('ascii').textContent = arr.map(c => c.charCodeAt(0)).join(' ');
+  document.getElementById('hex').textContent = arr.map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+  document.getElementById('bin').textContent = arr.map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+}
+document.getElementById('input').addEventListener('input', update);
+update();
+</script>
+</body>
+</html>
