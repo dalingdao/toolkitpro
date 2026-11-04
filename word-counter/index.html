@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字数统计工具 - Word Counter - 在线工具</title>
+<meta name="description" content="免费在线字数统计工具。实时统计字符数、字数、句子数、段落数、行数、阅读时间，中英文混排，即时更新。">
+<meta name="keywords" content="字数统计, Word Counter, 字符数, 单词数, 阅读时间, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; resize: vertical; min-height: 160px; }
+textarea:focus { outline: none; border-color: #805ad5; }
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 16px; }
+.stat { background: #f7fafc; border-radius: 10px; padding: 14px; text-align: center; border: 2px solid #e2e8f0; }
+.stat .num { font-size: 24px; font-weight: 700; color: #553c9a; font-family: 'SF Mono', Consolas, monospace; }
+.stat .lbl { font-size: 12px; color: #718096; margin-top: 4px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>字数统计工具</h1>
+  <p class="sub">实时统计字符、单词、句子、段落、阅读时间</p>
+  <div class="toolbox">
+    <textarea id="input" placeholder="在这里输入或粘贴文本..."></textarea>
+    <div class="stats">
+      <div class="stat"><div class="num" id="chars">0</div><div class="lbl">字符数</div></div>
+      <div class="stat"><div class="num" id="words">0</div><div class="lbl">单词数</div></div>
+      <div class="stat"><div class="num" id="sentences">0</div><div class="lbl">句子数</div></div>
+      <div class="stat"><div class="num" id="paras">0</div><div class="lbl">段落数</div></div>
+      <div class="stat"><div class="num" id="lines">0</div><div class="lbl">行数</div></div>
+      <div class="stat"><div class="num" id="read">0 分钟</div><div class="lbl">阅读时间</div></div>
+    </div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function update() {
+  const t = document.getElementById('input').value;
+  document.getElementById('chars').textContent = t.length;
+  const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+  document.getElementById('words').textContent = words;
+  const sentences = t.split(/[.!?。！？]+/).filter(s => s.trim()).length;
+  document.getElementById('sentences').textContent = sentences;
+  const paras = t.split(/\n\s*\n/).filter(p => p.trim()).length;
+  document.getElementById('paras').textContent = paras;
+  document.getElementById('lines').textContent = t ? t.split('\n').length : 0;
+  document.getElementById('read').textContent = Math.max(1, Math.ceil(words / 200)) + ' 分钟';
+}
+document.getElementById('input').addEventListener('input', update);
+update();
+</script>
+</body>
+</html>
