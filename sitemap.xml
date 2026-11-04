@@ -34,4 +34,5 @@
   <url><loc>https://dalingdao.github.io/toolkitpro/url-parser/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dalingdao.github.io/toolkitpro/html-escape/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dalingdao.github.io/toolkitpro/text-diff/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dalingdao.github.io/toolkitpro/jwt-decoder/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
