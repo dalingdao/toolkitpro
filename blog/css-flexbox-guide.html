@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Flexbox Guide - Complete Tutorial with Examples</title>
+<meta name="description" content="Complete CSS Flexbox guide. Learn flex container properties (justify-content, align-items, flex-wrap, gap) and flex item properties (flex-grow, flex-shrink, flex-basis) with practical examples.">
+<meta name="keywords" content="css flexbox, flexbox guide, flex container, justify-content, align-items, flex-wrap, flex-direction, flex tutorial">
+<link rel="canonical" href="https://dalingdao.github.io/toolkitpro/blog/css-flexbox-guide.html">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; line-height:1.7; color:#333; max-width:800px; margin:0 auto; padding:30px 20px; background:#fff; }
+h1 { font-size:2rem; margin-bottom:8px; color:#111; }
+h2 { font-size:1.5rem; margin:35px 0 12px; color:#222; border-bottom:2px solid #e8e8e8; padding-bottom:8px; }
+p { margin-bottom:15px; color:#555; }
+code { background:#f4f4f4; padding:2px 6px; border-radius:4px; font-family:Consolas,monospace; font-size:0.9em; color:#c7254e; }
+pre { background:#282c34; color:#abb2bf; padding:16px; border-radius:8px; overflow-x:auto; margin:15px 0; font-family:Consolas,monospace; font-size:14px; line-height:1.5; }
+pre code { background:none; color:inherit; padding:0; }
+table { width:100%; border-collapse:collapse; margin:15px 0; }
+th, td { border:1px solid #ddd; padding:10px; text-align:left; font-size:14px; }
+th { background:#f0f0f0; }
+.demo { display:flex; background:#f9f9f9; border:1px dashed #ccc; padding:12px; margin:12px 0; gap:8px; }
+.demo > div { background:#6c5ce7; color:#fff; padding:15px; border-radius:6px; font-weight:bold; font-size:14px; text-align:center; flex:1; }
+.demo-row { flex-direction:row; }
+.demo-col { flex-direction:column; }
+.demo-wrap { flex-wrap:wrap; }
+.demo-center { justify-content:center; align-items:center; }
+.demo-between { justify-content:space-between; }
+.demo-end { justify-content:flex-end; }
+.demo-around { justify-content:space-around; }
+.demo-stretch { align-items:stretch; }
+a { color:#6c5ce7; }
+.note { background:#fff3cd; border-left:4px solid #ffc107; padding:14px; margin:15px 0; border-radius:0 6px 6px 0; }
+</style>
+</head>
+<body>
+<h1>📐 CSS Flexbox Guide</h1>
+<p>A complete tutorial for CSS Flexbox — the modern one-dimensional layout system. Learn how to build responsive layouts with simple, readable code.</p>
+
+<div class="note"><strong>Quick answer:</strong> Use <code>display:flex</code> on the parent (container) to enable flexbox, then control alignment with <code>justify-content</code> (horizontal) and <code>align-items</code> (vertical).</div>
+
+<h2>What is Flexbox?</h2>
+<p>Flexbox (Flexible Box Layout) is a CSS layout module designed for one-dimensional layouts — aligning items in a row or column. It solves the classic problems of vertical centering and equal-height columns that were difficult with floats or inline-block.</p>
+
+<h2>Flex Container Properties</h2>
+<p>Apply these to the parent element with <code>display:flex</code>:</p>
+<table>
+<tr><th>Property</th><th>Values</th><th>Description</th></tr>
+<tr><td><code>flex-direction</code></td><td>row, column, row-reverse, column-reverse</td><td>Main axis direction</td></tr>
+<tr><td><code>justify-content</code></td><td>flex-start, center, flex-end, space-between, space-around, space-evenly</td><td>Align items along main axis</td></tr>
+<tr><td><code>align-items</code></td><td>stretch, flex-start, center, flex-end, baseline</td><td>Align items along cross axis</td></tr>
+<tr><td><code>flex-wrap</code></td><td>nowrap, wrap, wrap-reverse</td><td>Wrap items to multiple lines</td></tr>
+<tr><td><code>gap</code></td><td>length</td><td>Spacing between items (row-gap + column-gap)</td></tr>
+</table>
+
+<h2>Flex Item Properties</h2>
+<p>Apply these to the children inside the flex container:</p>
+<table>
+<tr><th>Property</th><th>Values</th><th>Description</th></tr>
+<tr><td><code>flex-grow</code></td><td>number (default 0)</td><td>How much item grows relative to siblings</td></tr>
+<tr><td><code>flex-shrink</code></td><td>number (default 1)</td><td>How much item shrinks when space is tight</td></tr>
+<tr><td><code>flex-basis</code></td><td>length, auto</td><td>Initial main-size before growing/shrinking</td></tr>
+<tr><td><code>align-self</code></td><td>auto, stretch, center, flex-start, flex-end</td><td>Override container's align-items for this item</td></tr>
+<tr><td><code>order</code></td><td>integer</td><td>Visual order (lower comes first)</td></tr>
+</table>
+
+<h2>Practical Examples</h2>
+<h3>1. Row Layout (default)</h3>
+<pre><code>.container {
+  display: flex;
+  gap: 10px;
+}
+/* Items align horizontally */</code></pre>
+<div class="demo demo-row"><div>1</div><div>2</div><div>3</div></div>
+
+<h3>2. Column Layout</h3>
+<pre><code>.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}</code></pre>
+<div class="demo demo-col"><div>1</div><div>2</div><div>3</div></div>
+
+<h3>3. Centering (the classic use case)</h3>
+<pre><code>.parent {
+  display: flex;
+  justify-content: center;  /* horizontal center */
+  align-items: center;      /* vertical center */
+  min-height: 200px;
+}</code></pre>
+<div class="demo demo-center"><div>Centered</div></div>
+
+<h3>4. Space Between</h3>
+<pre><code>.navbar {
+  display: flex;
+  justify-content: space-between;  /* pushes items apart */
+}</code></pre>
+<div class="demo demo-between"><div>Logo</div><div>Menu</div></div>
+
+<h3>5. Wrapping (responsive grid-like)</h3>
+<pre><code>.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.gallery .item { flex: 1 1 200px; }</code></pre>
+<div class="demo demo-wrap"><div>Item</div><div>Item</div><div>Item</div></div>
+
+<h2>Flexbox vs CSS Grid</h2>
+<p>Use <strong>Flexbox</strong> for one-dimensional layouts (a row or a column of items). Use <strong>CSS Grid</strong> for two-dimensional layouts (rows <em>and</em> columns together). They work great together — Grid for the page skeleton, Flexbox for component-level alignment.</p>
+
+<h2>Common Flexbox Patterns</h2>
+<ul>
+<li><strong>Navbar:</strong> <code>display:flex; justify-content:space-between</code></li>
+<li><strong>Card grid:</strong> <code>display:flex; flex-wrap:wrap; gap:20px</code></li>
+<li><strong>Sticky footer:</strong> <code>min-height:100vh; flex-direction:column</code> with <code>margin-top:auto</code> on footer</li>
+<li><strong>Input + button:</strong> <code>display:flex; gap:8px</code> with button fixed width</li>
+</ul>
+
+<h2>Browser Support</h2>
+<p>Flexbox is supported in all modern browsers (Chrome 29+, Firefox 28+, Safari 9+, Edge 12+, and IE 11 with prefixes). Use <code>display:-webkit-flex</code> for older Safari.</p>
+
+<p style="margin-top:40px;font-size:0.9em;color:#888;"><a href="../">← Back to Toolkit Pro</a></p>
+</body>
+</html>

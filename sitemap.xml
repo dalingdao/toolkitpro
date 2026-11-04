@@ -18,8 +18,6 @@
   <url><loc>https://dalingdao.github.io/toolkitpro/blog/css-gradient-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dalingdao.github.io/toolkitpro/blog/qr-code-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dalingdao.github.io/toolkitpro/blog/css-grid-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-<<<<<<< HEAD
-=======
   <url><loc>https://dalingdao.github.io/toolkitpro/password-generator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
->>>>>>> f5a388e (Add Password Generator tool (SEO page #8))
+  <url><loc>https://dalingdao.github.io/toolkitpro/blog/css-flexbox-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
