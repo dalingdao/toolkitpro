@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unix 时间戳转换器 - 在线工具</title>
+<meta name="description" content="免费在线 Unix 时间戳转换工具。Unix 时间戳与日期时间互转，支持时区偏移，即时转换，实时显示当前时间戳。">
+<meta name="keywords" content="Unix时间戳, 时间戳转换, timestamp converter, 日期转时间戳, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; }
+input:focus { outline: none; border-color: #d69e2e; }
+.now { background: #fffbeb; border-radius: 10px; padding: 14px; margin-bottom: 20px; text-align: center; }
+.now .big { font-size: 22px; font-weight: 700; color: #b7791f; font-family: 'SF Mono', Consolas, monospace; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 12px; font-size: 15px; border: 2px solid #e2e8f0; }
+.controls { display: flex; gap: 10px; margin-top: 16px; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #d69e2e; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #b7791f; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Unix 时间戳转换器</h1>
+  <p class="sub">Unix 时间戳与日期时间互转 - 实时更新</p>
+  <div class="toolbox">
+    <div class="now">当前 Unix 时间戳：<div class="big" id="now">0</div></div>
+    <label>Unix 时间戳（秒）→ 日期时间</label>
+    <input id="ts" placeholder="例如：1700000000" inputmode="numeric">
+    <div class="result" id="tsResult">输入时间戳查看日期</div>
+    <label style="margin-top:16px">日期时间 → Unix 时间戳</label>
+    <input id="dt" type="datetime-local">
+    <div class="result" id="dtResult">选择日期查看时间戳</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function updNow() { document.getElementById('now').textContent = Math.floor(Date.now() / 1000); }
+setInterval(updNow, 1000); updNow();
+document.getElementById('ts').addEventListener('input', () => {
+  const v = parseInt(document.getElementById('ts').value);
+  const r = document.getElementById('tsResult');
+  if (isNaN(v)) { r.textContent = '输入时间戳查看日期'; return; }
+  const d = new Date(v * 1000);
+  r.textContent = isNaN(d) ? '无效时间戳' : d.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) + ' (UTC+8)';
+});
+document.getElementById('dt').addEventListener('change', () => {
+  const v = document.getElementById('dt').value;
+  const r = document.getElementById('dtResult');
+  if (!v) { r.textContent = '选择日期查看时间戳'; return; }
+  const ts = Math.floor(new Date(v).getTime() / 1000);
+  r.textContent = ts + ' 秒 (' + new Date(ts * 1000).toISOString() + ')';
+});
+</script>
+</body>
+</html>

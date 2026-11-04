@@ -26,4 +26,5 @@
   <url><loc>https://dalingdao.github.io/toolkitpro/url-encoder/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dalingdao.github.io/toolkitpro/base64-encoder/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://dalingdao.github.io/toolkitpro/md5-hash/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dalingdao.github.io/toolkitpro/unix-timestamp/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
