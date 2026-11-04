@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT 解码器 - JWT Decoder - 在线工具</title>
+<meta name="description" content="免费在线 JWT 解码工具。解析 JWT Token 的 Header、Payload、Signature，JSON 格式化显示，即时解码。">
+<meta name="keywords" content="JWT解码, JWT Decoder, JSON Web Token, Token解析, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 90px; }
+textarea:focus { outline: none; border-color: #805ad5; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 16px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; border: 2px solid #e2e8f0; word-break: break-all; white-space: pre-wrap; }
+.result .hdr { background: #ebf4ff; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
+.result .ply { background: #f0fff4; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
+.result .sig { background: #fffaf0; padding: 10px; border-radius: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>JWT 解码器</h1>
+  <p class="sub">解析 JSON Web Token - Header / Payload / Signature</p>
+  <div class="toolbox">
+    <label>输入 JWT Token</label>
+    <textarea id="jwt" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmEq0vP3Sg9Q2FmYhVnY3JtZ2F4bWU"></textarea>
+    <div class="result" id="out">解码结果...</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function b64u(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
+function decode() {
+  const t = document.getElementById('jwt').value.trim();
+  const o = document.getElementById('out');
+  if (!t) { o.textContent = '请输入 JWT Token'; return; }
+  const parts = t.split('.');
+  if (parts.length < 2) { o.textContent = '无效 JWT（需 header.payload.signature 三段）'; return; }
+  let html = '';
+  try { const hdr = JSON.parse(b64u(parts[0])); html += '<div class="hdr"><b>Header:</b>\n' + JSON.stringify(hdr, null, 2) + '</div>'; } catch (e) { html += '<div class="hdr"><b>Header 解码失败:</b> ' + e.message + '</div>'; }
+  try { const ply = JSON.parse(b64u(parts[1])); html += '<div class="ply"><b>Payload:</b>\n' + JSON.stringify(ply, null, 2) + '</div>'; } catch (e) { html += '<div class="ply"><b>Payload 解码失败:</b> ' + e.message + '</div>'; }
+  if (parts.length >= 3) html += '<div class="sig"><b>Signature:</b> ' + parts[2] + '</div>';
+  o.innerHTML = html;
+}
+document.getElementById('jwt').addEventListener('input', decode);
+decode();
+</script>
+</body>
+</html>
