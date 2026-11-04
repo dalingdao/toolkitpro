@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Entity Encoder Decoder - Convert Special Characters Online</title>
+<meta name="description" content="Free HTML entity encoder/decoder. Convert special characters like &lt; &gt; &amp; &quot; to HTML entities and back instantly. Supports named and numeric entities.">
+<meta name="keywords" content="html entity, html encoder, html decoder, encode html, decode html, html escape, html unescape, character entity">
+<link rel="canonical" href="https://dalingdao.github.io/toolkitpro/html-entity/">
+<style>
+:root { --bg:#0f1117; --card:#1a1d29; --accent:#6c5ce7; --text:#e8eaf0; --muted:#8b90a5; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+.container { max-width:860px; margin:0 auto; padding:30px 20px; }
+h1 { font-size:2.1rem; margin-bottom:8px; color:#fff; }
+.subtitle { color:var(--muted); margin-bottom:28px; }
+.card { background:var(--card); border-radius:12px; padding:24px; margin-bottom:20px; border:1px solid #2a2f42; }
+textarea { width:100%; min-height:140px; background:#0d0f17; border:1px solid #2a2f42; border-radius:8px; color:var(--text); padding:12px; font-family:monospace; font-size:14px; resize:vertical; }
+label { display:block; color:var(--muted); font-size:0.9rem; margin-bottom:8px; }
+.btns { display:flex; gap:10px; margin:14px 0; flex-wrap:wrap; }
+button { background:var(--accent); border:none; color:#fff; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:0.95rem; }
+button:hover { opacity:0.9; }
+button.sec { background:#2a2f42; }
+h2 { font-size:1.4rem; margin:28px 0 12px; color:#fff; }
+p, li { color:var(--muted); }
+ul { padding-left:20px; margin-top:8px; }
+code { background:#2a2f42; padding:2px 6px; border-radius:4px; font-family:monospace; }
+table { width:100%; border-collapse:collapse; margin:14px 0; }
+th, td { border:1px solid #2a2f42; padding:8px 12px; text-align:left; font-size:0.9rem; color:var(--muted); }
+th { background:#14161f; }
+a { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🔣 HTML Entity Encoder / Decoder</h1>
+<p class="subtitle">Convert special characters to HTML entities and back. Essential for web developers, content writers, and anyone working with HTML.</p>
+
+<div class="card">
+  <label>Input Text</label>
+  <textarea id="in" placeholder="Paste text here... e.g. <script>alert('x')</script> or &lt;p&gt;Hello&lt;/p&gt;"></textarea>
+  <div class="btns">
+    <button onclick="encode()">Encode to HTML Entities</button>
+    <button class="sec" onclick="decode()">Decode HTML Entities</button>
+    <button class="sec" onclick="cp()">Copy Result</button>
+    <button class="sec" onclick="swap()">Swap</button>
+    <button class="sec" onclick="clr()">Clear</button>
+  </div>
+  <label>Result</label>
+  <textarea id="out" readonly placeholder="Result appears here..."></textarea>
+</div>
+
+<h2>What are HTML Entities?</h2>
+<p>HTML entities are special codes that represent characters in HTML. They start with <code>&amp;</code> and end with <code>;</code>. For example, <code>&amp;lt;</code> represents the less-than symbol <code>&lt;</code> and <code>&amp;amp;</code> represents the ampersand <code>&amp;</code>.</p>
+
+<h2>Common HTML Entities</h2>
+<table>
+<tr><th>Character</th><th>Named Entity</th><th>Numeric Entity</th><th>Description</th></tr>
+<tr><td>&lt;</td><td>&amp;lt;</td><td>&amp;#60;</td><td>Less than</td></tr>
+<tr><td>&gt;</td><td>&amp;gt;</td><td>&amp;#62;</td><td>Greater than</td></tr>
+<tr><td>&amp;</td><td>&amp;amp;</td><td>&amp;#38;</td><td>Ampersand</td></tr>
+<tr><td>"</td><td>&amp;quot;</td><td>&amp;#34;</td><td>Double quote</td></tr>
+<tr><td>'</td><td>&amp;#39;</td><td>&amp;#39;</td><td>Single quote</td></tr>
+<tr><td>&nbsp;</td><td>&amp;nbsp;</td><td>&amp;#160;</td><td>Non-breaking space</td></tr>
+<tr><td>©</td><td>&amp;copy;</td><td>&amp;#169;</td><td>Copyright</td></tr>
+<tr><td>™</td><td>&amp;trade;</td><td>&amp;#8482;</td><td>Trademark</td></tr>
+</table>
+
+<h2>Why Encode HTML?</h2>
+<ul>
+<li><strong>Prevent XSS:</strong> Encoding user input before rendering prevents cross-site scripting attacks.</li>
+<li><strong>Display code:</strong> Show HTML/JS code on a page without it being interpreted.</li>
+<li><strong>Email/JSON:</strong> Safely represent special characters in data.</li>
+<li><strong>Accessibility:</strong> Use entities for characters not on your keyboard.</li>
+</ul>
+
+<footer style="margin-top:40px;color:var(--muted);font-size:0.85rem;">
+  <a href="../">← Back to Toolkit Pro</a> | Free online tools
+</footer>
+</div>
+
+<script>
+const NAMED = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const NAMED_REV = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': '\u00a0', '&copy;': '\u00a9', '&trade;': '\u2122' };
+function encode() {
+  const v = document.getElementById('in').value;
+  document.getElementById('out').value = v.replace(/[&<>"']/g, c => NAMED[c]);
+}
+function decode() {
+  let v = document.getElementById('in').value;
+  v = v.replace(/&(amp|lt|gt|quot|#39|nbsp|copy|trade);/gi, m => NAMED_REV[m.toLowerCase()] || m);
+  v = v.replace(/&#(\d+);/g, (m, n) => String.fromCharCode(parseInt(n)));
+  document.getElementById('out').value = v;
+}
+function cp() {
+  const o = document.getElementById('out');
+  o.select(); document.execCommand('copy'); o.setSelectionRange(0, 0);
+}
+function swap() {
+  const i = document.getElementById('in'), o = document.getElementById('out');
+  const t = i.value; i.value = o.value; o.value = t;
+}
+function clr() { document.getElementById('in').value = ''; document.getElementById('out').value = ''; }
+</script>
+</body>
+</html>
