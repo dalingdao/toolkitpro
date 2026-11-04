@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本清理器 - Text Cleaner - 在线工具</title>
+<meta name="description" content="免费在线文本清理工具。移除多余空格、空行、重复行、HTML标签，清理文本格式，即时处理。">
+<meta name="keywords" content="文本清理, Text Cleaner, 移除空行, 去空格, 清理文本, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 140px; }
+textarea:focus { outline: none; border-color: #00b5d8; }
+.options { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.opt { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.btn { padding: 12px 28px; border: none; border-radius: 10px; background: #00b5d8; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #0987a0; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; word-break: break-all; border: 2px solid #e2e8f0; min-height: 60px; white-space: pre-wrap; margin-top: 16px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>文本清理器</h1>
+  <p class="sub">移除多余空格、空行、重复行、HTML 标签</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入要清理的文本..."></textarea>
+    <div class="options">
+      <label class="opt"><input type="checkbox" id="spaces" checked> 移除多余空格</label>
+      <label class="opt"><input type="checkbox" id="blank" checked> 移除空行</label>
+      <label class="opt"><input type="checkbox" id="dedupe"> 移除重复行</label>
+      <label class="opt"><input type="checkbox" id="tags"> 移除 HTML 标签</label>
+      <label class="opt"><input type="checkbox" id="trim"> 修剪每行</label>
+    </div>
+    <button class="btn" id="clean">清理文本</button>
+    <div class="result" id="output">等待清理...</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+document.getElementById('clean').addEventListener('click', () => {
+  let t = document.getElementById('input').value;
+  if (document.getElementById('tags').checked) t = t.replace(/<[^>]*>/g, '');
+  if (document.getElementById('spaces').checked) t = t.replace(/[ \t]+/g, ' ');
+  if (document.getElementById('trim').checked) t = t.split('\n').map(l => l.trim()).join('\n');
+  let lines = t.split('\n');
+  if (document.getElementById('blank').checked) lines = lines.filter(l => l.trim());
+  if (document.getElementById('dedupe').checked) lines = lines.filter((v, i, a) => a.indexOf(v) === i);
+  document.getElementById('output').textContent = lines.join('\n');
+});
+</script>
+</body>
+</html>
