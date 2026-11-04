@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS 压缩器 - CSS Minifier - 在线工具</title>
+<meta name="description" content="免费在线 CSS 压缩/美化工具。压缩 CSS 移除注释和空白，美化格式化输出，一键复制，即时处理。">
+<meta name="keywords" content="CSS压缩, CSS Minifier, CSS美化, CSS格式化, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 140px; }
+textarea:focus { outline: none; border-color: #e53e3e; }
+.controls { display: flex; gap: 10px; margin: 16px 0; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #e53e3e; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #c53030; }
+.btn.gray { background: #718096; }
+.btn.green { background: #38a169; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; border: 2px solid #e2e8f0; white-space: pre-wrap; word-break: break-all; max-height: 300px; overflow-y: auto; }
+.stat { font-size: 12px; color: #718096; margin-top: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>CSS 压缩器</h1>
+  <p class="sub">CSS Minifier / Formatter - 压缩与美化</p>
+  <div class="toolbox">
+    <label>输入 CSS</label>
+    <textarea id="css" placeholder="body { color: red; /* comment */ margin: 0; }"></textarea>
+    <div class="controls">
+      <button class="btn" id="min">压缩</button>
+      <button class="btn green" id="fmt">美化</button>
+      <button class="btn gray" id="copy">复制</button>
+    </div>
+    <label>结果</label>
+    <div class="result" id="out">等待处理...</div>
+    <div class="stat" id="stat"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function minify(css) { return css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{}:;,>])\s*/g, '$1').trim(); }
+function format(css) {
+  return css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\{/g, ' {\n  ').replace(/;/g, ';\n  ').replace(/}/g, '\n}\n').replace(/^\s+$/gm, '').trim();
+}
+const out = document.getElementById('out');
+document.getElementById('min').addEventListener('click', () => { const v = document.getElementById('css').value; out.textContent = minify(v); document.getElementById('stat').textContent = '压缩后 ' + out.textContent.length + ' 字符（原 ' + v.length + '）'; });
+document.getElementById('fmt').addEventListener('click', () => { out.textContent = format(document.getElementById('css').value); document.getElementById('stat').textContent = '格式化完成'; });
+document.getElementById('copy').addEventListener('click', () => { navigator.clipboard.writeText(out.textContent); document.getElementById('copy').textContent = '已复制!'; setTimeout(() => document.getElementById('copy').textContent = '复制', 1500); });
+</script>
+</body>
+</html>
