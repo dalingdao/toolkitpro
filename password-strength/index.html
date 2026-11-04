@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>密码强度检查器 - Password Strength - 在线工具</title>
+<meta name="description" content="免费在线密码强度检查工具。检查密码强度、长度、包含字符类型，实时评分，安全性建议。">
+<meta name="keywords" content="密码强度, Password Strength, 密码检查, 密码安全, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input[type=password] { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; }
+input[type=password]:focus { outline: none; border-color: #805ad5; }
+.bar { height: 10px; border-radius: 5px; background: #edf2f7; margin-top: 16px; overflow: hidden; }
+.bar .fill { height: 100%; width: 0; border-radius: 5px; transition: all .3s; }
+.score { text-align: center; font-size: 22px; font-weight: 700; margin-top: 12px; }
+.checks { margin-top: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.check { font-size: 13px; padding: 8px; border-radius: 8px; background: #f7fafc; }
+.check.pass { background: #c6f6d5; color: #22543d; }
+.check.fail { background: #fed7d7; color: #742a2a; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>密码强度检查器</h1>
+  <p class="sub">实时评分密码强度</p>
+  <div class="toolbox">
+    <label>输入密码</label>
+    <input type="password" id="pw" placeholder="输入要检查的密码...">
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="score" id="score">—</div>
+    <div class="checks" id="checks"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function check() {
+  const pw = document.getElementById('pw').value;
+  const checks = [
+    ['长度 ≥ 8', pw.length >= 8],
+    ['长度 ≥ 12', pw.length >= 12],
+    ['小写字母', /[a-z]/.test(pw)],
+    ['大写字母', /[A-Z]/.test(pw)],
+    ['数字', /\d/.test(pw)],
+    ['特殊字符', /[^A-Za-z0-9]/.test(pw)]
+  ];
+  const score = checks.filter(c => c[1]).length;
+  const colors = ['#e53e3e', '#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#2f855a', '#276749'];
+  const labels = ['非常弱', '非常弱', '弱', '中等', '较强', '强', '非常强'];
+  document.getElementById('fill').style.width = (score / 6 * 100) + '%';
+  document.getElementById('fill').style.background = colors[Math.min(6, score)];
+  document.getElementById('score').textContent = labels[Math.min(6, score)] + ' (' + score + '/6)';
+  document.getElementById('score').style.color = colors[Math.min(6, score)];
+  document.getElementById('checks').innerHTML = checks.map(c => '<div class="check ' + (c[1] ? 'pass' : 'fail') + '">' + (c[1] ? '✓ ' : '✗ ') + c[0] + '</div>').join('');
+}
+document.getElementById('pw').addEventListener('input', check);
+check();
+</script>
+</body>
+</html>
