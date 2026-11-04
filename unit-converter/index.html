@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单位转换器 - Unit Converter - 在线工具</title>
+<meta name="description" content="免费在线单位转换工具。长度、重量、温度单位互转，米/英尺、千克/磅、摄氏度/华氏度，即时转换。">
+<meta name="keywords" content="单位转换, Unit Converter, 长度换算, 重量换算, 温度换算, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.tab { padding: 8px 20px; border: 2px solid #e2e8f0; border-radius: 8px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.tab:hover, .tab.active { border-color: #319795; background: #e6fffa; color: #285e61; }
+.inputs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
+input, select { padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; width: 100%; font-family: 'SF Mono', Consolas, monospace; }
+input:focus, select:focus { outline: none; border-color: #319795; }
+.result { text-align: center; font-size: 20px; font-weight: 700; margin-top: 20px; color: #285e61; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>单位转换器</h1>
+  <p class="sub">长度、重量、温度单位互转</p>
+  <div class="toolbox">
+    <div class="tabs">
+      <button class="tab active" data-t="length">长度</button>
+      <button class="tab" data-t="weight">重量</button>
+      <button class="tab" data-t="temp">温度</button>
+    </div>
+    <div class="inputs">
+      <input type="number" id="val" value="1" placeholder="数值">
+      <select id="from"></select>
+      <select id="to"></select>
+    </div>
+    <div class="result" id="out">1</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+const units = {
+  length: [{ n: '米 (m)', v: 1 }, { n: '英尺 (ft)', v: 0.3048 }, { n: '英寸 (in)', v: 0.0254 }, { n: '厘米 (cm)', v: 0.01 }, { n: '千米 (km)', v: 1000 }, { n: '英里 (mi)', v: 1609.344 }],
+  weight: [{ n: '千克 (kg)', v: 1 }, { n: '克 (g)', v: 0.001 }, { n: '磅 (lb)', v: 0.453592 }, { n: '盎司 (oz)', v: 0.0283495 }, { n: '吨 (t)', v: 1000 }],
+  temp: [{ n: '摄氏度 (°C)', v: 0 }, { n: '华氏度 (°F)', v: 1 }, { n: '开尔文 (K)', v: 2 }]
+};
+let cur = 'length';
+function render() {
+  document.getElementById('from').innerHTML = units[cur].map((u, i) => '<option value="' + i + '">' + u.n + '</option>').join('');
+  document.getElementById('to').innerHTML = units[cur].map((u, i) => '<option value="' + i + '">' + u.n + '</option>').join('');
+  document.getElementById('to').value = 1;
+  update();
+}
+function update() {
+  const v = parseFloat(document.getElementById('val').value);
+  const f = parseInt(document.getElementById('from').value), t = parseInt(document.getElementById('to').value);
+  if (cur === 'temp') {
+    let celsius;
+    if (f === 0) celsius = v; else if (f === 1) celsius = (v - 32) * 5/9; else celsius = v - 273.15;
+    let out;
+    if (t === 0) out = celsius; else if (t === 1) out = celsius * 9/5 + 32; else out = celsius + 273.15;
+    document.getElementById('out').textContent = out.toFixed(2) + ' ' + units.temp[t].n;
+  } else {
+    const m = v * units[cur][f].v;
+    document.getElementById('out').textContent = (m / units[cur][t].v).toFixed(4) + ' ' + units[cur][t].n;
+  }
+}
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); b.classList.add('active'); cur = b.dataset.t; render(); }));
+document.getElementById('val').addEventListener('input', update);
+document.getElementById('from').addEventListener('change', update);
+document.getElementById('to').addEventListener('change', update);
+render();
+</script>
+</body>
+</html>
