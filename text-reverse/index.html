@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本反转器 - Text Reverser - 在线工具</title>
+<meta name="description" content="免费在线文本反转工具。反转文本、反转单词顺序、反转每行、移除重复行，即时转换，一键复制。">
+<meta name="keywords" content="文本反转, Text Reverse, 反转单词, 反转文本, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 120px; }
+textarea:focus { outline: none; border-color: #ed64a6; }
+.modes { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.mode { padding: 8px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+.mode:hover, .mode.active { border-color: #ed64a6; background: #fff5f7; color: #97266d; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; word-break: break-all; border: 2px solid #e2e8f0; min-height: 60px; white-space: pre-wrap; }
+.copy { padding: 8px 20px; border: none; border-radius: 8px; background: #ed64a6; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.copy:hover { background: #d53f8c; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>文本反转器</h1>
+  <p class="sub">反转文本 / 反转单词 / 移除重复行</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入要反转的文本..."></textarea>
+    <div class="modes">
+      <button class="mode active" data-m="rev">反转文本</button>
+      <button class="mode" data-m="words">反转单词顺序</button>
+      <button class="mode" data-m="lines">反转每行</button>
+      <button class="mode" data-m="dedupe">移除重复行</button>
+    </div>
+    <label>结果</label>
+    <div class="result" id="output">等待输入...</div>
+    <button class="copy" id="copy">复制结果</button>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function convert(mode, s) {
+  if (!s) return '';
+  switch (mode) {
+    case 'rev': return s.split('').reverse().join('');
+    case 'words': return s.split(/\s+/).filter(Boolean).reverse().join(' ');
+    case 'lines': return s.split('\n').map(l => l.split('').reverse().join('')).join('\n');
+    case 'dedupe': return s.split('\n').filter((v, i, a) => a.indexOf(v) === i).join('\n');
+    default: return s;
+  }
+}
+let cur = 'rev';
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.mode').forEach(x => x.classList.remove('active')); b.classList.add('active'); cur = b.dataset.m; update(); }));
+function update() { document.getElementById('output').textContent = convert(cur, document.getElementById('input').value) || '等待输入...'; }
+document.getElementById('input').addEventListener('input', update);
+document.getElementById('copy').addEventListener('click', () => { navigator.clipboard.writeText(document.getElementById('output').textContent); document.getElementById('copy').textContent = '已复制!'; setTimeout(() => document.getElementById('copy').textContent = '复制结果', 1500); });
+update();
+</script>
+</body>
+</html>
