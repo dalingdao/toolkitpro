@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>查找替换工具 - Find & Replace - 在线工具</title>
+<meta name="description" content="免费在线查找替换工具。批量查找替换文本，支持区分大小写、全局替换，即时预览。">
+<meta name="keywords" content="查找替换, Find Replace, 文本替换, 批量替换, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 120px; }
+textarea:focus, input:focus { outline: none; border-color: #3182ce; }
+.findbar { display: flex; gap: 10px; margin: 14px 0; align-items: center; flex-wrap: wrap; }
+.findbar input { padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; }
+.findbar input.f { flex: 2; } .findbar input.r { flex: 2; }
+.btn { padding: 12px 24px; border: none; border-radius: 8px; background: #3182ce; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #2b6cb0; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; white-space: pre-wrap; word-break: break-all; border: 2px solid #e2e8f0; min-height: 80px; margin-top: 16px; }
+.info { font-size: 12px; color: #718096; margin-top: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>查找替换工具</h1>
+  <p class="sub">批量查找替换文本</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入文本..."></textarea>
+    <div class="findbar">
+      <input class="f" id="find" placeholder="查找">
+      <input class="r" id="replace" placeholder="替换为">
+      <label style="margin:0"><input type="checkbox" id="case" checked> 区分大小写</label>
+      <button class="btn" id="do">替换</button>
+    </div>
+    <label>结果</label>
+    <div class="result" id="output">等待替换...</div>
+    <div class="info" id="info"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function doReplace() {
+  const t = document.getElementById('input').value;
+  const f = document.getElementById('find').value;
+  const r = document.getElementById('replace').value;
+  const cs = document.getElementById('case').checked;
+  if (!f) { document.getElementById('output').textContent = t; document.getElementById('info').textContent = ''; return; }
+  const re = new RegExp(f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g' + (cs ? '' : 'i'));
+  const result = t.replace(re, r);
+  const count = (t.match(re) || []).length;
+  document.getElementById('output').textContent = result;
+  document.getElementById('info').textContent = '替换 ' + count + ' 处';
+}
+document.getElementById('do').addEventListener('click', doReplace);
+</script>
+</body>
+</html>
