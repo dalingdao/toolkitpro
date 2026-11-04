@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gradient Forge - CSS渐变生成器</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#ec4899;--acc2:#8b5cf6;--text:#e2e8f0;--muted:#94a3b8;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+header{text-align:center;margin-bottom:20px}
+header h1{font-size:24px;background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header p{color:var(--muted);font-size:13px;margin-top:4px}
+.container{max-width:800px;margin:0 auto}
+.preview{border-radius:12px;height:200px;margin-bottom:16px;border:1px solid var(--border);transition:all .3s}
+.controls{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.controls h3{font-size:13px;color:var(--muted);margin-bottom:12px}
+.type-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.type-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer}
+.type-btn.active{background:var(--acc);border-color:var(--acc);color:#fff}
+.stops{margin-bottom:16px}
+.stop-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.stop-row input[type=color]{width:40px;height:34px;border:none;border-radius:6px;cursor:pointer;background:none}
+.stop-row input[type=range]{flex:1}
+.stop-row .pos{width:50px;text-align:center;font-size:12px;color:var(--muted)}
+.stop-row .del{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px}
+.stop-row .del:hover{color:#ef4444;border-color:#ef4444}
+.btn{background:var(--acc);border:none;color:#fff;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;margin-right:8px}
+.btn.sec{background:var(--border)}
+.code-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.code-box h3{font-size:13px;color:var(--muted);margin-bottom:8px}
+.code-output{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;color:var(--acc2)}
+.presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:12px}
+.preset{height:50px;border-radius:8px;cursor:pointer;border:2px solid transparent}
+.preset:hover{border-color:var(--acc)}
+.angle-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.angle-row label{font-size:13px;color:var(--muted);white-space:nowrap}
+.angle-row input[type=range]{flex:1}
+.angle-row .val{width:50px;text-align:center;font-size:12px;color:var(--acc)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--acc);color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header><h1>🌈 Gradient Forge</h1><p>CSS渐变生成器 · 线性/径向/锥形 · 多色标 · 预设 · 纯前端</p></header>
+<div class="container">
+  <div class="preview" id="preview"></div>
+  <div class="controls">
+    <h3>渐变类型</h3>
+    <div class="type-row">
+      <button class="type-btn active" onclick="setType('linear',this)">线性 Linear</button>
+      <button class="type-btn" onclick="setType('radial',this)">径向 Radial</button>
+      <button class="type-btn" onclick="setType('conic',this)">锥形 Conic</button>
+    </div>
+    <div class="angle-row" id="angleRow">
+      <label>角度</label>
+      <input type="range" id="angle" min="0" max="360" value="135" oninput="update()">
+      <span class="val" id="angleVal">135°</span>
+    </div>
+    <h3>色标</h3>
+    <div class="stops" id="stops"></div>
+    <button class="btn" onclick="addStop()">+ 添加色标</button>
+    <h3 style="margin-top:16px">预设</h3>
+    <div class="presets" id="presets"></div>
+  </div>
+  <div class="code-box">
+    <h3>CSS代码 <button class="btn sec" style="float:right;padding:4px 12px" onclick="copyCode()">复制</button></h3>
+    <div class="code-output" id="codeOutput"></div>
+  </div>
+</div>
+<div class="toast" id="toast">已复制!</div>
+<script>
+let type='linear';
+let stops=[{color:'#ec4899',pos:0},{color:'#8b5cf6',pos:50},{color:'#06b6d4',pos:100}];
+const presets=[
+  ['#ff6b6b','#feca57','#48dbfb'],['#667eea','#764ba2'],['#f093fb','#f5576c'],
+  ['#4facfe','#00f2fe'],['#43e97b','#38f9d7'],['#fa709a','#fee140'],
+  ['#a18cd1','#fbc2eb'],['#ffecd2','#fcb69f'],['#0f0c29','#302b63','#24243e'],
+  ['#ee9ca7','#ffdde1'],['#2193b0','#6dd5ed'],['#cc2b5e','#753a88']
+];
+function setType(t,el){type=t;document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('angleRow').style.display=t==='linear'?'flex':t==='conic'?'flex':'none';update();}
+function addStop(){const maxPos=Math.max(...stops.map(s=>s.pos));stops.push({color:'#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0'),pos:Math.min(maxPos+25,100)});renderStops();update();}
+function delStop(i){if(stops.length<=2)return;stops.splice(i,1);renderStops();update();}
+function moveStop(i,pos){stops[i].pos=pos;update();}
+function changeColor(i,color){stops[i].color=color;update();}
+function renderStops(){const el=document.getElementById('stops');el.innerHTML=stops.map((s,i)=>`<div class="stop-row"><input type="color" value="${s.color}" oninput="changeColor(${i},this.value)"><input type="range" min="0" max="100" value="${s.pos}" oninput="moveStop(${i},parseInt(this.value));document.querySelectorAll('.pos')[${i}].textContent=this.value+'%'"><span class="pos">${s.pos}%</span><button class="del" onclick="delStop(${i})">×</button></div>`).join('');}
+function buildGradient(){const sorted=[...stops].sort((a,b)=>a.pos-b.pos);const stopsStr=sorted.map(s=>`${s.color} ${s.pos}%`).join(', ');if(type==='linear'){const angle=document.getElementById('angle').value;return `linear-gradient(${angle}deg, ${stopsStr})`;}else if(type==='radial'){return `radial-gradient(circle, ${stopsStr})`;}else{const angle=document.getElementById('angle').value;return `conic-gradient(from ${angle}deg at 50% 50%, ${stopsStr})`;}}
+function update(){const g=buildGradient();document.getElementById('preview').style.background=g;document.getElementById('angleVal').textContent=document.getElementById('angle').value+'°';document.getElementById('codeOutput').textContent='background: '+g+';';}
+function copyCode(){const code='background: '+buildGradient()+';';navigator.clipboard.writeText(code).then(()=>showToast('CSS代码已复制!'));}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500);}
+function renderPresets(){const el=document.getElementById('presets');el.innerHTML=presets.map((p,i)=>`<div class="preset" style="background:linear-gradient(135deg,${p.join(',')})" onclick="loadPreset(${i})" title="预设${i+1}"></div>`).join('');}
+function loadPreset(i){const p=presets[i];stops=p.map((c,j)=>({color:c,pos:Math.round(j*100/(p.length-1))}));renderStops();update();}
+renderStops();renderPresets();update();
+</script>
+</body>
+</html>
