@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本对比器 - Text Diff - 在线工具</title>
+<meta name="description" content="免费在线文本对比工具。对比两段文本差异，高亮显示新增/删除行，逐行对比，即时分析。">
+<meta name="keywords" content="文本对比, Text Diff, 差异比较, 行对比, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 1000px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.editors { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 200px; }
+textarea:focus { outline: none; border-color: #e53e3e; }
+.result { background: #fff; border-radius: 12px; padding: 16px; margin-top: 16px; border: 2px solid #e2e8f0; max-height: 300px; overflow-y: auto; }
+.line { padding: 2px 8px; font-family: 'SF Mono', Consolas, monospace; font-size: 13px; white-space: pre-wrap; }
+.add { background: #c6f6d5; color: #22543d; }
+.del { background: #fed7d7; color: #742a2a; }
+.info { font-size: 13px; color: #718096; margin-top: 10px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+@media (max-width: 700px) { .editors { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>文本对比器</h1>
+  <p class="sub">Text Diff - 逐行对比两段文本差异</p>
+  <div class="editors">
+    <div><label>原文本 (A)</label><textarea id="a" placeholder="输入原文本..."></textarea></div>
+    <div><label>新文本 (B)</label><textarea id="b" placeholder="输入新文本..."></textarea></div>
+  </div>
+  <div class="info" id="info">输入两段文本查看差异</div>
+  <div class="result" id="result"></div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function diff() {
+  const a = document.getElementById('a').value.split('\n');
+  const b = document.getElementById('b').value.split('\n');
+  const r = document.getElementById('result');
+  const info = document.getElementById('info');
+  r.innerHTML = '';
+  const maxLen = Math.max(a.length, b.length);
+  let added = 0, removed = 0;
+  for (let i = 0; i < maxLen; i++) {
+    if (i < a.length && i < b.length) {
+      if (a[i] === b[i]) { const d = document.createElement('div'); d.className = 'line'; d.textContent = a[i]; r.appendChild(d); }
+      else { const d1 = document.createElement('div'); d1.className = 'line del'; d1.textContent = '- ' + a[i]; r.appendChild(d1); removed++; const d2 = document.createElement('div'); d2.className = 'line add'; d2.textContent = '+ ' + b[i]; r.appendChild(d2); added++; }
+    } else if (i < a.length) { const d = document.createElement('div'); d.className = 'line del'; d.textContent = '- ' + a[i]; r.appendChild(d); removed++; }
+    else { const d = document.createElement('div'); d.className = 'line add'; d.textContent = '+ ' + b[i]; r.appendChild(d); added++; }
+  }
+  info.textContent = added + removed === 0 ? '两段文本相同 ✓' : ('差异: 新增 ' + added + ' 行, 删除 ' + removed + ' 行');
+}
+document.getElementById('a').addEventListener('input', diff);
+document.getElementById('b').addEventListener('input', diff);
+diff();
+</script>
+</body>
+</html>
