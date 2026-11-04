@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日期计算器 - Date Calculator - 在线工具</title>
+<meta name="description" content="免费在线日期计算工具。计算两个日期之间的天数差，或日期加减天数/周数/月数，即时计算。">
+<meta name="keywords" content="日期计算器, Date Calculator, 天数差, 日期加减, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input { padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; }
+input:focus { outline: none; border-color: #38a169; }
+.section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+.result { background: #f0fff4; border-radius: 10px; padding: 14px; margin-top: 12px; font-size: 16px; font-weight: 600; color: #22543d; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>日期计算器</h1>
+  <p class="sub">计算日期差与日期加减</p>
+  <div class="toolbox">
+    <div class="section">
+      <label>计算两个日期的天数差</label>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input type="date" id="d1"> <span>至</span> <input type="date" id="d2">
+      </div>
+      <div class="result" id="diff">选择日期计算天数差</div>
+    </div>
+    <div class="section">
+      <label>日期加减（天数）</label>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input type="date" id="d3"> <span>加</span> <input type="number" id="days" value="30" min="-10000" max="10000" style="width:100px"> <span>天</span>
+      </div>
+      <div class="result" id="add">选择日期计算</div>
+    </div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+const fmt = d => d.toISOString().split('T')[0];
+function calc() {
+  const a = document.getElementById('d1').value, b = document.getElementById('d2').value;
+  if (a && b) { const diff = Math.abs((new Date(b) - new Date(a)) / 86400000); document.getElementById('diff').textContent = '相差 ' + Math.round(diff) + ' 天'; }
+  const d = document.getElementById('d3').value, n = parseInt(document.getElementById('days').value);
+  if (d && !isNaN(n)) { const r = new Date(d); r.setDate(r.getDate() + n); document.getElementById('add').textContent = fmt(r); }
+}
+document.getElementById('d1').addEventListener('change', calc);
+document.getElementById('d2').addEventListener('change', calc);
+document.getElementById('d3').addEventListener('change', calc);
+document.getElementById('days').addEventListener('input', calc);
+</script>
+</body>
+</html>
