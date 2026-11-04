@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Agent 解析器 - UA Parser - 在线工具</title>
+<meta name="description" content="免费在线 User Agent 解析工具。解析 UA 字符串识别浏览器、操作系统、设备，即时解析，粘贴即用。">
+<meta name="keywords" content="UserAgent解析, UA解析, 浏览器识别, 操作系统识别, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 80px; }
+textarea:focus { outline: none; border-color: #dd6b20; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 16px; font-size: 14px; border: 2px solid #e2e8f0; }
+.row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #edf2f7; }
+.row .k { color: #718096; font-weight: 600; }
+.row .v { font-weight: 600; color: #2d3748; text-align: right; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>User Agent 解析器</h1>
+  <p class="sub">识别浏览器、操作系统、设备</p>
+  <div class="toolbox">
+    <label>输入 User Agent 字符串</label>
+    <textarea id="ua" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36..."></textarea>
+    <div class="result" id="out">粘贴 UA 后自动解析...</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function parse() {
+  const ua = document.getElementById('ua').value.trim();
+  const o = document.getElementById('out');
+  if (!ua) { o.innerHTML = '粘贴 UA 后自动解析...'; return; }
+  let os = '未知', browser = '未知', device = '桌面';
+  if (/Windows NT/.test(ua)) os = 'Windows';
+  else if (/Android/.test(ua)) os = 'Android';
+  else if (/iPhone|iPad/.test(ua)) os = 'iOS';
+  else if (/Mac OS X/.test(ua)) os = 'macOS';
+  else if (/Linux/.test(ua)) os = 'Linux';
+  if (/Chrome\//.test(ua) && !/Edg\//.test(ua)) browser = 'Chrome';
+  else if (/Edg\//.test(ua)) browser = 'Edge';
+  else if (/Firefox\//.test(ua)) browser = 'Firefox';
+  else if (/Safari\//.test(ua)) browser = 'Safari';
+  else if (/MSIE|Trident/.test(ua)) browser = 'IE';
+  if (/Android|iPhone|iPad|Mobile/.test(ua)) device = '移动端';
+  o.innerHTML = '<div class="row"><span class="k">浏览器</span><span class="v">' + browser + '</span></div><div class="row"><span class="k">操作系统</span><span class="v">' + os + '</span></div><div class="row"><span class="k">设备</span><span class="v">' + device + '</span></div>';
+}
+document.getElementById('ua').addEventListener('input', parse);
+</script>
+</body>
+</html>
