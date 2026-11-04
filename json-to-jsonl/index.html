@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 转 JSONL 转换器 - 在线工具</title>
+<meta name="description" content="免费在线 JSON 转 JSONL 转换工具。JSON 数组转 JSON Lines 格式，每行一个对象，即时转换，下载导出。">
+<meta name="keywords" content="JSON转JSONL, JSONL, JSON Lines, 数据格式转换, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 140px; }
+textarea:focus { outline: none; border-color: #dd6b20; }
+.controls { display: flex; gap: 10px; margin: 16px 0; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #dd6b20; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #c05621; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; white-space: pre-wrap; word-break: break-all; border: 2px solid #e2e8f0; max-height: 300px; overflow-y: auto; }
+.error { color: #e53e3e; font-size: 13px; margin-top: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>JSON 转 JSONL 转换器</h1>
+  <p class="sub">JSON 数组 → JSON Lines（每行一个对象）</p>
+  <div class="toolbox">
+    <label>输入 JSON</label>
+    <textarea id="json" placeholder='[{"id":1,"name":"A"},{"id":2,"name":"B"}]'></textarea>
+    <div class="controls">
+      <button class="btn" id="convert">转换为 JSONL</button>
+      <button class="btn" id="download" style="background:#718096">下载 JSONL</button>
+    </div>
+    <label>JSONL 结果</label>
+    <div class="result" id="out">等待转换...</div>
+    <div class="error" id="err"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+let jsonl = '';
+document.getElementById('convert').addEventListener('click', () => {
+  const o = document.getElementById('out'), e = document.getElementById('err');
+  e.textContent = '';
+  try {
+    const data = JSON.parse(document.getElementById('json').value);
+    const arr = Array.isArray(data) ? data : [data];
+    jsonl = arr.map(x => JSON.stringify(x)).join('\n');
+    o.textContent = jsonl;
+  } catch (err) { e.textContent = 'JSON 解析失败: ' + err.message; o.textContent = ''; }
+});
+document.getElementById('download').addEventListener('click', () => { if (!jsonl) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([jsonl], { type: 'application/x-ndjson' })); a.download = 'data.jsonl'; a.click(); });
+</script>
+</body>
+</html>
