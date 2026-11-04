@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颜色混合器 - Color Mixer - 在线工具</title>
+<meta name="description" content="免费在线颜色混合工具。RGB/HEX 颜色混合，混合两种颜色生成新颜色，实时预览。">
+<meta name="keywords" content="颜色混合, Color Mixer, 混合颜色, RGB混合, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+.colors { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.color { background: #f7fafc; border-radius: 10px; padding: 14px; text-align: center; }
+input[type=color] { width: 100%; height: 50px; border: none; border-radius: 8px; cursor: pointer; }
+.ratio { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+input[type=range] { flex: 1; }
+.mix { text-align: center; margin-top: 16px; }
+.mix .swatch { width: 100%; height: 80px; border-radius: 12px; border: 2px solid #e2e8f0; }
+.mix .code { font-family: 'SF Mono', Consolas, monospace; font-size: 16px; font-weight: 700; margin-top: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>颜色混合器</h1>
+  <p class="sub">混合两种颜色生成新颜色</p>
+  <div class="toolbox">
+    <div class="colors">
+      <div class="color"><label>颜色 A</label><input type="color" id="ca" value="#ff0000"></div>
+      <div class="color"><label>颜色 B</label><input type="color" id="cb" value="#0000ff"></div>
+    </div>
+    <div class="ratio">
+      <label>A 占比</label>
+      <input type="range" id="ratio" min="0" max="100" value="50">
+      <label>50%</label>
+    </div>
+    <div class="mix">
+      <div class="swatch" id="swatch"></div>
+      <div class="code" id="code">#800080</div>
+    </div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function hexToRgb(h) { h = h.replace('#', ''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; }
+function rgbToHex(r, g, b) { return '#' + [r,g,b].map(x => ('0' + Math.round(x).toString(16)).slice(-2)).join(''); }
+function mix() {
+  const a = hexToRgb(document.getElementById('ca').value);
+  const b = hexToRgb(document.getElementById('cb').value);
+  const r = parseInt(document.getElementById('ratio').value);
+  const rgb = [0,1,2].map(i => a[i] * r/100 + b[i] * (1-r/100));
+  const hex = rgbToHex(...rgb);
+  document.getElementById('swatch').style.background = hex;
+  document.getElementById('code').textContent = hex;
+  document.querySelector('.ratio label:last-child').textContent = r + '%';
+}
+document.getElementById('ca').addEventListener('input', mix);
+document.getElementById('cb').addEventListener('input', mix);
+document.getElementById('ratio').addEventListener('input', mix);
+mix();
+</script>
+</body>
+</html>
