@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID & Hash Generator Online Guide - 2026 Complete Tutorial</title>
+<meta name="description" content="Complete UUID & hash generator guide 2026: learn UUID v4, SHA-1/SHA-256/SHA-512 hashing, Base64 encoding, random password generation. Free online tool, no signup.">
+<meta name="keywords" content="uuid generator, hash generator, sha256, sha512, base64 encoder, random password, uuid v4">
+<link rel="canonical" href="https://dalingdao.github.io/toolkitpro/blog/uuid-hash-guide.html">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #fff; color: #1a1a2e; line-height: 1.8; }
+header { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 40px 20px; text-align: center; }
+header h1 { font-size: 2rem; margin-bottom: 8px; }
+header p { opacity: 0.9; }
+.container { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+h2 { font-size: 1.5rem; margin: 30px 0 15px; color: #667eea; border-bottom: 2px solid #eef1f8; padding-bottom: 8px; }
+h3 { font-size: 1.2rem; margin: 20px 0 10px; color: #333; }
+p, li { margin-bottom: 12px; }
+code { background: #f4f5f9; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.9em; color: #e74c3c; }
+pre { background: #f8f9fa; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 15px 0; font-size: 0.9rem; }
+pre code { background: none; color: #333; }
+table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+th, td { border: 1px solid #e0e4ea; padding: 10px 12px; text-align: left; }
+th { background: #f8f9fa; }
+.cta { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 20px; border-radius: 12px; text-align: center; margin: 30px 0; }
+.cta a { color: #fff; font-size: 1.2rem; text-decoration: none; font-weight: bold; border: 2px solid #fff; padding: 10px 24px; border-radius: 8px; display: inline-block; }
+.cta a:hover { background: #fff; color: #667eea; }
+footer { text-align: center; padding: 20px; color: #999; font-size: 0.85rem; border-top: 1px solid #eee; }
+.toc { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+.toc h3 { margin-top: 0; }
+.toc a { color: #667eea; text-decoration: none; display: block; padding: 3px 0; }
+.toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header>
+  <h1>UUID & Hash Generator Guide</h1>
+  <p>2026 Complete Tutorial: UUID v4, SHA-256, Base64, Random Passwords</p>
+</header>
+
+<div class="container">
+  <div class="toc">
+    <h3>📖 Table of Contents</h3>
+    <a href="#uuid">1. What is a UUID?</a>
+    <a href="#uuidv4">2. UUID v4 Explained</a>
+    <a href="#hash">3. Hash Functions (SHA)</a>
+    <a href="#base64">4. Base64 Encoding</a>
+    <a href="#password">5. Random Password Generation</a>
+    <a href="#generator">6. Free Online Generator</a>
+  </div>
+
+  <div class="cta">
+    <h2>🚀 Use the Free Generator</h2>
+    <p>Generate UUIDs, hashes, passwords instantly</p>
+    <a href="../hashlab/">Open Hash Lab →</a>
+  </div>
+
+  <h2 id="uuid">1. What is a UUID?</h2>
+  <p><strong>UUID</strong> (Universally Unique Identifier) is a 128-bit number used to uniquely identify information in computer systems. It's standardized in RFC 4122 and is used for database primary keys, API identifiers, and distributed systems.</p>
+  <pre><code>550e8400-e29b-41d4-a716-446655440000</code></pre>
+  <p>UUIDs are essential because they can be generated independently on any machine without collision, making them ideal for distributed systems and microservices.</p>
+
+  <h2 id="uuidv4">2. UUID v4 Explained</h2>
+  <p><strong>UUID v4</strong> (random version) generates 122 random bits + 6 version/variant bits. It's the most common version for new applications.</p>
+  <table>
+    <tr><th>Version</th><th>Source</th><th>Use Case</th></tr>
+    <tr><td>v1</td><td>Timestamp + MAC</td><td>Legacy, time-ordered</td></tr>
+    <tr><td>v4</td><td>Random</td><td><strong>Most common</strong>, ideal for new apps</td></tr>
+    <tr><td>v7</td><td>Timestamp + Random</td><td>Modern, time-ordered (newer)</td></tr>
+  </table>
+  <p>Example v4 UUID: <code>550e8400-e29b-41d4-a716-446655440000</code></p>
+
+  <h2 id="hash">3. Hash Functions (SHA)</h2>
+  <p><strong>Hash functions</strong> convert input data to a fixed-size string. They're one-way (cannot be reversed) and used for password storage, data integrity, and signatures.</p>
+  <table>
+    <tr><th>Algorithm</th><th>Output</th><th>Use Case</th></tr>
+    <tr><td>SHA-1</td><td>40 hex chars</td><td>Legacy, Git commits</td></tr>
+    <tr><td>SHA-256</td><td>64 hex chars</td><td><strong>Most common</strong>, TLS, blockchain</td></tr>
+    <tr><td>SHA-512</td><td>128 hex chars</td><td>High security</td></tr>
+  </table>
+  <p>Example SHA-256 of "hello": <code>2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824</code></p>
+
+  <h2 id="base64">4. Base64 Encoding</h2>
+  <p><strong>Base64</strong> encodes binary data to ASCII text using 64 characters (A-Z, a-z, 0-9, +, /). It's used for:</p>
+  <ul>
+    <li>Embedding images in HTML/CSS (data URIs)</li>
+    <li>API authentication tokens (JWT)</li>
+    <li>Email attachments (MIME)</li>
+    <li>URL-safe transmission of data</li>
+  </ul>
+  <p>Example: <code>hello</code> → <code>aGVsbG8=</code></p>
+
+  <h2 id="password">5. Random Password Generation</h2>
+  <p><strong>Strong passwords</strong> are critical for security. A good generator uses:</p>
+  <ul>
+    <li>Crypto-secure random number generator</li>
+    <li>Character sets: uppercase, lowercase, numbers, symbols</li>
+    <li>Length 16+ for high security</li>
+  </ul>
+  <p>Example strong password: <code>k8#Pq2m$Xv9L@nR4</code></p>
+
+  <h2 id="generator">6. Free Online Generator</h2>
+  <p>Use the <a href="../hashlab/">free Hash Lab generator</a> to:</p>
+  <ol>
+    <li>Generate UUID v4 (single or batch)</li>
+    <li>Compute SHA-1/SHA-256/SHA-512 hashes</li>
+    <li>Encode/decode Base64</li>
+    <li>Generate strong random passwords</li>
+  </ol>
+
+  <div class="cta">
+    <h2>📱 Start Generating</h2>
+    <p>Free, no signup, works offline</p>
+    <a href="../hashlab/">Open Hash Lab →</a>
+  </div>
+</div>
+
+<footer>© 2026 ToolkitPro - Free Online Developer Tools | UUID & Hash Guide</footer>
+</body>
+</html>
