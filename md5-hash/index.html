@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD5 哈希计算器 - 在线工具</title>
+<meta name="description" content="免费在线 MD5 哈希计算工具。输入文本即时计算 MD5 哈希值，支持 UTF-8，用于数据校验与安全分析。">
+<meta name="keywords" content="MD5哈希, MD5计算器, MD5 hash, 在线工具, 哈希">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 130px; }
+textarea:focus { outline: none; border-color: #38a169; }
+.controls { display: flex; gap: 10px; margin: 16px 0; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #38a169; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #2f855a; }
+.btn.secondary { background: #718096; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; word-break: break-all; border: 2px solid #e2e8f0; }
+.info { margin-top: 30px; background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+.info h2 { font-size: 18px; margin-bottom: 12px; color: #1a202c; }
+.info p { font-size: 14px; color: #4a5568; line-height: 1.8; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>MD5 哈希计算器</h1>
+  <p class="sub">在线 MD5 哈希计算 - 即时生成，支持 UTF-8</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入要计算 MD5 哈希的文本..."></textarea>
+    <div class="controls">
+      <button class="btn" id="calc">计算 MD5</button>
+      <button class="btn secondary" id="clear">清空</button>
+    </div>
+    <label>MD5 哈希结果</label>
+    <div class="result" id="output">等待输入...</div>
+  </div>
+  <div class="info">
+    <h2>什么是 MD5 哈希？</h2>
+    <p>MD5（Message-Digest Algorithm 5）是一种广泛使用的哈希函数，将任意长度的输入转换为 128 位（32 个十六进制字符）的哈希值。常用于数据完整性校验（如文件下载校验）。注意：MD5 已不适用于安全加密场景，但仍是快速校验数据的常用工具。</p>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function md5(str) {
+  function rotl(x, c) { return (x << c) | (x >>> (32 - c)); }
+  function toBytes(s) { const utf8 = unescape(encodeURIComponent(s)); const b = []; for (let i = 0; i < utf8.length; i++) b.push(utf8.charCodeAt(i)); return b; }
+  const bytes = toBytes(str);
+  const bitLen = bytes.length * 8;
+  bytes.push(0x80);
+  while (bytes.length % 64 !== 56) bytes.push(0);
+  for (let i = 0; i < 8; i++) bytes.push((bitLen / Math.pow(2, 8 * i)) & 0xff);
+  let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+  const K = [], S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  for (let i = 0; i < 64; i++) K[i] = Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296);
+  for (let off = 0; off < bytes.length; off += 64) {
+    const M = []; for (let i = 0; i < 16; i++) M[i] = bytes[off + i*4] | (bytes[off + i*4+1] << 8) | (bytes[off + i*4+2] << 16) | (bytes[off + i*4+3] << 24);
+    let A = a0, B = b0, C = c0, D = d0;
+    for (let i = 0; i < 64; i++) {
+      let F, g;
+      if (i < 16) { F = (B & C) | (~B & D); g = i; }
+      else if (i < 32) { F = (D & B) | (~D & C); g = (5*i + 1) % 16; }
+      else if (i < 48) { F = B ^ C ^ D; g = (3*i + 5) % 16; }
+      else { F = C ^ (B | ~D); g = (7*i) % 16; }
+      F = (F + A + K[i] + M[g]) >>> 0;
+      A = D; D = C; C = B; B = (B + rotl(F, S[i])) >>> 0;
+    }
+    a0 = (a0 + A) >>> 0; b0 = (b0 + B) >>> 0; c0 = (c0 + C) >>> 0; d0 = (d0 + D) >>> 0;
+  }
+  return [a0,b0,c0,d0].map(v => ('00000000' + (v >>> 0).toString(16)).slice(-8)).join('');
+}
+document.getElementById('calc').addEventListener('click', () => { const v = document.getElementById('input').value; document.getElementById('output').textContent = v ? md5(v) : '等待输入...'; });
+document.getElementById('clear').addEventListener('click', () => { document.getElementById('input').value=''; document.getElementById('output').textContent='等待输入...'; });
+</script>
+</body>
+</html>
