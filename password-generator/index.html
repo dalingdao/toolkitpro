@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Generator - Create Strong Secure Random Passwords Online</title>
+<meta name="description" content="Free online password generator. Create strong, secure, random passwords with uppercase, lowercase, numbers, and symbols. Generate memorable and high-entropy passwords instantly.">
+<meta name="keywords" content="password generator, strong password, secure password, random password, password creator, password maker, generate password">
+<meta property="og:title" content="Password Generator - Strong Random Passwords">
+<meta property="og:description" content="Generate strong, secure random passwords instantly. Customize length and character sets.">
+<link rel="canonical" href="https://dalingdao.github.io/toolkitpro/password-generator/">
+<style>
+:root { --bg:#0f1117; --card:#1a1d29; --accent:#6c5ce7; --text:#e8eaf0; --muted:#8b90a5; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+.container { max-width:800px; margin:0 auto; padding:30px 20px; }
+h1 { font-size:2.2rem; margin-bottom:8px; color:#fff; }
+.subtitle { color:var(--muted); margin-bottom:28px; }
+.card { background:var(--card); border-radius:12px; padding:28px; margin-bottom:24px; border:1px solid #2a2f42; }
+.output { display:flex; gap:10px; align-items:center; background:#0d0f17; border-radius:8px; padding:14px 16px; margin-bottom:20px; }
+.output input { flex:1; background:none; border:none; color:var(--text); font-size:1.15rem; font-family:monospace; outline:none; }
+.output button { background:var(--accent); border:none; color:#fff; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:0.9rem; }
+.output button:hover { opacity:0.9; }
+.controls { display:grid; gap:14px; }
+.control-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; }
+.control-row label { color:var(--muted); font-size:0.95rem; }
+.length-value { color:var(--accent); font-weight:600; font-size:1.1rem; }
+input[type=range] { width:180px; accent-color:var(--accent); }
+.checkbox { display:flex; gap:8px; align-items:center; }
+input[type=checkbox] { accent-color:var(--accent); width:18px; height:18px; }
+.btn-generate { width:100%; background:var(--accent); border:none; color:#fff; padding:14px; border-radius:8px; font-size:1.1rem; cursor:pointer; font-weight:600; }
+.btn-generate:hover { opacity:0.9; }
+.strength { margin-top:16px; font-size:0.9rem; color:var(--muted); }
+.strength-bar { height:8px; border-radius:4px; background:#2a2f42; margin-top:8px; overflow:hidden; }
+.strength-fill { height:100%; border-radius:4px; transition:width 0.3s; background:#22c55e; }
+h2 { font-size:1.4rem; margin:30px 0 12px; color:#fff; }
+p, li { color:var(--muted); }
+ul { padding-left:20px; margin-top:8px; }
+a { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🔐 Password Generator</h1>
+<p class="subtitle">Create strong, secure random passwords instantly. Fully customizable — length, characters, and symbols.</p>
+
+<div class="card">
+  <div class="output">
+    <input id="pw-output" readonly value="Click Generate to create a password">
+    <button onclick="copyPw()">Copy</button>
+  </div>
+  <div class="controls">
+    <div class="control-row">
+      <label>Password Length</label>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="range" id="pw-length" min="6" max="64" value="16" oninput="updateLen()">
+        <span class="length-value" id="pw-length-val">16</span>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Uppercase (A-Z)</label>
+      <input type="checkbox" id="pw-upper" checked>
+    </div>
+    <div class="control-row">
+      <label>Lowercase (a-z)</label>
+      <input type="checkbox" id="pw-lower" checked>
+    </div>
+    <div class="control-row">
+      <label>Numbers (0-9)</label>
+      <input type="checkbox" id="pw-num" checked>
+    </div>
+    <div class="control-row">
+      <label>Symbols (!@#$%)</label>
+      <input type="checkbox" id="pw-sym" checked>
+    </div>
+    <div class="control-row">
+      <label>Exclude ambiguous (Il1O0)</label>
+      <input type="checkbox" id="pw-ambig">
+    </div>
+    <button class="btn-generate" onclick="generatePw()">Generate Password</button>
+    <div class="strength">
+      <span id="strength-text">Strength: Strong</span>
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill" style="width:90%"></div></div>
+    </div>
+  </div>
+</div>
+
+<h2>Why Use a Strong Password Generator?</h2>
+<p>A strong password generator creates high-entropy passwords that are difficult for attackers to crack. Modern password-cracking tools can test billions of combinations per second, so using a password with 12+ characters mixing uppercase, lowercase, numbers, and symbols is essential for protecting your online accounts.</p>
+
+<h2>Password Security Tips</h2>
+<ul>
+  <li>Use 16+ characters when possible</li>
+  <li>Never reuse passwords across different accounts</li>
+  <li>Use a password manager to store credentials securely</li>
+  <li>Enable two-factor authentication (2FA) on important accounts</li>
+  <li>Avoid common words, names, and personal information</li>
+</ul>
+
+<h2>How It Works</h2>
+<p>This generator uses the browser's <code>crypto.getRandomValues()</code> API — a cryptographically secure random number generator — to ensure your passwords are truly random and unpredictable.</p>
+
+<footer style="margin-top:40px;color:var(--muted);font-size:0.85rem;">
+  <a href="../">← Back to Toolkit Pro</a> | Free online tools
+</footer>
+</div>
+
+<script>
+const CHARS = { upper:'ABCDEFGHIJKLMNOPQRSTUVWXYZ', lower:'abcdefghijklmnopqrstuvwxyz', num:'0123456789', sym:'!@#$%^&*()-_=+[]{}|;:,.<>?' };
+const AMBIG = 'Il1O0';
+function updateLen() { document.getElementById('pw-length-val').textContent = document.getElementById('pw-length').value; }
+function generatePw() {
+  let pool = '';
+  if (document.getElementById('pw-upper').checked) pool += CHARS.upper;
+  if (document.getElementById('pw-lower').checked) pool += CHARS.lower;
+  if (document.getElementById('pw-num').checked) pool += CHARS.num;
+  if (document.getElementById('pw-sym').checked) pool += CHARS.sym;
+  if (document.getElementById('pw-ambig').checked) pool = pool.split('').filter(c => !AMBIG.includes(c)).join('');
+  if (!pool) pool = CHARS.lower;
+  const len = parseInt(document.getElementById('pw-length').value);
+  const arr = new Uint32Array(len);
+  crypto.getRandomValues(arr);
+  let pw = '';
+  for (let i = 0; i < len; i++) pw += pool[arr[i] % pool.length];
+  document.getElementById('pw-output').value = pw;
+  const strength = Math.min(100, Math.round((len / 32) * 100) + (pool.length >= 70 ? 15 : 0));
+  document.getElementById('strength-fill').style.width = strength + '%';
+  document.getElementById('strength-text').textContent = 'Strength: ' + (strength >= 70 ? 'Very Strong' : strength >= 45 ? 'Strong' : 'Moderate');
+}
+function copyPw() {
+  const input = document.getElementById('pw-output');
+  input.select();
+  document.execCommand('copy');
+  input.setSelectionRange(0, 0);
+}
+document.addEventListener('DOMContentLoaded', generatePw);
+</script>
+</body>
+</html>
