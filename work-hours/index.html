@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Work Hours - 鍏嶈垂鍦ㄧ嚎宸ヤ綔鏃堕暱璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎宸ヤ綔鏃堕暱璁＄畻鍣紝璁＄畻涓婁笅鐝椂闂翠箣闂寸殑鎬绘椂闀裤€佹墸闄や紤鎭悗鐨勫噣宸ユ椂锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="宸ヤ綔鏃堕暱,work hours,涓婁笅鐝?宸ユ椂璁＄畻,鍔犵彮,鍏嶈垂宸ュ叿">
+<title>Work Hours - 免费在线工作时长计算器</title>
+<meta name="description" content="免费在线工作时长计算器，计算上下班时间之间的总时长、扣除休息后的净工时，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="工作时长,work hours,上下班,工时计算,加班,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,31 +27,31 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈴?Work Hours</h1>
-  <p>鍏嶈垂鍦ㄧ嚎宸ヤ綔鏃堕暱璁＄畻鍣ㄢ€斺€?涓婁笅鐝椂闂淬€佷紤鎭椂闀裤€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">宸ユ椂</span><span class="badge">鍑€宸ユ椂</span></div>
+  <h1>⏰ Work Hours</h1>
+  <p>免费在线工作时长计算器—— 上下班时间、休息时长。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">工时</span><span class="badge">净工时</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>涓婄彮鏃堕棿</label><input type="time" id="start" value="09:00" oninput="calc()"></div>
-    <div class="field"><label>涓嬬彮鏃堕棿</label><input type="time" id="end" value="18:00" oninput="calc()"></div>
-    <div class="field"><label>鍗堜紤锛堝垎閽燂級</label><input type="number" id="br" value="60" min="0" oninput="calc()"></div>
+    <div class="field"><label>上班时间</label><input type="time" id="start" value="09:00" oninput="calc()"></div>
+    <div class="field"><label>下班时间</label><input type="time" id="end" value="18:00" oninput="calc()"></div>
+    <div class="field"><label>午休（分钟）</label><input type="number" id="br" value="60" min="0" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Work Hours 路 绾墠绔?/footer>
+<footer>ToolkitPro · Work Hours · 纯前端</footer>
 <script>
 function calc(){
   var s=document.getElementById('start').value,e=document.getElementById('end').value,br=+document.getElementById('br').value||0;
   var el=document.getElementById('res');
-  if(!s||!e){el.innerHTML='<div class="sub">璇烽€夋嫨鏃堕棿</div>';return;}
+  if(!s||!e){el.innerHTML='<div class="sub">请选择时间</div>';return;}
   var sm=+s.slice(0,2)*60+ +s.slice(3),em=+e.slice(0,2)*60+ +e.slice(3);
   if(em<=sm)em+=24*60;
   var gross=em-sm,net=gross-br;
-  function hms(m){return Math.floor(m/60)+' 灏忔椂 '+(m%60)+' 鍒?;}
-  el.innerHTML='<div class="big">'+hms(net)+'</div><div class="sub">鍦ㄥ矖 '+hms(gross)+'<br>鎵ｉ櫎浼戞伅 '+br+' 鍒嗛挓</div>';
+  function hms(m){return Math.floor(m/60)+' 小时 '+(m%60)+' 分';}
+  el.innerHTML='<div class="big">'+hms(net)+'</div><div class="sub">在岗 '+hms(gross)+'<br>扣除休息 '+br+' 分钟</div>';
 }
 calc();
 </script>
