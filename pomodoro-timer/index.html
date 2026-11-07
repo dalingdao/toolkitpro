@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pomodoro Timer - 鍏嶈垂鍦ㄧ嚎鐣寗閽?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鐣寗閽熻鏃跺櫒锛?5鍒嗛挓涓撴敞/5鍒嗛挓浼戞伅寰幆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鐣寗閽?pomodoro,涓撴敞,璁℃椂鍣?25鍒嗛挓,鍏嶈垂宸ュ叿">
+<title>Pomodoro Timer - 免费在线番茄钟</title>
+<meta name="description" content="免费在线番茄钟计时器，25分钟专注/5分钟休息循环，纯前端，无需注册。">
+<meta name="keywords" content="番茄钟,pomodoro,专注,计时器,25分钟,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -29,32 +29,32 @@ body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-s
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃崊 Pomodoro</h1>
-  <p>25鍒嗛挓涓撴敞 / 5鍒嗛挓浼戞伅寰幆銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">涓撴敞</span><span class="badge">25鍒嗛挓</span></div>
+  <h1>🍅 Pomodoro</h1>
+  <p>25分钟专注 / 5分钟休息循环。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">专注</span><span class="badge">25分钟</span></div>
 </div>
 <div class="ring">
   <svg width="260" height="260"><circle cx="130" cy="130" r="118" stroke="#1e293b" stroke-width="10" fill="none"/><circle id="prog" cx="130" cy="130" r="118" stroke="#2563eb" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="741" stroke-dashoffset="0"/></svg>
-  <div class="txt"><div class="time" id="time">25:00</div><div class="mode" id="mode">涓撴敞</div></div>
+  <div class="txt"><div class="time" id="time">25:00</div><div class="mode" id="mode">专注</div></div>
 </div>
 <div class="seg">
-  <button id="s1" class="on" onclick="setMode(1)">涓撴敞 25</button>
-  <button id="s2" onclick="setMode(2)">鐭紤 5</button>
-  <button id="s3" onclick="setMode(3)">闀夸紤 15</button>
+  <button id="s1" class="on" onclick="setMode(1)">专注 25</button>
+  <button id="s2" onclick="setMode(2)">短休 5</button>
+  <button id="s3" onclick="setMode(3)">长休 15</button>
 </div>
 <div class="ctrl">
-  <button id="start" onclick="start()">寮€濮?/button>
-  <button class="sec" onclick="reset()">閲嶇疆</button>
+  <button id="start" onclick="start()">开始</button>
+  <button class="sec" onclick="reset()">重置</button>
 </div>
 <script>
 var MODES={1:25*60,2:5*60,3:15*60},mode=1,left=MODES[1],running=false,iv=null;
 function setMode(m){mode=m;left=MODES[m];stop();document.getElementById('s1').className=m===1?'on':'';document.getElementById('s2').className=m===2?'on':'';document.getElementById('s3').className=m===3?'on':'';draw();}
-function draw(){var m=Math.floor(left/60),s=left%60;document.getElementById('time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');document.getElementById('mode').textContent=mode===1?'涓撴敞':mode===2?'鐭紤':'闀夸紤';document.getElementById('prog').setAttribute('stroke-dashoffset',741*(1-left/MODES[mode]));}
-function start(){if(running){stop();document.getElementById('start').textContent='寮€濮?;return;}running=true;document.getElementById('start').textContent='鏆傚仠';iv=setInterval(function(){left--;if(left<=0){left=0;stop();document.getElementById('start').textContent='寮€濮?;}draw();},1000);}
+function draw(){var m=Math.floor(left/60),s=left%60;document.getElementById('time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');document.getElementById('mode').textContent=mode===1?'专注':mode===2?'短休':'长休';document.getElementById('prog').setAttribute('stroke-dashoffset',741*(1-left/MODES[mode]));}
+function start(){if(running){stop();document.getElementById('start').textContent='开始';return;}running=true;document.getElementById('start').textContent='暂停';iv=setInterval(function(){left--;if(left<=0){left=0;stop();document.getElementById('start').textContent='开始';}draw();},1000);}
 function stop(){running=false;clearInterval(iv);}
-function reset(){stop();left=MODES[mode];document.getElementById('start').textContent='寮€濮?;draw();}
+function reset(){stop();left=MODES[mode];document.getElementById('start').textContent='开始';draw();}
 draw();
 </script>
 </body>
