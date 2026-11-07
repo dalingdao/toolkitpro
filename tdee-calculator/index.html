@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TDEE Calculator - 鍏嶈垂鍦ㄧ嚎姣忔棩鑳介噺娑堣€楄绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎TDEE璁＄畻鍣紝浣撻噸/韬珮/骞撮緞/娲诲姩閲忕畻姣忔棩鎬昏兘閲忔秷鑰楋紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="TDEE,姣忔棩娑堣€?鍩虹浠ｈ阿,BMR,鍑忚剛,鍏嶈垂宸ュ叿">
+<title>TDEE Calculator - 免费在线每日能量消耗计算器</title>
+<meta name="description" content="免费在线TDEE计算器，体重/身高/年龄/活动量算每日总能量消耗，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="TDEE,每日消耗,基础代谢,BMR,减脂,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,32 +27,32 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃敟 TDEE Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎TDEE璁＄畻鍣ㄢ€斺€?姣忔棩鎬昏兘閲忔秷鑰椼€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">TDEE</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🔥 TDEE Calculator</h1>
+  <p>免费在线TDEE计算器—— 每日总能量消耗。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">TDEE</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鎬у埆</label><select id="g" onchange="calc()"><option value="m" selected>鐢?/option><option value="f">濂?/option></select></div>
-    <div class="field"><label>浣撻噸锛坘g锛?/label><input type="number" id="w" value="70" min="1" oninput="calc()"></div>
-    <div class="field"><label>韬珮锛坈m锛?/label><input type="number" id="h" value="175" min="1" oninput="calc()"></div>
-    <div class="field"><label>骞撮緞</label><input type="number" id="a" value="30" min="1" oninput="calc()"></div>
-    <div class="field"><label>娲诲姩閲?/label><select id="act" onchange="calc()">
-      <option value="1.2">涔呭潗</option><option value="1.375" selected>杞诲害娲诲姩</option><option value="1.55">涓害娲诲姩</option><option value="1.725">楂樺害娲诲姩</option>
+    <div class="field"><label>性别</label><select id="g" onchange="calc()"><option value="m" selected>男</option><option value="f">女</option></select></div>
+    <div class="field"><label>体重（kg）</label><input type="number" id="w" value="70" min="1" oninput="calc()"></div>
+    <div class="field"><label>身高（cm）</label><input type="number" id="h" value="175" min="1" oninput="calc()"></div>
+    <div class="field"><label>年龄</label><input type="number" id="a" value="30" min="1" oninput="calc()"></div>
+    <div class="field"><label>活动量</label><select id="act" onchange="calc()">
+      <option value="1.2">久坐</option><option value="1.375" selected>轻度活动</option><option value="1.55">中度活动</option><option value="1.725">高度活动</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 TDEE 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · TDEE · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var g=document.getElementById('g').value,w=+document.getElementById('w').value||0,h=+document.getElementById('h').value||0,a=+document.getElementById('a').value||0,act=+document.getElementById('act').value||1.375;
   var el=document.getElementById('res');
   var bmr=g==='m'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161;
   var tdee=bmr*act;
-  el.innerHTML='<div class="big">'+Math.round(tdee)+' 鍗冨崱</div><div class="sub">姣忔棩鎬绘秷鑰?TDEE<br>鍩虹浠ｈ阿 BMR '+Math.round(bmr)+' 鍗冨崱<br>鍑忚剛绾?'+Math.round(tdee-500)+' 鍗冨崱/澶?/div>';
+  el.innerHTML='<div class="big">'+Math.round(tdee)+' 千卡</div><div class="sub">每日总消耗 TDEE<br>基础代谢 BMR '+Math.round(bmr)+' 千卡<br>减脂约 '+Math.round(tdee-500)+' 千卡/天</div>';
 }
 calc();
 (function(){
