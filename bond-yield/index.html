@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bond Yield - 鍏嶈垂鍦ㄧ嚎鍊哄埜鏀剁泭鐜囪绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍊哄埜鏀剁泭鐜囪绠楀櫒锛岀エ闈㈠埄鐜?涔板叆浠?鍒版湡骞撮檺浼扮畻鍒版湡鏀剁泭鐜囷紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鍊哄埜鏀剁泭鐜?bond yield,鍒版湡鏀剁泭鐜?绁ㄩ潰鍒╃巼,鍊哄埜,鍏嶈垂宸ュ叿">
+<title>Bond Yield - 免费在线债券收益率计算器</title>
+<meta name="description" content="免费在线债券收益率计算器，票面利率/买入价/到期年限估算到期收益率，纯前端，无需注册。">
+<meta name="keywords" content="债券收益率,bond yield,到期收益率,票面利率,债券,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,31 +27,31 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搱 Bond Yield</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍊哄埜鏀剁泭鐜囪绠楀櫒鈥斺€?浼扮畻鍒版湡鏀剁泭鐜囥€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">YTM</span><span class="badge">鍊哄埜</span></div>
+  <h1>📈 Bond Yield</h1>
+  <p>免费在线债券收益率计算器—— 估算到期收益率。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">YTM</span><span class="badge">债券</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>绁ㄩ潰鍒╃巼锛?锛?/label><input type="number" id="cr" value="3" min="0" step="0.1" oninput="calc()"></div>
-    <div class="field"><label>闈㈠€硷紙鍏冿級</label><input type="number" id="fv" value="100" min="1" oninput="calc()"></div>
-    <div class="field"><label>涔板叆浠凤紙鍏冿級</label><input type="number" id="pr" value="95" min="0.01" oninput="calc()"></div>
-    <div class="field"><label>鍒版湡骞撮檺锛堝勾锛?/label><input type="number" id="y" value="5" min="1" oninput="calc()"></div>
+    <div class="field"><label>票面利率（%）</label><input type="number" id="cr" value="3" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>面值（元）</label><input type="number" id="fv" value="100" min="1" oninput="calc()"></div>
+    <div class="field"><label>买入价（元）</label><input type="number" id="pr" value="95" min="0.01" oninput="calc()"></div>
+    <div class="field"><label>到期年限（年）</label><input type="number" id="y" value="5" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Bond Yield 路 绾墠绔?/footer>
+<footer>ToolkitPro · Bond Yield · 纯前端</footer>
 <script>
 function calc(){
   var cr=+document.getElementById('cr').value||0,fv=+document.getElementById('fv').value||100,pr=+document.getElementById('pr').value||0,y=+document.getElementById('y').value||1;
   var el=document.getElementById('res');
   var coupon=fv*cr/100;
-  // 绠€鍖?YTM 鈮?(绁ㄦ伅 + (闈㈠€?涔板叆浠?/骞撮檺) / ((闈㈠€?涔板叆浠?/2)
+  // 简化 YTM ≈ (票息 + (面值-买入价)/年限) / ((面值+买入价)/2)
   var ytm=(coupon+(fv-pr)/y)/((fv+pr)/2)*100;
   var cur=fv>0?coupon/pr*100:0;
-  el.innerHTML='<div class="big">'+ytm.toFixed(2)+'%</div><div class="sub">浼扮畻鍒版湡鏀剁泭鐜?(YTM)<br>褰撴湡鏀剁泭鐜?'+cur.toFixed(2)+'%<br>骞寸エ鎭?楼'+coupon.toFixed(2)+'</div>';
+  el.innerHTML='<div class="big">'+ytm.toFixed(2)+'%</div><div class="sub">估算到期收益率 (YTM)<br>当期收益率 '+cur.toFixed(2)+'%<br>年票息 ¥'+coupon.toFixed(2)+'</div>';
 }
 calc();
 </script>
