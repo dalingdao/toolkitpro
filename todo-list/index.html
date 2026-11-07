@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Todo List - 鍏嶈垂鍦ㄧ嚎寰呭姙娓呭崟</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎寰呭姙娓呭崟锛屾坊鍔?瀹屾垚/鍒犻櫎浠诲姟锛宭ocalStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="寰呭姙娓呭崟,todo list,寰呭姙,todo,浠诲姟,鍏嶈垂宸ュ叿">
+<title>Todo List - 免费在线待办清单</title>
+<meta name="description" content="免费在线待办清单，添加/完成/删除任务，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="待办清单,todo list,待办,todo,任务,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -30,23 +30,23 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搵 Todo List</h1>
-  <p>鍏嶈垂鍦ㄧ嚎寰呭姙娓呭崟鈥斺€?鏈湴淇濆瓨銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">寰呭姙</span><span class="badge">鏈湴瀛樺偍</span></div>
+  <h1>📋 Todo List</h1>
+  <p>免费在线待办清单—— 本地保存。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">待办</span><span class="badge">本地存储</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="add">
-      <input id="t" placeholder="娣诲姞浠诲姟鈥? onkeydown="if(event.key==='Enter')add()">
-      <button onclick="add()">娣诲姞</button>
+      <input id="t" placeholder="添加任务…" onkeydown="if(event.key==='Enter')add()">
+      <button onclick="add()">添加</button>
     </div>
     <div id="list"></div>
     <div class="count" id="cnt"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Todo List 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<footer>ToolkitPro · Todo List · 纯前端 · 本地存储</footer>
 <script>
 var items=JSON.parse(localStorage.getItem('tl_items')||'[]');
 function save(){localStorage.setItem('tl_items',JSON.stringify(items));render();}
@@ -54,9 +54,9 @@ function add(){var v=document.getElementById('t').value.trim();if(!v)return;item
 function tog(i){items[i].done=!items[i].done;save();}
 function del(i){items.splice(i,1);save();}
 function render(){
-  document.getElementById('list').innerHTML=items.map(function(x,i){return '<div class="item"><input type="checkbox" '+(x.done?'checked':'')+' onchange="tog('+i+')"><span class="txt'+(x.done?' done':'')+'">'+x.t+'</span><button class="del" onclick="del('+i+')">鉁?/button></div>';}).join('')||'<div class="item"><span class="txt">鏆傛棤浠诲姟</span></div>';
+  document.getElementById('list').innerHTML=items.map(function(x,i){return '<div class="item"><input type="checkbox" '+(x.done?'checked':'')+' onchange="tog('+i+')"><span class="txt'+(x.done?' done':'')+'">'+x.t+'</span><button class="del" onclick="del('+i+')">✕</button></div>';}).join('')||'<div class="item"><span class="txt">暂无任务</span></div>';
   var d=items.filter(function(x){return x.done;}).length;
-  document.getElementById('cnt').textContent='宸插畬鎴?'+d+' / '+items.length;
+  document.getElementById('cnt').textContent='已完成 '+d+' / '+items.length;
 }
 render();
 </script>
