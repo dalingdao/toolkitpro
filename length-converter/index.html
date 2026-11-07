@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Length Converter - 鍏嶈垂鍦ㄧ嚎闀垮害鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎闀垮害鎹㈢畻鍣紝绫?鍘樼背/姣背/鍗冪背/鑻卞/鑻卞昂浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="闀垮害鎹㈢畻,length converter,绫?鍘樼背,鑻卞,鑻卞昂,鍏嶈垂宸ュ叿">
+<title>Length Converter - 免费在线长度换算</title>
+<meta name="description" content="免费在线长度换算器，米/厘米/毫米/千米/英寸/英尺互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="长度换算,length converter,米,厘米,英寸,英尺,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搹 Length Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎闀垮害鎹㈢畻鈥斺€?m/cm/mm/km/inch/ft銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">绫?/span><span class="badge">鑻卞</span><span class="badge">鑻卞昂</span></div>
+  <h1>📏 Length Converter</h1>
+  <p>免费在线长度换算—— m/cm/mm/km/inch/ft。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">米</span><span class="badge">英寸</span><span class="badge">英尺</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="m" selected>绫?m</option><option value="cm">鍘樼背 cm</option><option value="mm">姣背 mm</option><option value="km">鍗冪背 km</option><option value="in">鑻卞 in</option><option value="ft">鑻卞昂 ft</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="m" selected>米 m</option><option value="cm">厘米 cm</option><option value="mm">毫米 mm</option><option value="km">千米 km</option><option value="in">英寸 in</option><option value="ft">英尺 ft</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Length Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Length Converter · 纯前端</footer>
 <script>
 var R={m:1,cm:100,mm:1000,km:0.001,in:39.3701,ft:3.28084};
 function calc(){
