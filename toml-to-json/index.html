@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOML to JSON - 鍏嶈垂鍦ㄧ嚎TOML杞琂SON</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎TOML杞琂SON宸ュ叿锛孴OML閰嶇疆杞琂SON锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="toml to json,TOML,JSON,杞崲,閰嶇疆,鍏嶈垂宸ュ叿">
+<title>TOML to JSON - 免费在线TOML转JSON</title>
+<meta name="description" content="免费在线TOML转JSON工具，TOML配置转JSON，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="toml to json,TOML,JSON,转换,配置,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -23,11 +23,11 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃摝 TOML to JSON</h1>
-  <p>鍏嶈垂鍦ㄧ嚎TOML杞琂SON鈥斺€?绠€鍗昑OML瀛愰泦銆傛敮鎸??input= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">TOML</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📦 TOML to JSON</h1>
+  <p>免费在线TOML转JSON—— 简单TOML子集。支持 ?input= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">TOML</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
@@ -38,11 +38,11 @@ enabled = true
 [db]
 name = "app"
 tables = ["users","orders"]</textarea>
-    <button class="btn" onclick="conv()">杞?JSON</button>
-    <textarea id="out" style="margin-top:12px" placeholder="JSON 杈撳嚭"></textarea>
+    <button class="btn" onclick="conv()">转 JSON</button>
+    <textarea id="out" style="margin-top:12px" placeholder="JSON 输出"></textarea>
   </div>
 </div>
-<footer>ToolkitPro 路 TOML to JSON 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · TOML to JSON · 纯前端 · Agent可用</footer>
 <script>
 function parseVal(s){
   s=s.trim();
@@ -62,7 +62,7 @@ function conv(){
       else{var eq=line.indexOf('=');if(eq>0)cur[line.slice(0,eq).trim()]=parseVal(line.slice(eq+1));}
     });
     el.value=JSON.stringify(root,null,2);
-  }catch(e){el.value='锛圱OML 瑙ｆ瀽閿欒锛?;}
+  }catch(e){el.value='（TOML 解析错误）';}
 }
 conv();
 (function(){
