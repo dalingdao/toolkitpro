@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAGR Calculator - 鍏嶈垂鍦ㄧ嚎澶嶅悎骞村闀跨巼璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎澶嶅悎骞村闀跨巼(CAGR)璁＄畻鍣紝鏈熷垵/鏈熸湯鍊?骞存暟绠楀勾澶嶅悎澧為暱鐜囷紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="CAGR,澶嶅悎骞村闀跨巼,澶嶅悎澧為暱鐜?鎶曡祫鍥炴姤,鍏嶈垂宸ュ叿">
+<title>CAGR Calculator - 免费在线复合年增长率计算器</title>
+<meta name="description" content="免费在线复合年增长率(CAGR)计算器，期初/期末值/年数算年复合增长率，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="CAGR,复合年增长率,复合增长率,投资回报,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,28 +27,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搱 CAGR Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎澶嶅悎骞村闀跨巼(CAGR)璁＄畻鍣ㄣ€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">CAGR</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📈 CAGR Calculator</h1>
+  <p>免费在线复合年增长率(CAGR)计算器。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">CAGR</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏈熷垵浠峰€硷紙鍏冿級</label><input type="number" id="b" value="10000" min="0.01" oninput="calc()"></div>
-    <div class="field"><label>鏈熸湯浠峰€硷紙鍏冿級</label><input type="number" id="e" value="20000" min="0.01" oninput="calc()"></div>
-    <div class="field"><label>骞存暟</label><input type="number" id="y" value="5" min="0.1" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>期初价值（元）</label><input type="number" id="b" value="10000" min="0.01" oninput="calc()"></div>
+    <div class="field"><label>期末价值（元）</label><input type="number" id="e" value="20000" min="0.01" oninput="calc()"></div>
+    <div class="field"><label>年数</label><input type="number" id="y" value="5" min="0.1" step="0.1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 CAGR Calculator 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · CAGR Calculator · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var b=+document.getElementById('b').value||0,e=+document.getElementById('e').value||0,y=+document.getElementById('y').value||1;
   var el=document.getElementById('res');
-  if(b<=0||e<=0){el.innerHTML='<div class="big">鈥?/div><div class="sub">璇疯緭鍏ユ湁鏁堟暟鍊?/div>';return;}
+  if(b<=0||e<=0){el.innerHTML='<div class="big">—</div><div class="sub">请输入有效数值</div>';return;}
   var cagr=(Math.pow(e/b,1/y)-1)*100;
-  el.innerHTML='<div class="big">'+cagr.toFixed(2)+'%</div><div class="sub">澶嶅悎骞村闀跨巼<br>鎬诲闀?'+((e/b-1)*100).toFixed(1)+'%<br>鏈熸湯 楼'+e.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  el.innerHTML='<div class="big">'+cagr.toFixed(2)+'%</div><div class="sub">复合年增长率<br>总增长 '+((e/b-1)*100).toFixed(1)+'%<br>期末 ¥'+e.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 calc();
 (function(){
