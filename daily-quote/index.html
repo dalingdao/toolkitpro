@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Quote - 鍏嶈垂鍦ㄧ嚎姣忔棩鍚嶈█</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎姣忔棩鍚嶈█锛岄殢鏈烘縺鍔辫褰曪紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="姣忔棩鍚嶈█,daily quote,鍚嶈█,璇綍,婵€鍔?鍏嶈垂宸ュ叿">
+<title>Daily Quote - 免费在线每日名言</title>
+<meta name="description" content="免费在线每日名言，随机激励语录，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="每日名言,daily quote,名言,语录,激励,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -21,18 +21,18 @@ body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-s
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃摐 Daily Quote</h1>
-  <p>姣忔棩鍚嶈█鈥斺€?涓€鍙ユ縺鍔憋紝寮€濮嬩竴澶┿€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍚嶈█</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📜 Daily Quote</h1>
+  <p>每日名言—— 一句激励，开始一天。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">名言</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="quote" id="q"></div>
-<div class="ctrl"><button onclick="pick()">鎹竴鍙?/button></div>
+<div class="ctrl"><button onclick="pick()">换一句</button></div>
 <script>
 var Q=[
-['琛屽姩鏄敼鍙樼殑寮€濮嬨€?,'浣氬悕'],['浣犱笉闇€瑕佸畬缇庯紝鍙渶瑕佸紑濮嬨€?,'浣氬悕'],['鍗冮噷涔嬭濮嬩簬瓒充笅銆?,'鑰佸瓙'],['涓嶇Н璺鏃犱互鑷冲崈閲屻€?,'鑽€瀛?],['鎴愬姛鏄範鎯殑绉疮銆?,'浣氬悕'],['瓒婂姫鍔涜秺骞歌繍銆?,'浣氬悕'],['浠婂ぉ鐨勪簨浠婂ぉ鍋氥€?,'浣氬悕'],['鍧氭寔灏辨槸鑳滃埄銆?,'浣氬悕'],['绉嶄竴妫垫爲鏈€濂界殑鏃堕棿鏄幇鍦ㄣ€?,'浣氬悕'],['蹇冧箣鎵€鍚戠礌灞ヤ互寰€銆?,'涓冨爣骞?]];
-function pick(){var x=Q[Math.floor(Math.random()*Q.length)];document.getElementById('q').innerHTML='鈥?+x[0]+'鈥?div class="by">鈥斺€?'+x[1]+'</div>';}
+['行动是改变的开始。','佚名'],['你不需要完美，只需要开始。','佚名'],['千里之行始于足下。','老子'],['不积跬步无以至千里。','荀子'],['成功是习惯的积累。','佚名'],['越努力越幸运。','佚名'],['今天的事今天做。','佚名'],['坚持就是胜利。','佚名'],['种一棵树最好的时间是现在。','佚名'],['心之所向素履以往。','七堇年']];
+function pick(){var x=Q[Math.floor(Math.random()*Q.length)];document.getElementById('q').innerHTML='“'+x[0]+'”<div class="by">—— '+x[1]+'</div>';}
 pick();
 (function(){
   var q=new URLSearchParams(location.search);
