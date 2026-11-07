@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON to CSV - 鍏嶈垂鍦ㄧ嚎JSON杞珻SV</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎JSON杞珻SV宸ュ叿锛屽璞℃暟缁勮浆CSV锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="json to csv,JSON杞珻SV,CSV,杞崲,鍏嶈垂宸ュ叿">
+<title>JSON to CSV - 免费在线JSON转CSV</title>
+<meta name="description" content="免费在线JSON转CSV工具，对象数组转CSV，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="json to csv,JSON转CSV,CSV,转换,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -23,31 +23,31 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃摛 JSON to CSV</h1>
-  <p>鍏嶈垂鍦ㄧ嚎JSON杞珻SV鈥斺€?瀵硅薄鏁扮粍杞珻SV銆傛敮鎸??input= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">JSON鈫扖SV</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📤 JSON to CSV</h1>
+  <p>免费在线JSON转CSV—— 对象数组转CSV。支持 ?input= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">JSON→CSV</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
     <textarea id="json" placeholder='[{"name":"Alice","age":30}]'>[{"name":"Alice","age":30,"city":"Beijing"},{"name":"Bob","age":25,"city":"Shanghai"}]</textarea>
-    <button class="btn" onclick="conv()">杞?CSV</button>
-    <textarea id="out" style="margin-top:12px" placeholder="CSV 杈撳嚭"></textarea>
+    <button class="btn" onclick="conv()">转 CSV</button>
+    <textarea id="out" style="margin-top:12px" placeholder="CSV 输出"></textarea>
   </div>
 </div>
-<footer>ToolkitPro 路 JSON to CSV 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · JSON to CSV · 纯前端 · Agent可用</footer>
 <script>
 function esc(v){if(v===null||v===undefined)return '';v=String(v);if(/[",\n]/.test(v))return '"'+v.replace(/"/g,'""')+'"';return v;}
 function conv(){
   var el=document.getElementById('out');
   try{
     var arr=JSON.parse(document.getElementById('json').value);
-    if(!Array.isArray(arr)){el.value='锛堥渶涓哄璞℃暟缁勶級';return;}
+    if(!Array.isArray(arr)){el.value='（需为对象数组）';return;}
     var keys=[];arr.forEach(function(o){if(o&&typeof o==='object')Object.keys(o).forEach(function(k){if(keys.indexOf(k)<0)keys.push(k);});});
     var rows=[keys.join(',')].concat(arr.map(function(o){return keys.map(function(k){return esc(o&&o[k]);}).join(',');}));
     el.value=rows.join('\n');
-  }catch(e){el.value='锛圝SON 鏍煎紡涓嶆纭級';}
+  }catch(e){el.value='（JSON 格式不正确）';}
 }
 conv();
 (function(){
