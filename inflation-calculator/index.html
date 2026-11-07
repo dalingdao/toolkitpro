@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inflation Calculator - 鍏嶈垂鍦ㄧ嚎閫氳儉/璐拱鍔涜绠楀櫒</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎閫氳揣鑶ㄨ儉璁＄畻鍣紝鎸夐€氳儉鐜囪绠楁湭鏉ヨ喘涔板姏涓庣瓑鍊奸噾棰濓紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
+<meta name="keywords" content="閫氳儉璁＄畻鍣?inflation calculator,閫氳揣鑶ㄨ儉,璐拱鍔?鐗╀环,绛夊€奸噾棰?鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:28px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃搲 Inflation Calculator</h1>
+  <p>鍏嶈垂鍦ㄧ嚎閫氳儉璁＄畻鍣ㄢ€斺€?鐗╀环涓婃定鍚庤喘涔板姏鍙樺寲銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">閫氳儉</span><span class="badge">璐拱鍔?/span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>閲戦锛堝厓锛?/label><input type="number" id="a" value="10000" min="0" oninput="calc()"></div>
+    <div class="field"><label>骞撮€氳儉鐜囷紙%锛?/label><input type="number" id="r" value="3" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>骞存暟</label><input type="number" id="y" value="10" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Inflation Calculator 路 绾墠绔?/footer>
+<script>
+function calc(){
+  var a=+document.getElementById('a').value||0,r=+document.getElementById('r').value||0,y=+document.getElementById('y').value||0;
+  var eq=a*Math.pow(1+r/100,y), buy=a/Math.pow(1+r/100,y);
+  document.getElementById('res').innerHTML='<div class="big">楼'+eq.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">'+y+' 骞村悗绛夊€奸噾棰?br>璐拱鍔涗粎鐩稿綋浜庝粖澶╃殑 楼'+buy.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>璐拱鍔涗笅闄?'+(1-Math.pow(1+r/100,-y))*100+'%</div>';
+}
+calc();
+</script>
+</body>
+</html>
