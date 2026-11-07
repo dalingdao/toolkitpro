@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gratitude Journal - 鍏嶈垂鍦ㄧ嚎鎰熸仼鏃ヨ</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎰熸仼鏃ヨ锛屾瘡澶╄3浠舵劅鎭╃殑浜嬶紝localStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鎰熸仼鏃ヨ,gratitude journal,鎰熸仼,鏃ヨ,绉瀬,鍏嶈垂宸ュ叿">
+<title>Gratitude Journal - 免费在线感恩日记</title>
+<meta name="description" content="免费在线感恩日记，每天记3件感恩的事，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="感恩日记,gratitude journal,感恩,日记,积极,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,20 +27,20 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃檹 Gratitude</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鎰熸仼鏃ヨ鈥斺€?姣忓ぉ3浠舵劅鎭╃殑浜嬨€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎰熸仼</span><span class="badge">鏈湴瀛樺偍</span></div>
+  <h1>🙏 Gratitude</h1>
+  <p>免费在线感恩日记—— 每天3件感恩的事。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">感恩</span><span class="badge">本地存储</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div id="inputs"></div>
-    <button class="btn" onclick="add()">淇濆瓨浠婂ぉ鐨勬劅鎭?/button>
+    <button class="btn" onclick="add()">保存今天的感恩</button>
     <div id="list" style="margin-top:18px"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Gratitude Journal 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<footer>ToolkitPro · Gratitude Journal · 纯前端 · 本地存储</footer>
 <script>
 var entries=JSON.parse(localStorage.getItem('gj_entries')||'[]');
 function today(){return new Date().toISOString().slice(0,10);}
@@ -55,10 +55,10 @@ function del(i){entries.splice(i,1);localStorage.setItem('gj_entries',JSON.strin
 function render(){
   var el=document.getElementById('list');
   el.innerHTML=entries.slice().reverse().slice(0,14).map(function(e,i){
-    return '<div class="entry"><div><div class="d">'+e.d+'</div><div class="t">'+e.items.map(function(x){return '馃檹 '+x;}).join(' 路 ')+'</div></div><button class="del" onclick="del('+i+')">鉁?/button></div>';
-  }).join('')||'<div class="entry"><div class="d">浠婂ぉ鍐欎笅绗竴浠舵劅鎭╃殑浜嬪惂</div></div>';
+    return '<div class="entry"><div><div class="d">'+e.d+'</div><div class="t">'+e.items.map(function(x){return '🙏 '+x;}).join(' · ')+'</div></div><button class="del" onclick="del('+i+')">✕</button></div>';
+  }).join('')||'<div class="entry"><div class="d">今天写下第一件感恩的事吧</div></div>';
 }
-document.getElementById('inputs').innerHTML=[1,2,3].map(function(i){return '<textarea id="g'+i+'" placeholder="鎰熸仼鐨勪簨 '+i+'鈥?></textarea>';}).join('');
+document.getElementById('inputs').innerHTML=[1,2,3].map(function(i){return '<textarea id="g'+i+'" placeholder="感恩的事 '+i+'…"></textarea>';}).join('');
 render();
 </script>
 </body>
