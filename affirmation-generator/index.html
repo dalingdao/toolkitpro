@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Affirmation Generator - 鍏嶈垂鍦ㄧ嚎姣忔棩鑲畾璇?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鑲畾璇敓鎴愬櫒锛岄殢鏈烘闈㈣偗瀹氳锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鑲畾璇?affirmation,绉瀬,鑷垜鑲畾,婵€鍔?鍏嶈垂宸ュ叿">
+<title>Affirmation Generator - 免费在线每日肯定语</title>
+<meta name="description" content="免费在线肯定语生成器，随机正面肯定语，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="肯定语,affirmation,积极,自我肯定,激励,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -20,18 +20,18 @@ body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-s
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鉁?Affirmation</h1>
-  <p>姣忔棩鑲畾璇€斺€?鐢ㄧН鏋佺殑鑷垜瀵硅瘽寮€鍚竴澶┿€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">绉瀬</span><span class="badge">Agent鍙敤</span></div>
+  <h1>✨ Affirmation</h1>
+  <p>每日肯定语—— 用积极的自我对话开启一天。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">积极</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="quote" id="q"></div>
-<div class="ctrl"><button onclick="pick()">鎹竴鍙?/button></div>
+<div class="ctrl"><button onclick="pick()">换一句</button></div>
 <script>
 var A=[
-'鎴戞槸鏈夎兘鍔涗笖鍊煎緱琚埍鐨勩€?,'鎴戜粖澶╃殑姣忎竴姝ラ兘鍦ㄥ彉寰楁洿濂姐€?,'鎴戦€夋嫨鎶婃敞鎰忓姏鏀惧湪鎴戣兘鎺у埗鐨勪簨鎯呬笂銆?,'鎴戠殑浠峰€间笉鍙栧喅浜庡埆浜虹殑鐪嬫硶銆?,'鎴戝厑璁歌嚜宸辨參鎱㈡潵锛屼篃鍦ㄦ寔缁繘姝ャ€?,'鎴戞湁鍔涢噺鍒涢€犳垜鎯宠鐨勭敓娲汇€?,'姣忎竴娆℃寫鎴橀兘鏄垜鎴愰暱鐨勬満浼氥€?,'鎴戝€煎緱鎷ユ湁骞哥鍜屾垚鍔熴€?,'鎴戠殑韬綋鏄己澶х殑锛屾垜鍠勫緟瀹冦€?,'鎴戝彲浠ュ钩闈欓潰瀵逛笉纭畾鎬с€?,'鎴戞鍦ㄦ垚涓烘垜鎯虫垚涓虹殑浜恒€?,'鎴戠殑鍔姏姝ｅ湪鎱㈡參寮€鑺辩粨鏋溿€?];
-function pick(){document.getElementById('q').textContent='鈥?+A[Math.floor(Math.random()*A.length)]+'鈥?;}
+'我是有能力且值得被爱的。','我今天的每一步都在变得更好。','我选择把注意力放在我能控制的事情上。','我的价值不取决于别人的看法。','我允许自己慢慢来，也在持续进步。','我有力量创造我想要的生活。','每一次挑战都是我成长的机会。','我值得拥有幸福和成功。','我的身体是强大的，我善待它。','我可以平静面对不确定性。','我正在成为我想成为的人。','我的努力正在慢慢开花结果。'];
+function pick(){document.getElementById('q').textContent='“'+A[Math.floor(Math.random()*A.length)]+'”';}
 pick();
 (function(){
   var q=new URLSearchParams(location.search);
