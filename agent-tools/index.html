@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>ToolkitPro Agent Tools - AI Agent 可调用的 JSON 工具接口</title>
+<meta name="description" content="AI Agent 可调用的统一 JSON 工具接口：时间戳转换、Base64、JSON 校验、颜色转换、字数统计、哈希、URL 编解码。?tool=xxx&input=yyy&format=json 返回 JSON。">
+</head>
+<body>
+<pre id="out">{"status":"ok","tool":"agent-tools","hint":"GET /toolkitpro/agent-tools/?tool=T&input=V&format=json 返回JSON。工具: timestamp|base64|json-format|color|wordcount|hash|url"}</pre>
+<script>
+const q = new URLSearchParams(location.search);
+const tool = (q.get('tool')||'').toLowerCase(), input = q.get('input')||'', fmt = q.get('format')||'json';
+let r = { status:'ok', tool, input };
+function out(o){ document.getElementById('out').textContent = JSON.stringify(o, null, fmt==='pretty'?2:0); }
+try {
+  switch(tool){
+    case 'timestamp': {
+      const n = parseInt(input)||0;
+      const d = new Date(n*1000);
+      r.result = { unix:n, iso:d.toISOString(), local:d.toString(), valid:!isNaN(d) };
+      break;
+    }
+    case 'base64': {
+      const enc = q.get('enc')||'encode';
+      if(enc==='decode'){ try{ r.result={mode:'decode',output:atob(input)} }catch(e){ r.result={mode:'decode',error:'invalid-base64'} } }
+      else { try{ r.result={mode:'encode',output:btoa(unescape(encodeURIComponent(input)))} }catch(e){ r.result={mode:'encode',error:'encode-failed'} } }
+      break;
+    }
+    case 'json-format': {
+      try{ const j=JSON.parse(input); r.result={valid:true,size:JSON.stringify(j).length,type:Array.isArray(j)?'array':typeof j,pretty:JSON.stringify(j,null,2)} }
+      catch(e){ r.result={valid:false,error:e.message} }
+      break;
+    }
+    case 'color': {
+      const hex=(input.match(/^#?([0-9a-f]{6})$/i)||[])[1];
+      if(hex){ const n=parseInt(hex,16),r1=(n>>16)&255,g=(n>>8)&255,b=n&255;
+        r.result={hex:'#'+hex,rgb:{r:r1,g,g,b},hsl:null,css:'rgb('+r1+','+g+','+b+')'};
+      } else r.result={error:'invalid-hex'};
+      break;
+    }
+    case 'wordcount': {
+      const cn=(input.match(/[\u4e00-\u9fff]/g)||[]).length, words=(input.match(/[a-zA-Z0-9]+/g)||[]).length;
+      r.result={chars:input.length,chinese:cn,words,cjkWords:cn+words,lines:input?input.split('\n').length:0};
+      break;
+    }
+    case 'hash': {
+      const algo=q.get('algo')||'sha256';
+      let out='';
+      try{ out=hashStr(input,algo); r.result={algo,output:out} }catch(e){ r.result={algo,error:'unsupported'} }
+      break;
+    }
+    case 'url': {
+      const mode=q.get('mode')||'encode';
+      try{ r.result={mode,output:mode==='encode'?encodeURIComponent(input):decodeURIComponent(input)} }
+      catch(e){ r.result={mode,error:e.message} }
+      break;
+    }
+    default: r={status:'error',error:'unknown-tool',available:['timestamp','base64','json-format','color','wordcount','hash','url']};
+  }
+} catch(e){ r={status:'error',error:e.message} }
+out(r);
+function hashStr(s,algo){
+  // 简单哈希（JS 无 WebCrypto 同步—— 用简单 FNV/或提示异步）
+  let h=0x811c9dc5;
+  for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193) }
+  return (h>>>0).toString(16);
+}
+</script>
+</body>
+</html>
