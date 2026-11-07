@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amortization Schedule - 鍏嶈垂鍦ㄧ嚎璐锋杩樻璁″垝琛?/title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎璐锋杩樻璁″垝琛紝绛夐鏈伅閫愭湀鏈噾/鍒╂伅/鍓╀綑浣欓鏄庣粏锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="杩樻璁″垝琛?amortization schedule,绛夐鏈伅,鏈噾,鍒╂伅,璐锋鏄庣粏,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.field label{font-size:12px;color:#475569;display:block;margin-bottom:5px;font-weight:600}
+input{width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px}
+.summary{margin-bottom:14px;background:#eff6ff;border-radius:12px;padding:16px;text-align:center}
+.summary .big{font-size:26px;font-weight:800;color:#2563eb}
+.summary .sub{font-size:13px;color:#475569;margin-top:6px}
+table{width:100%;border-collapse:collapse;font-size:12px;max-height:420px;overflow:auto;display:block}
+th,td{padding:7px;text-align:right;border-bottom:1px solid #e2e8f0}
+th{color:#64748b;font-weight:600;position:sticky;top:0;background:#f8fafc}
+td:first-child,th:first-child{text-align:center}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+@media(max-width:600px){.fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃搳 Amortization Schedule</h1>
+  <p>鍏嶈垂鍦ㄧ嚎璐锋杩樻璁″垝琛ㄢ€斺€?绛夐鏈伅閫愭湀鏄庣粏銆傛敮鎸??loan= &rate= &years= &format=json 渚?Agent 璋冪敤銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">閫愭湀鏄庣粏</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="fields">
+      <div class="field"><label>璐锋棰濓紙涓囧厓锛?/label><input type="number" id="p" value="100" oninput="calc()"></div>
+      <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
+      <div class="field"><label>骞撮檺</label><input type="number" id="n" value="30" oninput="calc()"></div>
+    </div>
+    <div class="summary" id="sum"></div>
+    <table><thead><tr><th>鏈?/th><th>鏈堜緵</th><th>鏈噾</th><th>鍒╂伅</th><th>鍓╀綑</th></tr></thead><tbody id="tb"></tbody></table>
+  </div>
+</div>
+<footer>ToolkitPro 路 Amortization Schedule 路 绾墠绔?路 Agent鍙敤</footer>
+<script>
+function calc(){
+  var p=+document.getElementById('p').value||0,r=+document.getElementById('r').value||0,n=+document.getElementById('n').value||1;
+  p=p*10000;var mr=r/100/12,months=n*12;
+  var tb=document.getElementById('tb');tb.innerHTML='';
+  if(mr>0){
+    var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
+    var bal=p,ti=0;
+    for(var i=1;i<=months;i++){var int=bal*mr,prin=mf-int;if(bal<prin)prin=bal;bal-=prin;ti+=int;
+      if(i<=60||i>months-2){var tr=document.createElement('tr');tr.innerHTML='<td>'+i+'</td><td>'+fmt(mf)+'</td><td>'+fmt(prin)+'</td><td>'+fmt(int)+'</td><td>'+fmt(bal)+'</td>';tb.appendChild(tr);}
+      else if(i===61){var tr2=document.createElement('tr');tr2.innerHTML='<td colspan="5" style="text-align:center;color:#94a3b8">鈥?/td>';tb.appendChild(tr2);}
+    }
+    document.getElementById('sum').innerHTML='<div class="big">楼'+fmt(mf)+'/鏈?/div><div class="sub">鎬诲埄鎭?楼'+fmt(ti)+' 路 鎬昏繕娆?楼'+fmt(ti+p)+'</div>';
+  } else {
+    var mf0=p/months;document.getElementById('sum').innerHTML='<div class="big">楼'+fmt(mf0)+'/鏈?/div><div class="sub">鍒╃巼涓?0</div>';
+  }
+}
+function fmt(x){return x.toLocaleString('zh-CN',{maximumFractionDigits:0});}
+calc();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var p=(+q.get('loan')||100)*10000,r=+q.get('rate')||3.6,n=+q.get('years')||30,mr=r/100/12,months=n*12;
+    var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1),bal=p,rows=[];
+    for(var i=1;i<=months;i++){var int=bal*mr,prin=mf-int;if(bal<prin)prin=bal;bal-=prin;rows.push({period:i,payment:Math.round(mf),principal:Math.round(prin),interest:Math.round(int),balance:Math.round(bal)});}
+    document.body.innerHTML='<pre style="padding:30px;font-size:13px">'+JSON.stringify({monthly_payment:Math.round(mf),total_payment:Math.round(mf*months),total_interest:Math.round(mf*months-p),schedule:rows},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
