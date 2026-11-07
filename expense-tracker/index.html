@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expense Tracker - 免费在线消费记录器</title>
+<meta name="description" content="免费在线消费记录器，记录收入/支出，分类统计，本地保存，纯前端，无需注册。">
+<meta name="keywords" content="消费记录,expense tracker,记账,收支统计,预算管理,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:700px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px}
+.row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.row input,.row select{padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;flex:1;min-width:100px}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#2563eb}
+.btn.red{background:#ef4444}
+.btn.green{background:#22c55e}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px;text-align:left;border-bottom:1px solid #e2e8f0}
+th{color:#64748b;font-weight:600}
+.inc{color:#22c55e;font-weight:700}
+.exp{color:#ef4444;font-weight:700}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>💸 Expense Tracker</h1>
+  <p>免费在线消费记录器—— 收入/支出，分类统计，本地保存。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">本地保存</span><span class="badge">分类</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="row">
+      <input type="number" id="amt" placeholder="金额" min="0">
+      <input type="text" id="desc" placeholder="备注">
+      <select id="type"><option value="exp">支出</option><option value="inc">收入</option></select>
+      <select id="cat"><option>餐饮</option><option>交通</option><option>购物</option><option>住房</option><option>娱乐</option><option>其他</option></select>
+    </div>
+    <button class="btn" onclick="add()">➕ 添加</button>
+  </div>
+  <div class="card" id="summary" style="text-align:center"></div>
+  <div class="card">
+    <table><thead><tr><th>类型</th><th>备注</th><th>分类</th><th>金额</th><th></th></tr></thead><tbody id="list"></tbody></table>
+  </div>
+</div>
+<footer>ToolkitPro · Expense Tracker · 纯前端</footer>
+<script>
+let items=JSON.parse(localStorage.getItem('expenses')||'[]');
+function save(){localStorage.setItem('expenses',JSON.stringify(items))}
+function add(){
+  const amt=+document.getElementById('amt').value;
+  if(!amt){alert('输入金额');return}
+  items.unshift({amt,desc:document.getElementById('desc').value,type:document.getElementById('type').value,cat:document.getElementById('cat').value,id:Date.now()});
+  document.getElementById('amt').value='';document.getElementById('desc').value='';
+  save();render();
+}
+function del(id){items=items.filter(i=>i.id!==id);save();render()}
+function render(){
+  const list=document.getElementById('list');
+  list.innerHTML=items.map(i=>'<tr><td class="'+(i.type==='inc'?'inc':'exp')+'">'+(i.type==='inc'?'收入':'支出')+'</td><td>'+i.desc+'</td><td>'+i.cat+'</td><td class="'+(i.type==='inc'?'inc':'exp')+'">'+(i.type==='inc'?'+':'−')+'¥'+i.amt.toLocaleString()+'</td><td><button class="btn red" style="padding:4px 10px;font-size:12px" onclick="del('+i.id+')">删</button></td></tr>').join('')||'<tr><td colspan="5" style="text-align:center;color:#94a3b8">暂无记录</td></tr>';
+  const inc=items.filter(i=>i.type==='inc').reduce((a,b)=>a+b.amt,0);
+  const exp=items.filter(i=>i.type==='exp').reduce((a,b)=>a+b.amt,0);
+  document.getElementById('summary').innerHTML='<div style="display:flex;justify-content:space-around;font-size:18px"><span>收入 <b class="inc">¥'+inc.toLocaleString()+'</b></span><span>支出 <b class="exp">¥'+exp.toLocaleString()+'</b></span><span>结余 <b style="color:#2563eb">¥'+(inc-exp).toLocaleString()+'</b></span></div>';
+}
+render();
+</script>
+</body>
+</html>
