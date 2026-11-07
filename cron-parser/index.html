@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cron Parser - 鍏嶈垂鍦ㄧ嚎Cron琛ㄨ揪寮忚В鏋愬櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎Cron琛ㄨ揪寮忚В鏋愬櫒锛岃В鏋?/6娈礳ron琛ㄨ揪寮忓苟璁＄畻涓嬫杩愯鏃堕棿锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="cron parser,cron琛ㄨ揪寮?瀹氭椂浠诲姟,涓嬫杩愯,鍏嶈垂宸ュ叿,agent">
+<title>Cron Parser - 免费在线Cron表达式解析器</title>
+<meta name="description" content="免费在线Cron表达式解析器，解析5/6段cron表达式并计算下次运行时间，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="cron parser,cron表达式,定时任务,下次运行,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,28 +28,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈴憋笍 Cron Parser</h1>
-  <p>鍏嶈垂鍦ㄧ嚎Cron琛ㄨ揪寮忚В鏋愬櫒鈥斺€?璁＄畻涓嬫杩愯鏃堕棿銆傛敮鎸??expr= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">Cron</span><span class="badge">涓嬫杩愯</span><span class="badge">Agent鍙敤</span></div>
+  <h1>⏱️ Cron Parser</h1>
+  <p>免费在线Cron表达式解析器—— 计算下次运行时间。支持 ?expr= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">Cron</span><span class="badge">下次运行</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>Cron 琛ㄨ揪寮?/label><input type="text" id="e" value="0 9 * * 1-5" oninput="calc()"></div>
+    <div class="field"><label>Cron 表达式</label><input type="text" id="e" value="0 9 * * 1-5" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Cron Parser 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Cron Parser · 纯前端 · Agent可用</footer>
 <script>
-var DAYS=['鏃?,'涓€','浜?,'涓?,'鍥?,'浜?,'鍏?];
+var DAYS=['日','一','二','三','四','五','六'];
 function calc(){
   var ex=document.getElementById('e').value.trim(),el=document.getElementById('res');
   var parts=ex.split(/\s+/);
-  if(parts.length!==5&&parts.length!==6){el.innerHTML='<div style="color:#dc2626">闇€ 5 鎴?6 娈佃〃杈惧紡</div>';return;}
+  if(parts.length!==5&&parts.length!==6){el.innerHTML='<div style="color:#dc2626">需 5 或 6 段表达式</div>';return;}
   if(parts.length===6)parts.shift();
   var min=parseField(parts[0],0,59),hour=parseField(parts[1],0,23),day=parseField(parts[2],1,31),mon=parseField(parts[3],1,12),dow=parseField(parts[4],0,6);
-  if(!min||!hour||!day||!mon||!dow){el.innerHTML='<div style="color:#dc2626">琛ㄨ揪寮忔棤鏁?/div>';return;}
+  if(!min||!hour||!day||!mon||!dow){el.innerHTML='<div style="color:#dc2626">表达式无效</div>';return;}
   var found=[],d=new Date();
   for(var k=0;k<100000&&found.length<5;k++){
     d.setMinutes(d.getMinutes()+1);
@@ -61,8 +61,8 @@ function calc(){
     found.push(new Date(d));
   }
   var rows='';
-  if(found.length)found.forEach(function(f){rows+='<div class="row"><span>'+f.toLocaleString('zh-CN')+'</span><b>鍛?+DAYS[f.getDay()]+'</b></div>';});
-  else rows='<div class="row"><span>鏈壘鍒拌繍琛屾椂闂?/span></div>';
+  if(found.length)found.forEach(function(f){rows+='<div class="row"><span>'+f.toLocaleString('zh-CN')+'</span><b>周'+DAYS[f.getDay()]+'</b></div>';});
+  else rows='<div class="row"><span>未找到运行时间</span></div>';
   el.innerHTML=rows;
 }
 function parseField(s,min,max){
