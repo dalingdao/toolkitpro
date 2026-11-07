@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mortgage Calculator - 鍏嶈垂鍦ㄧ嚎鎴胯捶璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎴胯捶璁＄畻鍣紝绛夐鏈伅/绛夐鏈噾鏈堜緵銆佹€诲埄鎭€佹€昏繕娆撅紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鎴胯捶璁＄畻鍣?mortgage calculator,绛夐鏈伅,绛夐鏈噾,鏈堜緵,璐锋璁＄畻,鍏嶈垂宸ュ叿">
+<title>Mortgage Calculator - 免费在线房贷计算器</title>
+<meta name="description" content="免费在线房贷计算器，等额本息/等额本金月供、总利息、总还款，纯前端，无需注册。">
+<meta name="keywords" content="房贷计算器,mortgage calculator,等额本息,等额本金,月供,贷款计算,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -34,25 +34,25 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃彔 Mortgage Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鎴胯捶璁＄畻鍣ㄢ€斺€?绛夐鏈伅 / 绛夐鏈噾鏈堜緵涓庢€诲埄鎭€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">绛夐鏈伅</span><span class="badge">绛夐鏈噾</span><span class="badge">鏀寔 JSON</span></div>
+  <h1>🏠 Mortgage Calculator</h1>
+  <p>免费在线房贷计算器—— 等额本息 / 等额本金月供与总利息。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">等额本息</span><span class="badge">等额本金</span><span class="badge">支持 JSON</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>璐锋鎬婚锛堜竾鍏冿級</label><input type="number" id="p" value="100" min="1" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="3.6" min="0" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>璐锋骞撮檺锛堝勾锛?/label><input type="number" id="n" value="30" min="1" max="40" oninput="calc()"></div>
+    <div class="field"><label>贷款总额（万元）</label><input type="number" id="p" value="100" min="1" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>贷款年限（年）</label><input type="number" id="n" value="30" min="1" max="40" oninput="calc()"></div>
     <div class="seg">
-      <button id="b1" class="on" onclick="mode(1)">绛夐鏈伅</button>
-      <button id="b2" onclick="mode(2)">绛夐鏈噾</button>
+      <button id="b1" class="on" onclick="mode(1)">等额本息</button>
+      <button id="b2" onclick="mode(2)">等额本金</button>
     </div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Mortgage Calculator 路 绾墠绔?路 鏀寔 ?format=json</footer>
+<footer>ToolkitPro · Mortgage Calculator · 纯前端 · 支持 ?format=json</footer>
 <script>
 var M=1;
 function mode(m){M=m;document.getElementById('b1').className=M===1?'on':'';document.getElementById('b2').className=M===2?'on':'';calc();}
@@ -66,14 +66,14 @@ function calc(){
   if(M===1&&mr>0){
     var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
     var total=mf*months, interest=total-p;
-    el.innerHTML='<div class="big">楼'+fmt(mf)+'/鏈?/div><div class="sub">鎬昏繕娆?楼'+fmt(total)+'<br>鎬诲埄鎭?楼'+fmt(interest)+'</div>';
+    el.innerHTML='<div class="big">¥'+fmt(mf)+'/月</div><div class="sub">总还款 ¥'+fmt(total)+'<br>总利息 ¥'+fmt(interest)+'</div>';
   } else if(M===2&&mr>0){
     var first=p/months+p*mr, total=p, sum=0, rows='';
-    for(var i=1;i<=months;i++){var bal=p-p/months*(i-1);var int=bal*mr;var pay=p/months+int;total+=int;sum+=pay;if(i===1||i===months){rows+='<tr><td>'+i+'鏈?/td><td>楼'+fmt(pay)+'</td><td>楼'+fmt(int)+'</td></tr>';}}
-    el.innerHTML='<div class="big">棣栨湀 楼'+fmt(first)+'/鏈?/div><div class="sub">鎬诲埄鎭?楼'+fmt(total-p)+'<br>鎬昏繕娆?楼'+fmt(total)+'</div><table><tr><th>鏈熸暟</th><th>鏈堜緵</th><th>鍒╂伅</th></tr>'+rows+'</table>';
+    for(var i=1;i<=months;i++){var bal=p-p/months*(i-1);var int=bal*mr;var pay=p/months+int;total+=int;sum+=pay;if(i===1||i===months){rows+='<tr><td>'+i+'月</td><td>¥'+fmt(pay)+'</td><td>¥'+fmt(int)+'</td></tr>';}}
+    el.innerHTML='<div class="big">首月 ¥'+fmt(first)+'/月</div><div class="sub">总利息 ¥'+fmt(total-p)+'<br>总还款 ¥'+fmt(total)+'</div><table><tr><th>期数</th><th>月供</th><th>利息</th></tr>'+rows+'</table>';
   } else {
     var mf2=p/months;
-    el.innerHTML='<div class="big">楼'+fmt(mf2)+'/鏈?/div><div class="sub">鍒╃巼涓?0锛屼粎杩樻湰閲?/div>';
+    el.innerHTML='<div class="big">¥'+fmt(mf2)+'/月</div><div class="sub">利率为 0，仅还本金</div>';
   }
 }
 function fmt(x){return x.toLocaleString('zh-CN',{maximumFractionDigits:0});}
