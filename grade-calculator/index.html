@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grade Calculator - 鍏嶈垂鍦ㄧ嚎鎴愮哗/GPA璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎴愮哗璁＄畻鍣紝璁＄畻鍔犳潈骞冲潎鍒嗐€丟PA(4.0/5.0)锛屽绉戠洰鍒嗘暟鏉冮噸锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鎴愮哗璁＄畻鍣?grade calculator,GPA,骞冲潎鍒?鍔犳潈骞冲潎,缁╃偣,鍏嶈垂宸ュ叿">
+<title>Grade Calculator - 免费在线成绩/GPA计算器</title>
+<meta name="description" content="免费在线成绩计算器，计算加权平均分、GPA(4.0/5.0)，多科目分数权重，纯前端，无需注册。">
+<meta name="keywords" content="成绩计算器,grade calculator,GPA,平均分,加权平均,绩点,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -29,28 +29,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃帗 Grade Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鎴愮哗璁＄畻鍣ㄢ€斺€?鍔犳潈骞冲潎鍒嗕笌 GPA銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">GPA</span><span class="badge">鍔犳潈骞冲潎</span></div>
+  <h1>🎓 Grade Calculator</h1>
+  <p>免费在线成绩计算器—— 加权平均分与 GPA。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">GPA</span><span class="badge">加权平均</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div id="rows"></div>
-    <button class="btn add" onclick="addRow()">+ 娣诲姞绉戠洰</button>
+    <button class="btn add" onclick="addRow()">+ 添加科目</button>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Grade Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Grade Calculator · 纯前端</footer>
 <script>
-var rows=[['鏁板',95,4],['鑻辫',88,3],['鐗╃悊',92,3]];
-function addRow(n,s,c){rows.push([n||'绉戠洰'+(rows.length+1),s||90,c||3]);render();}
+var rows=[['数学',95,4],['英语',88,3],['物理',92,3]];
+function addRow(n,s,c){rows.push([n||'科目'+(rows.length+1),s||90,c||3]);render();}
 function render(){
   var el=document.getElementById('rows');el.innerHTML='';
   rows.forEach(function(r,i){
     var d=document.createElement('div');d.className='row';
-    d.innerHTML='<input value="'+r[0]+'" oninput="rows['+i+'][0]=this.value;calc()"><input type="number" value="'+r[1]+'" min="0" max="100" oninput="rows['+i+'][1]=+this.value;calc()"><input type="number" value="'+r[2]+'" min="0" step="0.5" oninput="rows['+i+'][2]=+this.value;calc()"><button class="rm" onclick="rows.splice('+i+',1);render()">脳</button>';
+    d.innerHTML='<input value="'+r[0]+'" oninput="rows['+i+'][0]=this.value;calc()"><input type="number" value="'+r[1]+'" min="0" max="100" oninput="rows['+i+'][1]=+this.value;calc()"><input type="number" value="'+r[2]+'" min="0" step="0.5" oninput="rows['+i+'][2]=+this.value;calc()"><button class="rm" onclick="rows.splice('+i+',1);render()">×</button>';
     el.appendChild(d);
   });
   calc();
@@ -58,7 +58,7 @@ function render(){
 function calc(){
   var sw=0,ws=0;rows.forEach(function(r){sw+=r[1]*r[2];ws+=+r[2];});
   var avg=ws?sw/ws:0, gpa=ws?(avg/100*4).toFixed(2):'0.00';
-  document.getElementById('res').innerHTML='<div class="big">'+avg.toFixed(1)+' 鍒?/div><div class="sub">鍔犳潈骞冲潎鍒嗭紙'+ws+' 瀛﹀垎锛?br>GPA锛?.0 鍒讹級鈮?'+gpa+'</div>';
+  document.getElementById('res').innerHTML='<div class="big">'+avg.toFixed(1)+' 分</div><div class="sub">加权平均分（'+ws+' 学分）<br>GPA（4.0 制）≈ '+gpa+'</div>';
 }
 render();
 </script>
