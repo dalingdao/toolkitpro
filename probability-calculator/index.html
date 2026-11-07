@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability Calculator - 免费在线概率计算器</title>
+<meta name="description" content="免费在线概率计算器，计算成功/失败概率、赔率、概率转百分比，纯前端，无需注册。">
+<meta name="keywords" content="概率计算,probability calculator,赔率,独立事件,概率转换,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:600px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.box{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:19px;font-weight:800;color:#2563eb;margin-top:4px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🎯 Probability Calculator</h1>
+  <p>免费在线概率计算器—— 独立事件概率/赔率。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">概率</span><span class="badge">赔率</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>成功次数</label><input type="number" id="s" value="3" min="0" oninput="calc()"></div>
+    <div class="field"><label>总次数</label><input type="number" id="t" value="10" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Probability Calculator · 纯前端</footer>
+<script>
+function calc(){
+  const s=+document.getElementById('s').value||0,t=+document.getElementById('t').value||1;
+  const p=s/t;
+  document.getElementById('res').innerHTML='<div class="box"><div class="label">成功概率</div><div class="value">'+(p*100).toFixed(2)+'%</div></div><div class="box"><div class="label">失败概率</div><div class="value">'+((1-p)*100).toFixed(2)+'%</div></div><div class="box"><div class="label">赔率</div><div class="value">'+(s?('1 : '+(t/s).toFixed(2)):'∞')+'</div></div>';
+}
+calc();
+</script>
+</body>
+</html>
