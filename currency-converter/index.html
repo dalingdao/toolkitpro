@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Currency Converter - 鍏嶈垂鍦ㄧ嚎姹囩巼鎹㈢畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎姹囩巼鎹㈢畻鍣紝浜烘皯甯?缇庡厓/娆у厓/鏃ュ厓/鑻遍晳绛夊父鐢ㄨ揣甯佷簰杞紝姹囩巼鍙墜鍔ㄨ皟鏁达紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="姹囩巼鎹㈢畻,currency converter,璐у竵杞崲,缇庡厓,娆у厓,鏃ュ厓,姹囩巼,鍏嶈垂宸ュ叿">
+<title>Currency Converter - 免费在线汇率换算器</title>
+<meta name="description" content="免费在线汇率换算器，人民币/美元/欧元/日元/英镑等常用货币互转，汇率可手动调整，纯前端，无需注册。">
+<meta name="keywords" content="汇率换算,currency converter,货币转换,美元,欧元,日元,汇率,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -32,33 +32,34 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃挶 Currency Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎姹囩巼鎹㈢畻鍣ㄢ€斺€?甯哥敤璐у竵浜掕浆锛屾眹鐜囧彲缂栬緫銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">澶氬竵绉?/span><span class="badge">鍙紪杈戞眹鐜?/span></div>
+  <h1>💱 Currency Converter</h1>
+  <p>免费在线汇率换算器—— 常用货币互转，汇率可编辑。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">多币种</span><span class="badge">可编辑汇率</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>閲戦</label><input type="number" id="amt" value="100" min="0" oninput="calc()"></div>
-    <div class="field"><label>浠?/label><select id="from" onchange="calc()">
-      <option value="CNY" selected>CNY 浜烘皯甯?/option><option value="USD">USD 缇庡厓</option><option value="EUR">EUR 娆у厓</option><option value="JPY">JPY 鏃ュ厓</option><option value="GBP">GBP 鑻遍晳</option><option value="HKD">HKD 娓竵</option><option value="KRW">KRW 闊╁厓</option>
+    <div class="field"><label>金额</label><input type="number" id="amt" value="100" min="0" oninput="calc()"></div>
+    <div class="field"><label>从</label><select id="from" onchange="calc()">
+      <option value="CNY" selected>CNY 人民币</option><option value="USD">USD 美元</option><option value="EUR">EUR 欧元</option><option value="JPY">JPY 日元</option><option value="GBP">GBP 英镑</option><option value="HKD">HKD 港币</option><option value="KRW">KRW 韩元</option>
     </select></div>
-    <button class="swap" onclick="var a=document.getElementById('from').value;document.getElementById('from').value=document.getElementById('to').value;document.getElementById('to').value=a;calc();">鈬?浜掓崲</button>
-    <div class="field"><label>鍒?/label><select id="to" onchange="calc()">
-      <option value="USD">USD 缇庡厓</option><option value="CNY" selected>CNY 浜烘皯甯?/option><option value="EUR">EUR 娆у厓</option><option value="JPY">JPY 鏃ュ厓</option><option value="GBP">GBP 鑻遍晳</option><option value="HKD">HKD 娓竵</option><option value="KRW">KRW 闊╁厓</option>
+    <button class="swap" onclick="var a=document.getElementById('from').value;document.getElementById('from').value=document.getElementById('to').value;document.getElementById('to').value=a;calc();">⇄ 互换</button>
+    <div class="field"><label>到</label><select id="to" onchange="calc()">
+      <option value="USD">USD 美元</option><option value="CNY" selected>CNY 人民币</option><option value="EUR">EUR 欧元</option><option value="JPY">JPY 日元</option><option value="GBP">GBP 英镑</option><option value="HKD">HKD 港币</option><option value="KRW">KRW 韩元</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Currency Converter 路 姹囩巼鍙傝€冨€煎彲鎵嬪姩缂栬緫</footer>
+<footer>ToolkitPro · Currency Converter · 汇率参考值可手动编辑</footer>
 <script>
-// 鍙傝€冩眹鐜囷細1 CNY = X 澶栧竵锛堝彲缂栬緫锛?var rate={CNY:1,USD:0.14,EUR:0.13,JPY:21.5,GBP:0.11,HKD:1.09,KRW:193};
+// 参考汇率：1 CNY = X 外币（可编辑）
+var rate={CNY:1,USD:0.14,EUR:0.13,JPY:21.5,GBP:0.11,HKD:1.09,KRW:193};
 function calc(){
   var amt=+document.getElementById('amt').value||0,f=document.getElementById('from').value,t=document.getElementById('to').value;
   var out=amt*rate[t]/rate[f];
   var el=document.getElementById('res');
-  el.innerHTML='<div class="big">'+out.toLocaleString('en-US',{maximumFractionDigits:2})+' '+t+'</div><div class="sub">1 '+f+' 鈮?'+(rate[t]/rate[f]).toFixed(4)+' '+t+'<br>鍙傝€冩眹鐜囷紝鍙紪杈?/div>';
+  el.innerHTML='<div class="big">'+out.toLocaleString('en-US',{maximumFractionDigits:2})+' '+t+'</div><div class="sub">1 '+f+' ≈ '+(rate[t]/rate[f]).toFixed(4)+' '+t+'<br>参考汇率，可编辑</div>';
 }
 calc();
 </script>
