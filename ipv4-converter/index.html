@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IPv4 Converter - 鍏嶈垂鍦ㄧ嚎IPv4涓庢暣鏁颁簰杞?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎IPv4杞崲鍣紝IPv4鍦板潃涓庡崄杩涘埗鏁存暟銆佷簩杩涘埗浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="ipv4 converter,IP杞暣鏁?鍗佽繘鍒?浜岃繘鍒?IP杞崲,鍏嶈垂宸ュ叿,agent">
+<title>IPv4 Converter - 免费在线IPv4与整数互转</title>
+<meta name="description" content="免费在线IPv4转换器，IPv4地址与十进制整数、二进制互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="ipv4 converter,IP转整数,十进制,二进制,IP转换,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -30,38 +30,38 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃敘 IPv4 Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎IPv4杞崲鍣ㄢ€斺€?鐐瑰垎鍗佽繘鍒?/ 鏁存暟 / 浜岃繘鍒朵簰杞€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">IP</span><span class="badge">鏁存暟</span><span class="badge">浜岃繘鍒?/span></div>
+  <h1>🔢 IPv4 Converter</h1>
+  <p>免费在线IPv4转换器—— 点分十进制 / 整数 / 二进制互转。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">IP</span><span class="badge">整数</span><span class="badge">二进制</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="seg">
-      <button id="s1" class="on" onclick="m(1)">IP 鈫?鏁存暟</button>
-      <button id="s2" onclick="m(2)">鏁存暟 鈫?IP</button>
+      <button id="s1" class="on" onclick="m(1)">IP → 整数</button>
+      <button id="s2" onclick="m(2)">整数 → IP</button>
     </div>
-    <div class="field"><label id="lbl">IPv4 鍦板潃</label><input type="text" id="a" value="192.168.1.1" oninput="calc()"></div>
+    <div class="field"><label id="lbl">IPv4 地址</label><input type="text" id="a" value="192.168.1.1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 IPv4 Converter 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · IPv4 Converter · 纯前端 · Agent可用</footer>
 <script>
 var M=1;
-function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';document.getElementById('lbl').textContent=M===1?'IPv4 鍦板潃':'鍗佽繘鍒舵暣鏁?;document.getElementById('a').value=M===1?'192.168.1.1':'3232235777';calc();}
+function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';document.getElementById('lbl').textContent=M===1?'IPv4 地址':'十进制整数';document.getElementById('a').value=M===1?'192.168.1.1':'3232235777';calc();}
 function toInt(ip){return ip.split('.').reduce(function(a,o){return (a<<8)+ +o},0)>>>0}
 function toIp(n){return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.')}
 function calc(){
   var v=document.getElementById('a').value.trim(),el=document.getElementById('res');
   if(M===1){
-    if(!/^(\d{1,3}\.){3}\d{1,3}$/.test(v)||v.split('.').some(function(o){return +o>255})){el.innerHTML='<div style="color:#dc2626">IP 鏍煎紡涓嶆纭?/div>';return;}
+    if(!/^(\d{1,3}\.){3}\d{1,3}$/.test(v)||v.split('.').some(function(o){return +o>255})){el.innerHTML='<div style="color:#dc2626">IP 格式不正确</div>';return;}
     var n=toInt(v);
-    el.innerHTML='<div class="big">'+n+'</div><div class="sub">浜岃繘鍒?'+n.toString(2).padStart(32,'0')+'</div>';
+    el.innerHTML='<div class="big">'+n+'</div><div class="sub">二进制 '+n.toString(2).padStart(32,'0')+'</div>';
   }else{
     var n2=+v;
-    if(isNaN(n2)||n2<0||n2>4294967295){el.innerHTML='<div style="color:#dc2626">鏁存暟闇€鍦?0 ~ 4294967295</div>';return;}
-    el.innerHTML='<div class="big">'+toIp(n2)+'</div><div class="sub">浜岃繘鍒?'+n2.toString(2).padStart(32,'0')+'</div>';
+    if(isNaN(n2)||n2<0||n2>4294967295){el.innerHTML='<div style="color:#dc2626">整数需在 0 ~ 4294967295</div>';return;}
+    el.innerHTML='<div class="big">'+toIp(n2)+'</div><div class="sub">二进制 '+n2.toString(2).padStart(32,'0')+'</div>';
   }
 }
 calc();
