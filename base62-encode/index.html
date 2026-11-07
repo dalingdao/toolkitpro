@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Base62 Encode - 鍏嶈垂鍦ㄧ嚎Base62缂栬В鐮?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎Base62缂栫爜瑙ｇ爜宸ュ叿锛屾枃鏈笌Base62浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="base62,Base62缂栫爜,Base62瑙ｇ爜,缂栫爜,鍏嶈垂宸ュ叿,agent">
+<title>Base62 Encode - 免费在线Base62编解码</title>
+<meta name="description" content="免费在线Base62编码解码工具，文本与Base62互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="base62,Base62编码,Base62解码,编码,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -25,23 +25,23 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃攼 Base62 Encode</h1>
-  <p>鍏嶈垂鍦ㄧ嚎Base62缂栬В鐮佲€斺€?鏂囨湰涓嶣ase62浜掕浆銆傛敮鎸??input= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">Base62</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🔐 Base62 Encode</h1>
+  <p>免费在线Base62编解码—— 文本与Base62互转。支持 ?input= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">Base62</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="seg">
-      <button id="s1" class="on" onclick="m(1)">缂栫爜</button>
-      <button id="s2" onclick="m(2)">瑙ｇ爜</button>
+      <button id="s1" class="on" onclick="m(1)">编码</button>
+      <button id="s2" onclick="m(2)">解码</button>
     </div>
-    <textarea id="in" placeholder="杈撳叆鏂囨湰">Hello ToolkitPro</textarea>
-    <textarea id="out" placeholder="杈撳嚭"></textarea>
+    <textarea id="in" placeholder="输入文本">Hello ToolkitPro</textarea>
+    <textarea id="out" placeholder="输出"></textarea>
   </div>
 </div>
-<footer>ToolkitPro 路 Base62 Encode 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Base62 Encode · 纯前端 · Agent可用</footer>
 <script>
 var CH='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',M=1;
 function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';run();}
@@ -63,7 +63,7 @@ function run(){
   try{
     if(M===1){var bytes=[];for(var i=0;i<v.length;i++){var cp=v.codePointAt(i);var b=[];while(cp){b.unshift(cp&255);cp>>=8;}if(!b.length)b=[0];bytes=bytes.concat(b);}el.value=b62(bytes,true);}
     else{el.value=b62(v,false).map(function(x){return String.fromCharCode(x)}).join('');}
-  }catch(e){el.value='锛堣緭鍏ユ棤鏁堬級';}
+  }catch(e){el.value='（输入无效）';}
 }
 run();
 document.getElementById('in').addEventListener('input',run);
