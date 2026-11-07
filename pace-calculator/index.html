@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pace Calculator - 鍏嶈垂鍦ㄧ嚎璺戞閰嶉€熻绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎璺戞閰嶉€熻绠楀櫒锛岃窛绂?鏃堕棿绠楅厤閫熶笌閫熷害锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="閰嶉€?pace calculator,璺戞閰嶉€?椹媺鏉?閫熷害,鍏嶈垂宸ュ叿">
+<title>Pace Calculator - 免费在线跑步配速计算器</title>
+<meta name="description" content="免费在线跑步配速计算器，距离/时间算配速与速度，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="配速,pace calculator,跑步配速,马拉松,速度,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,29 +27,29 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃弮 Pace Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎璺戞閰嶉€熻绠楀櫒鈥斺€?璺濈涓庢椂闂寸畻閰嶉€熴€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">閰嶉€?/span><span class="badge">Agent鍙敤</span></div>
+  <h1>🏃 Pace Calculator</h1>
+  <p>免费在线跑步配速计算器—— 距离与时间算配速。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">配速</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>璺濈锛堝叕閲岋級</label><input type="number" id="d" value="10" min="0.1" step="0.1" oninput="calc()"></div>
-    <div class="field"><label>鐢ㄦ椂锛堝垎閽燂級</label><input type="number" id="t" value="55" min="1" oninput="calc()"></div>
+    <div class="field"><label>距离（公里）</label><input type="number" id="d" value="10" min="0.1" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>用时（分钟）</label><input type="number" id="t" value="55" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Pace Calculator 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Pace Calculator · 纯前端 · Agent可用</footer>
 <script>
 function fmt(min){var m=Math.floor(min),s=Math.round((min-m)*60);if(s===60){m++;s=0;}return m+"'"+String(s).padStart(2,'0')+'"';}
 function calc(){
   var d=+document.getElementById('d').value||0,t=+document.getElementById('t').value||0;
   var el=document.getElementById('res');
-  if(d<=0){el.innerHTML='<div class="big">鈥?/div>';return;}
+  if(d<=0){el.innerHTML='<div class="big">—</div>';return;}
   var pace=t/d,spd=d/(t/60);
   var mar=fmt(pace*42.195);
-  el.innerHTML='<div class="big">'+fmt(pace)+' /km</div><div class="sub">閰嶉€?br>閫熷害 '+spd.toFixed(2)+' km/h<br>鍏ㄩ┈瀹岃禌绾?'+mar+'</div>';
+  el.innerHTML='<div class="big">'+fmt(pace)+' /km</div><div class="sub">配速<br>速度 '+spd.toFixed(2)+' km/h<br>全马完赛约 '+mar+'</div>';
 }
 calc();
 (function(){
