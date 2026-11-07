@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio Allocator - 鍏嶈垂鍦ㄧ嚎璧勪骇閰嶇疆璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎璧勪骇閰嶇疆璁＄畻鍣紝鎸夊悇绫昏祫浜х洰鏍囨瘮渚嬪垎閰嶆€昏祫閲戦噾棰濓紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="璧勪骇閰嶇疆,portfolio allocator,鍒嗛厤姣斾緥,鎶曡祫缁勫悎,鍏嶈垂宸ュ叿">
+<title>Portfolio Allocator - 免费在线资产配置计算器</title>
+<meta name="description" content="免费在线资产配置计算器，按各类资产目标比例分配总资金金额，纯前端，无需注册。">
+<meta name="keywords" content="资产配置,portfolio allocator,分配比例,投资组合,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -33,29 +33,29 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃Ш Portfolio Allocator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎璧勪骇閰嶇疆璁＄畻鍣ㄢ€斺€?鎸夌洰鏍囨瘮渚嬪垎閰嶆€昏祫閲戙€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">閰嶇疆</span><span class="badge">姣斾緥</span></div>
+  <h1>🧺 Portfolio Allocator</h1>
+  <p>免费在线资产配置计算器—— 按目标比例分配总资金。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">配置</span><span class="badge">比例</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鎬昏祫閲戯紙鍏冿級</label><input type="number" id="t" value="100000" min="1" oninput="calc()"></div>
+    <div class="field"><label>总资金（元）</label><input type="number" id="t" value="100000" min="1" oninput="calc()"></div>
     <div id="rows"></div>
-    <button class="btn add" onclick="add()">+ 娣诲姞璧勪骇</button>
+    <button class="btn add" onclick="add()">+ 添加资产</button>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Portfolio Allocator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Portfolio Allocator · 纯前端</footer>
 <script>
-var A=[['鑲＄エ',50],['鍊哄埜',30],['鐜伴噾',20]];
-function add(){A.push(['璧勪骇'+(A.length+1),10]);render();}
+var A=[['股票',50],['债券',30],['现金',20]];
+function add(){A.push(['资产'+(A.length+1),10]);render();}
 function render(){
   var el=document.getElementById('rows');el.innerHTML='';
   A.forEach(function(r,i){
     var d=document.createElement('div');d.className='row';
-    d.innerHTML='<input value="'+r[0]+'" oninput="A['+i+'][0]=this.value"><input type="number" value="'+r[1]+'" oninput="A['+i+'][1]=+this.value;calc()"><button class="rm" onclick="A.splice('+i+',1);render()">脳</button>';
+    d.innerHTML='<input value="'+r[0]+'" oninput="A['+i+'][0]=this.value"><input type="number" value="'+r[1]+'" oninput="A['+i+'][1]=+this.value;calc()"><button class="rm" onclick="A.splice('+i+',1);render()">×</button>';
     el.appendChild(d);
   });
   calc();
@@ -63,8 +63,8 @@ function render(){
 function calc(){
   var t=+document.getElementById('t').value||0,sum=A.reduce(function(s,r){return s+r[1]},0);
   var el=document.getElementById('res');
-  if(!sum){el.innerHTML='<div class="row"><span>鎬绘瘮渚嬮渶澶т簬0</span></div>';return;}
-  el.innerHTML='<div class="row"><span>鎬绘瘮渚?/span><b>'+sum+'%</b></div>'+A.map(function(r){return '<div class="row"><span>'+r[0]+'锛?+r[1]+'%锛?/span><b>楼'+Math.round(t*r[1]/sum).toLocaleString('zh-CN')+'</b></div>';}).join('');
+  if(!sum){el.innerHTML='<div class="row"><span>总比例需大于0</span></div>';return;}
+  el.innerHTML='<div class="row"><span>总比例</span><b>'+sum+'%</b></div>'+A.map(function(r){return '<div class="row"><span>'+r[0]+'（'+r[1]+'%）</span><b>¥'+Math.round(t*r[1]/sum).toLocaleString('zh-CN')+'</b></div>';}).join('');
 }
 render();
 </script>
