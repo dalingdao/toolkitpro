@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Caffeine Calculator - 鍏嶈垂鍦ㄧ嚎鍜栧暋鍥犺绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍜栧暋鍥犺绠楀櫒锛屾寜鍜栧暋/鑼?鍙箰/鑳介噺楗枡浼扮畻姣忔棩鍜栧暋鍥犳憚鍏ワ紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鍜栧暋鍥?caffeine,鍜栧暋鍥犳憚鍏?鍜栧暋,鑳介噺楗枡,鍏嶈垂宸ュ叿">
+<title>Caffeine Calculator - 免费在线咖啡因计算器</title>
+<meta name="description" content="免费在线咖啡因计算器，按咖啡/茶/可乐/能量饮料估算每日咖啡因摄入，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="咖啡因,caffeine,咖啡因摄入,咖啡,能量饮料,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,28 +27,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈽?Caffeine</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍜栧暋鍥犺绠楀櫒鈥斺€?姣忔棩鍜栧暋鍥犳憚鍏ャ€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍜栧暋鍥?/span><span class="badge">Agent鍙敤</span></div>
+  <h1>☕ Caffeine</h1>
+  <p>免费在线咖啡因计算器—— 每日咖啡因摄入。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">咖啡因</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鍜栧暋锛堟澂锛岀害95mg锛?/label><input type="number" id="coffee" value="2" min="0" oninput="calc()"></div>
-    <div class="field"><label>鑼讹紙鏉紝绾?7mg锛?/label><input type="number" id="tea" value="1" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍙箰锛堢綈锛岀害34mg锛?/label><input type="number" id="cola" value="0" min="0" oninput="calc()"></div>
-    <div class="field"><label>鑳介噺楗枡锛堢綈锛岀害80mg锛?/label><input type="number" id="energy" value="0" min="0" oninput="calc()"></div>
+    <div class="field"><label>咖啡（杯，约95mg）</label><input type="number" id="coffee" value="2" min="0" oninput="calc()"></div>
+    <div class="field"><label>茶（杯，约47mg）</label><input type="number" id="tea" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>可乐（罐，约34mg）</label><input type="number" id="cola" value="0" min="0" oninput="calc()"></div>
+    <div class="field"><label>能量饮料（罐，约80mg）</label><input type="number" id="energy" value="0" min="0" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Caffeine 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Caffeine · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var c=+document.getElementById('coffee').value||0,t=+document.getElementById('tea').value||0,cl=+document.getElementById('cola').value||0,e=+document.getElementById('energy').value||0;
   var mg=c*95+t*47+cl*34+e*80;
-  var verdict=mg<=200?'鉁?閫傞噺':(mg<=400?'鈿狅笍 涓瓑锛堚墹400mg锛?:'鉂?鍋忛珮锛?gt;400mg锛?);
-  document.getElementById('res').innerHTML='<div class="big">'+mg+' mg</div><div class="sub">'+verdict+'<br>鍋ュ悍鎴愪汉寤鸿 鈮?00mg/澶?/div>';
+  var verdict=mg<=200?'✅ 适量':(mg<=400?'⚠️ 中等（≤400mg）':'❌ 偏高（&gt;400mg）');
+  document.getElementById('res').innerHTML='<div class="big">'+mg+' mg</div><div class="sub">'+verdict+'<br>健康成人建议 ≤400mg/天</div>';
 }
 calc();
 (function(){
