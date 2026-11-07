@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Down Payment Savings - 鍏嶈垂鍦ㄧ嚎棣栦粯鍌ㄨ搫鐩爣璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎棣栦粯鍌ㄨ搫璁＄畻鍣紝鎸夋埧浠?棣栦粯姣斾緥/鏈堝瓨/鏀剁泭浼扮畻澶氫箙鏀掑棣栦粯锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="棣栦粯鍌ㄨ搫,down payment,鏀掗浠?涔版埧,鍌ㄨ搫鐩爣,鍏嶈垂宸ュ叿">
+<title>Down Payment Savings - 免费在线首付储蓄目标计算器</title>
+<meta name="description" content="免费在线首付储蓄计算器，按房价/首付比例/月存/收益估算多久攒够首付，纯前端，无需注册。">
+<meta name="keywords" content="首付储蓄,down payment,攒首付,买房,储蓄目标,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,30 +27,30 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃彟 Down Payment Savings</h1>
-  <p>鍏嶈垂鍦ㄧ嚎棣栦粯鍌ㄨ搫璁＄畻鍣ㄢ€斺€?澶氫箙鏀掑棣栦粯銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">棣栦粯</span><span class="badge">鍌ㄨ搫</span></div>
+  <h1>🏦 Down Payment Savings</h1>
+  <p>免费在线首付储蓄计算器—— 多久攒够首付。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">首付</span><span class="badge">储蓄</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鎴夸环锛堜竾鍏冿級</label><input type="number" id="h" value="100" min="1" oninput="calc()"></div>
-    <div class="field"><label>棣栦粯姣斾緥锛?锛?/label><input type="number" id="d" value="30" min="0" max="100" oninput="calc()"></div>
-    <div class="field"><label>宸叉湁鍌ㄨ搫锛堜竾鍏冿級</label><input type="number" id="cur" value="5" min="0" oninput="calc()"></div>
-    <div class="field"><label>姣忔湀鍌ㄨ搫锛堝厓锛?/label><input type="number" id="m" value="5000" min="1" oninput="calc()"></div>
-    <div class="field"><label>骞存敹鐩婄巼锛?锛?/label><input type="number" id="r" value="2" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>房价（万元）</label><input type="number" id="h" value="100" min="1" oninput="calc()"></div>
+    <div class="field"><label>首付比例（%）</label><input type="number" id="d" value="30" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>已有储蓄（万元）</label><input type="number" id="cur" value="5" min="0" oninput="calc()"></div>
+    <div class="field"><label>每月储蓄（元）</label><input type="number" id="m" value="5000" min="1" oninput="calc()"></div>
+    <div class="field"><label>年收益率（%）</label><input type="number" id="r" value="2" min="0" step="0.1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Down Payment Savings 路 绾墠绔?/footer>
+<footer>ToolkitPro · Down Payment Savings · 纯前端</footer>
 <script>
 function calc(){
   var h=+document.getElementById('h').value||0,d=+document.getElementById('d').value||0,cur=+document.getElementById('cur').value||0,m=+document.getElementById('m').value||0,r=+document.getElementById('r').value||0;
   var target=h*10000*d/100,bal=cur*10000;
   var months=0;
   while(bal<target&&months<1200){bal=bal*(1+r/100/12)+m;months++;}
-  document.getElementById('res').innerHTML='<div class="big">'+months+' 涓湀</div><div class="sub">绾?'+Math.floor(months/12)+' 骞?'+months%12+' 涓湀<br>鐩爣棣栦粯 楼'+target.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  document.getElementById('res').innerHTML='<div class="big">'+months+' 个月</div><div class="sub">约 '+Math.floor(months/12)+' 年 '+months%12+' 个月<br>目标首付 ¥'+target.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 calc();
 </script>
