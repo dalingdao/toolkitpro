@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Net Worth Calculator - 鍏嶈垂鍦ㄧ嚎鍑€璧勪骇璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍑€璧勪骇璁＄畻鍣紝鎬昏祫浜у噺鎬昏礋鍊虹畻鍑€璧勪骇锛岃祫浜?璐熷€哄垎绫荤櫥璁帮紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鍑€璧勪骇璁＄畻鍣?net worth,璧勪骇,璐熷€?璐㈠瘜,鍑€鍊?鍏嶈垂宸ュ叿">
+<title>Net Worth Calculator - 免费在线净资产计算器</title>
+<meta name="description" content="免费在线净资产计算器，总资产减总负债算净资产，资产/负债分类登记，纯前端，无需注册。">
+<meta name="keywords" content="净资产计算器,net worth,资产,负债,财富,净值,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -31,31 +31,31 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃挵 Net Worth Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍑€璧勪骇璁＄畻鍣ㄢ€斺€?鎬昏祫浜?鈭?鎬昏礋鍊恒€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">璧勪骇</span><span class="badge">璐熷€?/span></div>
+  <h1>💰 Net Worth Calculator</h1>
+  <p>免费在线净资产计算器—— 总资产 − 总负债。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">资产</span><span class="badge">负债</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="sec"><h2>馃彟 璧勪骇锛堝厓锛?/h2><div id="assets"></div><button class="btn add" onclick="add('assets')">+ 娣诲姞璧勪骇</button></div>
-    <div class="sec"><h2>馃挸 璐熷€猴紙鍏冿級</h2><div id="debts"></div><button class="btn add" onclick="add('debts')">+ 娣诲姞璐熷€?/button></div>
+    <div class="sec"><h2>🏦 资产（元）</h2><div id="assets"></div><button class="btn add" onclick="add('assets')">+ 添加资产</button></div>
+    <div class="sec"><h2>💳 负债（元）</h2><div id="debts"></div><button class="btn add" onclick="add('debts')">+ 添加负债</button></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Net Worth Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Net Worth Calculator · 纯前端</footer>
 <script>
-var A=[['鐜伴噾',50000],['瀛樻',300000],['鎴夸骇',1500000]];
-var D=[['鎴胯捶',800000],['杞﹁捶',50000]];
-function add(k){var arr=k==='assets'?A:D;arr.push(['椤圭洰'+(arr.length+1),0]);render();}
+var A=[['现金',50000],['存款',300000],['房产',1500000]];
+var D=[['房贷',800000],['车贷',50000]];
+function add(k){var arr=k==='assets'?A:D;arr.push(['项目'+(arr.length+1),0]);render();}
 function render(){
   ['assets','debts'].forEach(function(k){
     var el=document.getElementById(k),arr=k==='assets'?A:D;
     el.innerHTML='';
     arr.forEach(function(r,i){
       var d=document.createElement('div');d.className='row';
-      d.innerHTML='<input value="'+r[0]+'" oninput="'+(k==='assets'?'A':'D')+'['+i+'][0]=this.value"><input type="number" value="'+r[1]+'" oninput="'+(k==='assets'?'A':'D')+'['+i+'][1]=+this.value;calc()"><button class="rm" onclick="'+(k==='assets'?'A':'D')+'.splice('+i+',1);render()">脳</button>';
+      d.innerHTML='<input value="'+r[0]+'" oninput="'+(k==='assets'?'A':'D')+'['+i+'][0]=this.value"><input type="number" value="'+r[1]+'" oninput="'+(k==='assets'?'A':'D')+'['+i+'][1]=+this.value;calc()"><button class="rm" onclick="'+(k==='assets'?'A':'D')+'.splice('+i+',1);render()">×</button>';
       el.appendChild(d);
     });
   });
@@ -63,7 +63,7 @@ function render(){
 }
 function calc(){
   var ta=A.reduce(function(s,r){return s+(+r[1]||0)},0),td=D.reduce(function(s,r){return s+(+r[1]||0)},0),nw=ta-td;
-  document.getElementById('res').innerHTML='<div class="big">楼'+nw.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">鎬昏祫浜?楼'+ta.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>鎬昏礋鍊?楼'+td.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  document.getElementById('res').innerHTML='<div class="big">¥'+nw.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">总资产 ¥'+ta.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>总负债 ¥'+td.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 render();
 </script>
