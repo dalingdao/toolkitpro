@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Present Value - 鍏嶈垂鍦ㄧ嚎鐜板€艰绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鐜板€艰绠楀櫒锛屾湭鏉ラ噾棰?鎶樼幇鐜?骞撮檺绠楃幇鍊糚V锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鐜板€?present value,PV,鎶樼幇,鏈潵閲戦,鍏嶈垂宸ュ叿">
+<title>Present Value - 免费在线现值计算器</title>
+<meta name="description" content="免费在线现值计算器，未来金额/折现率/年限算现值PV，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="现值,present value,PV,折现,未来金额,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,27 +27,27 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃攳 Present Value</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鐜板€艰绠楀櫒鈥斺€?鏈潵閲戦鎶樼幇銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">PV</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🔍 Present Value</h1>
+  <p>免费在线现值计算器—— 未来金额折现。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">PV</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏈潵閲戦锛堝厓锛?/label><input type="number" id="f" value="100000" min="0" oninput="calc()"></div>
-    <div class="field"><label>骞存姌鐜扮巼锛?锛?/label><input type="number" id="r" value="5" min="0" step="0.1" oninput="calc()"></div>
-    <div class="field"><label>骞撮檺锛堝勾锛?/label><input type="number" id="y" value="5" min="0" oninput="calc()"></div>
+    <div class="field"><label>未来金额（元）</label><input type="number" id="f" value="100000" min="0" oninput="calc()"></div>
+    <div class="field"><label>年折现率（%）</label><input type="number" id="r" value="5" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>年限（年）</label><input type="number" id="y" value="5" min="0" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Present Value 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Present Value · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var f=+document.getElementById('f').value||0,r=+document.getElementById('r').value||0,y=+document.getElementById('y').value||0;
   var el=document.getElementById('res');
   var pv=f/Math.pow(1+r/100,y);
-  el.innerHTML='<div class="big">楼'+pv.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div><div class="sub">鐜板€?PV锛堟姌鐜扮巼 '+r+'%锛?+y+' 骞达級</div>';
+  el.innerHTML='<div class="big">¥'+pv.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div><div class="sub">现值 PV（折现率 '+r+'%，'+y+' 年）</div>';
 }
 calc();
 (function(){
