@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Factor Pro - 免费在线质因数分解/质数检测器</title>
+<meta name="description" content="免费在线质因数分解工具，输入数字分解质因数，检测质数，列出因数，纯前端，无需注册。">
+<meta name="keywords" content="质因数分解,prime factor,质数检测,因数列表,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:12px;border-radius:8px;border:1px solid #cbd5e1;font-size:18px}
+.result{margin-top:16px;padding:16px;border-radius:10px;background:#eff6ff}
+.result .big{font-size:20px;font-weight:700;color:#2563eb;word-break:break-all;line-height:1.6}
+.result .sub{font-size:14px;color:#475569;margin-top:8px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🔬 Prime Factor Pro</h1>
+  <p>免费在线质因数分解/质数检测器—— 分解质因数，检测质数，列出因数。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">质因数</span><span class="badge">质数</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>输入整数（1-1000000）</label><input type="number" id="n" value="360" min="1" max="1000000" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Prime Factor Pro · 纯前端</footer>
+<script>
+function isPrime(n){if(n<2)return false;if(n<4)return true;if(n%2===0||n%3===0)return false;for(let i=5;i*i<=n;i+=6)if(n%i===0||n%(i+2)===0)return false;return true}
+function calc(){
+  let n=+document.getElementById('n').value;
+  if(!n||n<1){document.getElementById('res').innerHTML='请输入正整数';return}
+  let m=n,factors=[],i=2;
+  while(i*i<=m){while(m%i===0){factors.push(i);m/=i}i+=i===2?1:2}
+  if(m>1)factors.push(m);
+  const count={};factors.forEach(f=>count[f]=(count[f]||0)+1);
+  const primeStr=Object.keys(count).map(p=>count[p]>1?p+'^'+count[p]:p).join(' × ');
+  // 因数列表
+  const divisors=[];
+  for(let d=1;d*d<=n;d++){if(n%d===0){divisors.push(d);if(d*d!==n)divisors.push(n/d)}}
+  divisors.sort((a,b)=>a-b);
+  const isP=isPrime(n);
+  document.getElementById('res').innerHTML='<div class="big">'+n+' = '+primeStr+'</div><div class="sub">质数检测：'+(isP?'是质数':'不是质数')+'<br>因数（'+divisors.length+'个）：'+divisors.join(', ')+'</div>';
+}
+calc();
+</script>
+</body>
+</html>
