@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID Generator Pro - 免费在线 UUID 生成器</title>
+<meta name="description" content="免费在线 UUID 生成器，生成 v4 UUID，批量生成 1-100 个，复制/下载，纯前端，无需注册。">
+<meta name="keywords" content="uuid生成,uuid generator,uuid v4,guid生成,批量uuid,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.row{display:flex;gap:12px;margin-bottom:14px;align-items:center}
+.row label{font-size:13px;color:#475569;font-weight:600}
+input[type=number]{width:90px;padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#2563eb}
+.btn.gray{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+textarea{width:100%;min-height:260px;padding:14px;border-radius:10px;border:1px solid #cbd5e1;font-size:13px;font-family:monospace;resize:vertical}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🆔 UUID Generator Pro</h1>
+  <p>免费在线 UUID 生成器—— 生成 v4 UUID，批量 1-100 个。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">v4</span><span class="badge">批量</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="row">
+      <label>生成数量：</label><input type="number" id="n" value="5" min="1" max="100" onchange="gen()">
+      <button class="btn" onclick="gen()">🎲 生成</button>
+      <button class="btn gray" onclick="cp()">📋 复制</button>
+      <button class="btn gray" onclick="dl()">💾 下载</button>
+    </div>
+    <textarea id="out" readonly></textarea>
+  </div>
+</div>
+<footer>ToolkitPro · UUID Generator Pro · 纯前端</footer>
+<script>
+function uuid(){
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);
+  });
+}
+function gen(){
+  const n=Math.min(100,Math.max(1,+document.getElementById('n').value||1));
+  const arr=[];for(let i=0;i<n;i++)arr.push(uuid());
+  document.getElementById('out').value=arr.join('\n');
+}
+function cp(){const t=document.getElementById('out').value;if(t)navigator.clipboard.writeText(t).then(()=>alert('已复制 '+t.split('\n').length+' 个 UUID'))}
+function dl(){
+  const t=document.getElementById('out').value;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='uuids.txt';a.click();
+}
+gen();
+</script>
+</body>
+</html>
