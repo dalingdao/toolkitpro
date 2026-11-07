@@ -3,77 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>单位转换器 - Unit Converter - 在线工具</title>
-<meta name="description" content="免费在线单位转换工具。长度、重量、温度单位互转，米/英尺、千克/磅、摄氏度/华氏度，即时转换。">
-<meta name="keywords" content="单位转换, Unit Converter, 长度换算, 重量换算, 温度换算, 在线工具">
+<title>Unit Converter Pro - 免费在线单位转换器（长度/重量/温度/面积/体积）</title>
+<meta name="description" content="免费在线单位转换器，支持长度、重量、温度、面积、体积等常用单位互转，实时计算，纯前端，无需注册。">
+<meta name="keywords" content="单位转换,unit converter,长度转换,重量转换,温度转换,面积转换,体积转换,免费工具">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
-.container { max-width: 860px; margin: 0 auto; }
-h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
-.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
-.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
-.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-.tab { padding: 8px 20px; border: 2px solid #e2e8f0; border-radius: 8px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
-.tab:hover, .tab.active { border-color: #319795; background: #e6fffa; color: #285e61; }
-.inputs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
-input, select { padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; width: 100%; font-family: 'SF Mono', Consolas, monospace; }
-input:focus, select:focus { outline: none; border-color: #319795; }
-.result { text-align: center; font-size: 20px; font-weight: 700; margin-top: 20px; color: #285e61; }
-footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{flex:1;min-width:100px;padding:10px;text-align:center;border:2px solid #e2e8f0;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:#475569}
+.tab.active{border-color:#3b82f6;background:#eff6ff;color:#2563eb}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.row{display:flex;gap:12px;align-items:flex-end}
+.row .field{flex:1}
+.eq{font-size:22px;color:#64748b;padding-bottom:10px}
+.result{background:#eff6ff;border-radius:10px;padding:16px;text-align:center;margin-top:16px}
+.result b{font-size:24px;color:#2563eb}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>单位转换器</h1>
-  <p class="sub">长度、重量、温度单位互转</p>
-  <div class="toolbox">
-    <div class="tabs">
-      <button class="tab active" data-t="length">长度</button>
-      <button class="tab" data-t="weight">重量</button>
-      <button class="tab" data-t="temp">温度</button>
-    </div>
-    <div class="inputs">
-      <input type="number" id="val" value="1" placeholder="数值">
-      <select id="from"></select>
-      <select id="to"></select>
-    </div>
-    <div class="result" id="out">1</div>
-  </div>
-  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📏 Unit Converter Pro</h1>
+  <p>免费在线单位转换器—— 长度/重量/温度/面积/体积/速度，实时计算，纯前端。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">6类</span><span class="badge">实时</span></div>
 </div>
+<div class="container">
+  <div class="card">
+    <div class="tabs" id="tabs"></div>
+    <div class="row">
+      <div class="field"><label>数值</label><input type="number" id="val" value="1" oninput="calc()"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>从</label><select id="from" onchange="calc()"></select></div>
+      <div class="eq">⇄</div>
+      <div class="field"><label>到</label><select id="to" onchange="calc()"></select></div>
+    </div>
+    <div class="result">结果：<b id="res">—</b></div>
+  </div>
+</div>
+<footer>ToolkitPro · Unit Converter Pro · 纯前端</footer>
 <script>
-const units = {
-  length: [{ n: '米 (m)', v: 1 }, { n: '英尺 (ft)', v: 0.3048 }, { n: '英寸 (in)', v: 0.0254 }, { n: '厘米 (cm)', v: 0.01 }, { n: '千米 (km)', v: 1000 }, { n: '英里 (mi)', v: 1609.344 }],
-  weight: [{ n: '千克 (kg)', v: 1 }, { n: '克 (g)', v: 0.001 }, { n: '磅 (lb)', v: 0.453592 }, { n: '盎司 (oz)', v: 0.0283495 }, { n: '吨 (t)', v: 1000 }],
-  temp: [{ n: '摄氏度 (°C)', v: 0 }, { n: '华氏度 (°F)', v: 1 }, { n: '开尔文 (K)', v: 2 }]
+const cats={
+  length:{label:'长度',units:{m:1,km:1000,cm:0.01,mm:0.001,mi:1609.344,yd:0.9144,ft:0.3048,in:0.0254}},
+  weight:{label:'重量',units:{kg:1,g:0.001,mg:1e-6,t:1000,lb:0.453592,oz:0.0283495}},
+  temperature:{label:'温度',units:{c:1,f:1,k:1},special:true},
+  area:{label:'面积',units:{m2:1,km2:1e6,cm2:1e-4,ha:1e4,acre:4046.86,ft2:0.092903}},
+  volume:{label:'体积',units:{l:1,ml:0.001,m3:1000,gal:3.78541,floz:0.0295735}},
+  speed:{label:'速度',units:{ms:1,kmh:0.277778,mph:0.44704,kn:0.514444}}
 };
-let cur = 'length';
-function render() {
-  document.getElementById('from').innerHTML = units[cur].map((u, i) => '<option value="' + i + '">' + u.n + '</option>').join('');
-  document.getElementById('to').innerHTML = units[cur].map((u, i) => '<option value="' + i + '">' + u.n + '</option>').join('');
-  document.getElementById('to').value = 1;
-  update();
+let cur='length';
+function init(){
+  const tabs=document.getElementById('tabs');
+  tabs.innerHTML=Object.keys(cats).map(k=>'<div class="tab'+(k===cur?' active':'')+'" onclick="setCat(\''+k+'\')">'+cats[k].label+'</div>').join('');
+  fill();
 }
-function update() {
-  const v = parseFloat(document.getElementById('val').value);
-  const f = parseInt(document.getElementById('from').value), t = parseInt(document.getElementById('to').value);
-  if (cur === 'temp') {
-    let celsius;
-    if (f === 0) celsius = v; else if (f === 1) celsius = (v - 32) * 5/9; else celsius = v - 273.15;
-    let out;
-    if (t === 0) out = celsius; else if (t === 1) out = celsius * 9/5 + 32; else out = celsius + 273.15;
-    document.getElementById('out').textContent = out.toFixed(2) + ' ' + units.temp[t].n;
+function setCat(c){cur=c;document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',Object.keys(cats)[i]===c));fill();calc()}
+function fill(){
+  const u=Object.keys(cats[cur].units);
+  document.getElementById('from').innerHTML=u.map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+  document.getElementById('to').innerHTML=u.map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+  if(u[1])document.getElementById('to').value=u[1];
+}
+function calc(){
+  const v=parseFloat(document.getElementById('val').value)||0;
+  const f=document.getElementById('from').value,t=document.getElementById('to').value;
+  let out=v;
+  if(cats[cur].special){
+    if(cur==='temperature'){let c=v;if(f==='f')c=(v-32)*5/9;else if(f==='k')c=v-273.15;if(t==='f')out=c*9/5+32;else if(t==='k')out=c+273.15;else out=c}
   } else {
-    const m = v * units[cur][f].v;
-    document.getElementById('out').textContent = (m / units[cur][t].v).toFixed(4) + ' ' + units[cur][t].n;
+    out=v*cats[cur].units[f]/cats[cur].units[t];
   }
+  document.getElementById('res').textContent=(Math.round(out*1e8)/1e8)+' '+t;
 }
-document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); b.classList.add('active'); cur = b.dataset.t; render(); }));
-document.getElementById('val').addEventListener('input', update);
-document.getElementById('from').addEventListener('change', update);
-document.getElementById('to').addEventListener('change', update);
-render();
+init();calc();
 </script>
 </body>
 </html>
