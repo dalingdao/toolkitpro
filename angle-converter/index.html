@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Angle Converter - 鍏嶈垂鍦ㄧ嚎瑙掑害鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎瑙掑害鎹㈢畻鍣紝搴?寮у害/鍒?绉?鐧惧垎搴︿簰杞紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="瑙掑害鎹㈢畻,angle converter,搴?寮у害,瑙?鍏嶈垂宸ュ叿">
+<title>Angle Converter - 免费在线角度换算</title>
+<meta name="description" content="免费在线角度换算器，度/弧度/分/秒/百分度互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="角度换算,angle converter,度,弧度,角,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搻 Angle Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎瑙掑害鎹㈢畻鈥斺€?搴?寮у害/鍒?绉掋€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">搴?/span><span class="badge">寮у害</span></div>
+  <h1>📐 Angle Converter</h1>
+  <p>免费在线角度换算—— 度/弧度/分/秒。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">度</span><span class="badge">弧度</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="90" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="deg" selected>搴?掳</option><option value="rad">寮у害 rad</option><option value="grad">鐧惧垎搴?grad</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="90" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="deg" selected>度 °</option><option value="rad">弧度 rad</option><option value="grad">百分度 grad</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Angle Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Angle Converter · 纯前端</footer>
 <script>
 var R={deg:1,rad:0.0174533,grad:1.11111};
 function calc(){
