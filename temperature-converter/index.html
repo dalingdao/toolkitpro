@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Temperature Converter - 鍏嶈垂鍦ㄧ嚎娓╁害鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎娓╁害鎹㈢畻鍣紝鎽勬皬/鍗庢皬/寮€灏旀枃浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="娓╁害鎹㈢畻,temperature converter,鎽勬皬搴?鍗庢皬搴?寮€灏旀枃,鍏嶈垂宸ュ叿">
+<title>Temperature Converter - 免费在线温度换算</title>
+<meta name="description" content="免费在线温度换算器，摄氏/华氏/开尔文互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="温度换算,temperature converter,摄氏度,华氏度,开尔文,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,28 +27,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃尅锔?Temperature Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎娓╁害鎹㈢畻鈥斺€?鎽勬皬/鍗庢皬/寮€灏旀枃銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">掳C</span><span class="badge">掳F</span><span class="badge">K</span></div>
+  <h1>🌡️ Temperature Converter</h1>
+  <p>免费在线温度换算—— 摄氏/华氏/开尔文。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">°C</span><span class="badge">°F</span><span class="badge">K</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="25" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="C" selected>鎽勬皬搴?掳C</option><option value="F">鍗庢皬搴?掳F</option><option value="K">寮€灏旀枃 K</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="25" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="C" selected>摄氏度 °C</option><option value="F">华氏度 °F</option><option value="K">开尔文 K</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Temperature Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Temperature Converter · 纯前端</footer>
 <script>
 function calc(){
   var v=+document.getElementById('v').value||0,u=document.getElementById('u').value;
   var c=u==='C'?v:(u==='F'?(v-32)*5/9:v-273.15);
   var f=c*9/5+32,k=c+273.15;
-  document.getElementById('res').innerHTML='<div class="big">'+c.toFixed(2)+' 掳C</div><div class="sub">'+f.toFixed(2)+' 掳F<br>'+k.toFixed(2)+' K</div>';
+  document.getElementById('res').innerHTML='<div class="big">'+c.toFixed(2)+' °C</div><div class="sub">'+f.toFixed(2)+' °F<br>'+k.toFixed(2)+' K</div>';
 }
 calc();
 (function(){
