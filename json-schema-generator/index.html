@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Schema Generator - 鍏嶈垂鍦ㄧ嚎JSON杞琂SON Schema</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎JSON Schema鐢熸垚鍣紝浠庣ず渚婮SON鑷姩鐢熸垚JSON Schema锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="json schema,JSON Schema,鐢熸垚鍣?schema,鍏嶈垂宸ュ叿,agent">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:760px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+textarea{width:100%;height:220px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:13px;font-family:monospace;resize:vertical;margin-bottom:12px}
+.btn{padding:9px 16px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;background:#2563eb;color:#fff;margin-right:8px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃К JSON Schema Generator</h1>
+  <p>鍏嶈垂鍦ㄧ嚎JSON杞琂SON Schema鈥斺€?鑷姩鐢熸垚銆傛敮鎸??input= &format=json 渚?Agent 璋冪敤銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">JSON Schema</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <textarea id="json" placeholder='{"name":"Alice","age":30,"tags":["a","b"]}'>{"name":"Alice","age":30,"score":95.5,"active":true,"tags":["admin","user"],"address":{"city":"Beijing","zip":"100000"}}</textarea>
+    <button class="btn" onclick="conv()">鐢熸垚 Schema</button>
+    <textarea id="out" style="margin-top:12px" placeholder="JSON Schema 杈撳嚭"></textarea>
+  </div>
+</div>
+<footer>ToolkitPro 路 JSON Schema Generator 路 绾墠绔?路 Agent鍙敤</footer>
+<script>
+function typeOf(v){
+  if(v===null)return {type:'null'};
+  if(Array.isArray(v)){
+    var inner=v.length?v[0]:null;
+    return {type:'array',items:inner===null?{}:typeOf(inner)};
+  }
+  if(typeof v==='object')return {type:'object',properties:{},required:[]};
+  var t=typeof v;
+  if(t==='number')return Number.isInteger(v)?{type:'integer'}:{type:'number'};
+  return {type:t};
+}
+function build(obj){
+  var s=typeOf(obj);
+  if(s.type==='object'){Object.keys(obj).forEach(function(k){s.properties[k]=build(obj[k]);s.required.push(k);});}
+  return s;
+}
+function conv(){
+  var el=document.getElementById('out');
+  try{var o=JSON.parse(document.getElementById('json').value);el.value=JSON.stringify(build(o),null,2);}
+  catch(e){el.value='锛圝SON 鏍煎紡涓嶆纭級';}
+}
+conv();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    try{var o=JSON.parse(q.get('input')||'');document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({schema:build(o)},null,2)+'</pre>';}
+    catch(e){document.body.innerHTML='<pre style="padding:30px">{"error":"invalid json"}</pre>';}
+  }
+})();
+</script>
+</body>
+</html>
