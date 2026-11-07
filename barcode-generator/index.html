@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barcode Generator - 免费在线条形码生成器</title>
+<meta name="description" content="免费在线条形码生成器，输入数字/文本生成 EAN-13/Code128 条形码，下载 PNG，纯前端，无需注册。">
+<meta name="keywords" content="条形码生成,barcode generator,ean13,code128,条形码,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+.btn:hover{background:#2563eb}
+.code{text-align:center;margin-top:18px}
+.code svg{border:1px solid #e2e8f0;border-radius:8px;background:#fff}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📊 Barcode Generator</h1>
+  <p>免费在线条形码生成器—— EAN-13/Code128。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">EAN13</span><span class="badge">Code128</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>内容</label><input type="text" id="text" value="6901234567892" oninput="gen()"></div>
+    <div class="field"><label>格式</label><select id="fmt" onchange="gen()"><option value="ean13">EAN-13</option><option value="code128">Code128</option><option value="upc">UPC</option></select></div>
+    <div class="code" id="code"></div>
+    <div style="text-align:center"><button class="btn" onclick="dl()">💾 下载 PNG</button></div>
+  </div>
+</div>
+<footer>ToolkitPro · Barcode Generator · 纯前端</footer>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script>
+function gen(){
+  const t=document.getElementById('text').value;
+  try{
+    JsBarcode('#code',t,{format:document.getElementById('fmt').value,height:80,width:2,displayValue:true});
+  }catch(e){document.getElementById('code').innerHTML='<p style="color:#ef4444;font-size:13px">无效内容</p>'}
+}
+function dl(){
+  const svg=document.querySelector('#code svg');
+  if(!svg)return;
+  const c=document.createElement('canvas');c.width=svg.width.baseVal.value;c.height=svg.height.baseVal.value;
+  const ctx=c.getContext('2d');const img=new Image();
+  img.onload=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0);const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='barcode.png';a.click()};
+  img.src='data:image/svg+xml;base64,'+btoa(new XMLSerializer().serializeToString(svg));
+}
+gen();
+</script>
+</body>
+</html>
