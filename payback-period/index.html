@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payback Period - 鍏嶈垂鍦ㄧ嚎鎶曡祫鍥炴敹鏈熻绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎶曡祫鍥炴敹鏈熻绠楀櫒锛屾姇璧勯/骞村噣鏀剁泭璁＄畻鍥炴敹骞撮檺涓庡洖鎶ョ巼锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鎶曡祫鍥炴敹鏈?payback period,鍥炴湰,鎶曡祫鍥炴姤,鍥炴敹骞撮檺,鍏嶈垂宸ュ叿">
+<title>Payback Period - 免费在线投资回收期计算器</title>
+<meta name="description" content="免费在线投资回收期计算器，投资额/年净收益计算回收年限与回报率，纯前端，无需注册。">
+<meta name="keywords" content="投资回收期,payback period,回本,投资回报,回收年限,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,29 +27,29 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈴憋笍 Payback Period</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鎶曡祫鍥炴敹鏈熻绠楀櫒鈥斺€?澶氫箙鍥炴湰銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍥炴湰</span><span class="badge">鍥炴姤鐜?/span></div>
+  <h1>⏱️ Payback Period</h1>
+  <p>免费在线投资回收期计算器—— 多久回本。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">回本</span><span class="badge">回报率</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鍒濆鎶曡祫锛堝厓锛?/label><input type="number" id="i" value="100000" min="1" oninput="calc()"></div>
-    <div class="field"><label>骞村噣鏀剁泭锛堝厓锛?/label><input type="number" id="a" value="20000" min="1" oninput="calc()"></div>
-    <div class="field"><label>骞存暟</label><input type="number" id="y" value="5" min="1" oninput="calc()"></div>
+    <div class="field"><label>初始投资（元）</label><input type="number" id="i" value="100000" min="1" oninput="calc()"></div>
+    <div class="field"><label>年净收益（元）</label><input type="number" id="a" value="20000" min="1" oninput="calc()"></div>
+    <div class="field"><label>年数</label><input type="number" id="y" value="5" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Payback Period 路 绾墠绔?/footer>
+<footer>ToolkitPro · Payback Period · 纯前端</footer>
 <script>
 function calc(){
   var i=+document.getElementById('i').value||0,a=+document.getElementById('a').value||0,y=+document.getElementById('y').value||1;
   var el=document.getElementById('res');
-  if(a<=0){el.innerHTML='<div class="sub">骞村噣鏀剁泭闇€澶т簬 0</div>';return;}
+  if(a<=0){el.innerHTML='<div class="sub">年净收益需大于 0</div>';return;}
   var years=i/a, total=a*y, roi=(total-i)/i*100;
   var py=Math.floor(years),pm=Math.round((years-py)*12);
-  el.innerHTML='<div class="big">'+years.toFixed(1)+' 骞?/div><div class="sub">绾?'+py+' 骞?'+pm+' 涓湀鍥炴湰<br>'+y+' 骞寸疮璁℃敹鐩?楼'+total.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>ROI '+roi.toFixed(1)+'%</div>';
+  el.innerHTML='<div class="big">'+years.toFixed(1)+' 年</div><div class="sub">约 '+py+' 年 '+pm+' 个月回本<br>'+y+' 年累计收益 ¥'+total.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>ROI '+roi.toFixed(1)+'%</div>';
 }
 calc();
 </script>
