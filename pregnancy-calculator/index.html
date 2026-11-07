@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pregnancy Calculator - 免费在线预产期/孕周计算器</title>
+<meta name="description" content="免费在线预产期计算器，输入末次月经计算预产期/当前孕周/剩余天数，纯前端，无需注册。">
+<meta name="keywords" content="预产期计算,pregnancy calculator,孕周计算,末次月经,怀孕计算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:32px;font-weight:800;color:#2563eb}
+.result .sub{font-size:15px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🤰 Pregnancy Calculator</h1>
+  <p>免费在线预产期计算器—— 末次月经计算预产期/孕周。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">预产期</span><span class="badge">孕周</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>末次月经（LMP）</label><input type="date" id="lmp" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Pregnancy Calculator · 纯前端</footer>
+<script>
+function calc(){
+  const v=document.getElementById('lmp').value;
+  if(!v){document.getElementById('res').innerHTML='<div class="sub">选择日期</div>';return}
+  const p=v.split('-');const lmp=new Date(+p[0],+p[1]-1,+p[2]);
+  const due=new Date(lmp);due.setDate(lmp.getDate()+280);
+  const now=new Date();
+  const days=Math.floor((now-lmp)/86400000);
+  const week=Math.floor(days/7),day=days%7;
+  const left=Math.max(0,Math.ceil((due-now)/86400000));
+  const fmt=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+  document.getElementById('res').innerHTML='<div class="big">预产期 '+fmt(due)+'</div><div class="sub">当前孕周：'+week+' 周 + '+day+' 天<br>距预产期：'+left+' 天</div>';
+}
+const now=new Date();now.setDate(now.getDate()-70);
+document.getElementById('lmp').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+calc();
+</script>
+</body>
+</html>
