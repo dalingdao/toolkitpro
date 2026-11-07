@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Debt Snowball - 鍏嶈垂鍦ㄧ嚎鍊哄姟闆悆璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍊哄姟闆悆璁＄畻鍣紝鎸夐洩鐞冩硶/闆穿娉曟帓搴忚繕娓呭绗斿€哄姟鐨勬湀鏁颁笌鍒╂伅锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鍊哄姟闆悆,debt snowball,杩樺€鸿鍒?鍊哄姟杩樻,闆穿娉?鍏嶈垂宸ュ叿">
+<title>Debt Snowball - 免费在线债务雪球计算器</title>
+<meta name="description" content="免费在线债务雪球计算器，按雪球法/雪崩法排序还清多笔债务的月数与利息，纯前端，无需注册。">
+<meta name="keywords" content="债务雪球,debt snowball,还债计划,债务还款,雪崩法,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -32,34 +32,34 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鉀帮笍 Debt Snowball</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍊哄姟闆悆璁＄畻鍣ㄢ€斺€?闆悆娉曪紙浣欓灏忎紭鍏堬級/ 闆穿娉曪紙鍒╃巼楂樹紭鍏堬級銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">闆悆娉?/span><span class="badge">闆穿娉?/span></div>
+  <h1>⛰️ Debt Snowball</h1>
+  <p>免费在线债务雪球计算器—— 雪球法（余额小优先）/ 雪崩法（利率高优先）。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">雪球法</span><span class="badge">雪崩法</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field" style="margin-bottom:10px"><label>姣忔湀鎬昏繕娆撅紙鍏冿級</label><input type="number" id="budget" value="2000" min="1" oninput="calc()"></div>
+    <div class="field" style="margin-bottom:10px"><label>每月总还款（元）</label><input type="number" id="budget" value="2000" min="1" oninput="calc()"></div>
     <div class="seg">
-      <button id="s1" class="on" onclick="mode(1)">闆悆娉?/button>
-      <button id="s2" onclick="mode(2)">闆穿娉?/button>
+      <button id="s1" class="on" onclick="mode(1)">雪球法</button>
+      <button id="s2" onclick="mode(2)">雪崩法</button>
     </div>
     <div id="rows"></div>
-    <button class="btn add" onclick="add()">+ 娣诲姞鍊哄姟</button>
+    <button class="btn add" onclick="add()">+ 添加债务</button>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Debt Snowball 路 绾墠绔?/footer>
+<footer>ToolkitPro · Debt Snowball · 纯前端</footer>
 <script>
-var MODE=1,DEBTS=[['淇＄敤鍗?,8000,18],['杞﹁捶',15000,6],['瀛﹁捶',20000,4]];
+var MODE=1,DEBTS=[['信用卡',8000,18],['车贷',15000,6],['学贷',20000,4]];
 function mode(m){MODE=m;document.getElementById('s1').className=MODE===1?'on':'';document.getElementById('s2').className=MODE===2?'on':'';calc();}
-function add(){DEBTS.push(['鍊哄姟'+(DEBTS.length+1),10000,10]);render();}
+function add(){DEBTS.push(['债务'+(DEBTS.length+1),10000,10]);render();}
 function render(){
   var el=document.getElementById('rows');el.innerHTML='';
   DEBTS.forEach(function(d,i){
     var r=document.createElement('div');r.className='row';
-    r.innerHTML='<input value="'+d[0]+'" oninput="DEBTS['+i+'][0]=this.value"><input type="number" value="'+d[1]+'" oninput="DEBTS['+i+'][1]=+this.value;calc()"><input type="number" value="'+d[2]+'" oninput="DEBTS['+i+'][2]=+this.value;calc()"><button class="rm" onclick="DEBTS.splice('+i+',1);render()">脳</button>';
+    r.innerHTML='<input value="'+d[0]+'" oninput="DEBTS['+i+'][0]=this.value"><input type="number" value="'+d[1]+'" oninput="DEBTS['+i+'][1]=+this.value;calc()"><input type="number" value="'+d[2]+'" oninput="DEBTS['+i+'][2]=+this.value;calc()"><button class="rm" onclick="DEBTS.splice('+i+',1);render()">×</button>';
     el.appendChild(r);
   });
   calc();
@@ -85,7 +85,7 @@ function calc(){
     months++;
   }
   var el=document.getElementById('res');
-  el.innerHTML='<div class="big">'+months+' 涓湀</div><div class="sub">绾?'+Math.floor(months/12)+' 骞?'+months%12+' 涓湀杩樻竻<br>鎬诲埄鎭?楼'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  el.innerHTML='<div class="big">'+months+' 个月</div><div class="sub">约 '+Math.floor(months/12)+' 年 '+months%12+' 个月还清<br>总利息 ¥'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 render();
 </script>
