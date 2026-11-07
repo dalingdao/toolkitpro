@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dividend Calculator - 鍏嶈垂鍦ㄧ嚎鑲℃伅鏀剁泭璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鑲℃伅鏀剁泭璁＄畻鍣紝鎸佽偂鏁懊楁瘡鑲¤偂鎭畻骞村害鑲℃伅涓庤偂鎭巼锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鑲℃伅璁＄畻鍣?dividend calculator,鑲℃伅鐜?鍒嗙孩,姣忚偂鑲℃伅,鑲＄エ鏀剁泭,鍏嶈垂宸ュ叿">
+<title>Dividend Calculator - 免费在线股息收益计算器</title>
+<meta name="description" content="免费在线股息收益计算器，持股数×每股股息算年度股息与股息率，纯前端，无需注册。">
+<meta name="keywords" content="股息计算器,dividend calculator,股息率,分红,每股股息,股票收益,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,26 +27,26 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃挼 Dividend Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鑲℃伅鏀剁泭璁＄畻鍣ㄢ€斺€?鎸佽偂鏁颁笌姣忚偂鑲℃伅銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鑲℃伅</span><span class="badge">鏀剁泭鐜?/span></div>
+  <h1>💵 Dividend Calculator</h1>
+  <p>免费在线股息收益计算器—— 持股数与每股股息。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">股息</span><span class="badge">收益率</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鎸佽偂鏁伴噺</label><input type="number" id="n" value="1000" min="0" oninput="calc()"></div>
-    <div class="field"><label>姣忚偂骞村害鑲℃伅锛堝厓锛?/label><input type="number" id="d" value="0.5" min="0" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>姣忚偂鑲′环锛堝厓锛屽彲閫夛紝绠楄偂鎭巼锛?/label><input type="number" id="p" value="10" min="0" oninput="calc()"></div>
+    <div class="field"><label>持股数量</label><input type="number" id="n" value="1000" min="0" oninput="calc()"></div>
+    <div class="field"><label>每股年度股息（元）</label><input type="number" id="d" value="0.5" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>每股股价（元，可选，算股息率）</label><input type="number" id="p" value="10" min="0" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Dividend Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Dividend Calculator · 纯前端</footer>
 <script>
 function calc(){
   var n=+document.getElementById('n').value||0,d=+document.getElementById('d').value||0,p=+document.getElementById('p').value||0;
   var total=n*d,yr=p?total/(n*p)*100:0;
-  document.getElementById('res').innerHTML='<div class="big">楼'+total.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div><div class="sub">骞村害鑲℃伅鎬婚<br>'+(p?'鑲℃伅鐜?'+yr.toFixed(2)+'%':'杈撳叆鑲′环鍙畻鑲℃伅鐜?)+'</div>';
+  document.getElementById('res').innerHTML='<div class="big">¥'+total.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div><div class="sub">年度股息总额<br>'+(p?'股息率 '+yr.toFixed(2)+'%':'输入股价可算股息率')+'</div>';
 }
 calc();
 </script>
