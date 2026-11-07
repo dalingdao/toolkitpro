@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Macro Calculator - 鍏嶈垂鍦ㄧ嚎瀹忛噺钀ュ吇绱犺绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎瀹忛噺钀ュ吇绱犺绠楀櫒锛屾寜姣忔棩鐑噺鍒嗛厤铔嬬櫧/纰虫按/鑴傝偑鍏嬫暟锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="瀹忛噺钀ュ吇绱?macro,铔嬬櫧璐?纰虫按,鑴傝偑,鍋ヨ韩,鍏嶈垂宸ュ叿">
+<title>Macro Calculator - 免费在线宏量营养素计算器</title>
+<meta name="description" content="免费在线宏量营养素计算器，按每日热量分配蛋白/碳水/脂肪克数，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="宏量营养素,macro,蛋白质,碳水,脂肪,健身,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,28 +27,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃ォ Macro Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎瀹忛噺钀ュ吇绱犺绠楀櫒鈥斺€?铔嬬櫧/纰虫按/鑴傝偑鍏嬫暟銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">瀹忛噺</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🥩 Macro Calculator</h1>
+  <p>免费在线宏量营养素计算器—— 蛋白/碳水/脂肪克数。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">宏量</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>姣忔棩鐑噺锛堝崈鍗★級</label><input type="number" id="c" value="2000" min="0" oninput="calc()"></div>
-    <div class="field"><label>铔嬬櫧璐ㄦ瘮渚嬶紙%锛?/label><input type="number" id="p" value="30" min="0" max="100" oninput="calc()"></div>
-    <div class="field"><label>纰虫按姣斾緥锛?锛?/label><input type="number" id="ch" value="40" min="0" max="100" oninput="calc()"></div>
-    <div class="field"><label>鑴傝偑姣斾緥锛?锛?/label><input type="number" id="f" value="30" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>每日热量（千卡）</label><input type="number" id="c" value="2000" min="0" oninput="calc()"></div>
+    <div class="field"><label>蛋白质比例（%）</label><input type="number" id="p" value="30" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>碳水比例（%）</label><input type="number" id="ch" value="40" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>脂肪比例（%）</label><input type="number" id="f" value="30" min="0" max="100" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Macro Calculator 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Macro Calculator · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var c=+document.getElementById('c').value||0,p=+document.getElementById('p').value||0,ch=+document.getElementById('ch').value||0,f=+document.getElementById('f').value||0;
   var el=document.getElementById('res');
   var pg=c*p/100/4,cg=c*ch/100/4,fg=c*f/100/9;
-  el.innerHTML='<div class="big">铔嬬櫧璐?'+pg.toFixed(0)+'g<br>纰虫按 '+cg.toFixed(0)+'g<br>鑴傝偑 '+fg.toFixed(0)+'g</div><div class="sub">鎸?'+p+'/'+ch+'/'+f+'% 鍒嗛厤锛?/4/9鍗冨崱姣忓厠锛?/div>';
+  el.innerHTML='<div class="big">蛋白质 '+pg.toFixed(0)+'g<br>碳水 '+cg.toFixed(0)+'g<br>脂肪 '+fg.toFixed(0)+'g</div><div class="sub">按 '+p+'/'+ch+'/'+f+'% 分配（4/4/9千卡每克）</div>';
 }
 calc();
 (function(){
