@@ -3,67 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数字进制转换器 - Base Converter - 在线工具</title>
-<meta name="description" content="免费在线数字进制转换工具。二进制、八进制、十进制、十六进制互转，任意进制 2-36，即时转换。">
-<meta name="keywords" content="进制转换, Base Converter, 二进制转十进制, 十六进制, 在线工具">
+<title>Number Base Converter - 免费在线进制转换器（二/八/十/十六进制）</title>
+<meta name="description" content="免费在线进制转换器，二进制、八进制、十进制、十六进制互转，支持大数，纯前端，即时结果，无需注册。">
+<meta name="keywords" content="进制转换,number base,二进制转换,十六进制,八进制,免费工具">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
-.container { max-width: 860px; margin: 0 auto; }
-h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
-.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
-.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
-label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
-input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; font-family: 'SF Mono', Consolas, monospace; }
-input:focus { outline: none; border-color: #ed64a6; }
-.bases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
-.base { background: #f7fafc; border-radius: 10px; padding: 14px; border: 2px solid #e2e8f0; }
-.base .lbl { font-size: 12px; color: #718096; font-weight: 600; margin-bottom: 6px; }
-.base .val { font-size: 16px; font-family: 'SF Mono', Consolas, monospace; color: #2d3748; word-break: break-all; }
-.ctrl { display: flex; gap: 10px; margin: 16px 0; align-items: center; }
-.ctrl select { padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
-footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px;font-family:monospace}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+.row label{font-size:12px;color:#475569;font-weight:600;display:block;margin-bottom:4px}
+.row input{font-size:14px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🔢 Number Base Converter</h1>
+  <p>免费在线进制转换器—— 二进制/八进制/十进制/十六进制互转，即时更新。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">4进制</span><span class="badge">即时</span></div>
+</div>
 <div class="container">
-  <h1>数字进制转换器</h1>
-  <p class="sub">Base Converter - 二/八/十/十六进制互转</p>
-  <div class="toolbox">
-    <div class="ctrl">
-      <label>输入数字</label>
-      <input id="num" placeholder="255" value="255" style="flex:1">
-      <select id="from">
-        <option value="2">二进制</option><option value="8">八进制</option>
-        <option value="10" selected>十进制</option><option value="16">十六进制</option>
-      </select>
-    </div>
-    <div class="bases">
-      <div class="base"><div class="lbl">二进制 (Base 2)</div><div class="val" id="b2">11111111</div></div>
-      <div class="base"><div class="lbl">八进制 (Base 8)</div><div class="val" id="b8">377</div></div>
-      <div class="base"><div class="lbl">十进制 (Base 10)</div><div class="val" id="b10">255</div></div>
-      <div class="base"><div class="lbl">十六进制 (Base 16)</div><div class="val" id="b16">ff</div></div>
+  <div class="card">
+    <div class="field"><label>输入数字</label><input id="in" value="255" oninput="conv()" placeholder="输入任意进制数字"></div>
+    <div class="row">
+      <div><label>二进制</label><input id="b2" readonly></div>
+      <div><label>八进制</label><input id="b8" readonly></div>
+      <div><label>十进制</label><input id="b10" readonly></div>
+      <div><label>十六进制</label><input id="b16" readonly></div>
     </div>
   </div>
-  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
 </div>
+<footer>ToolkitPro · Number Base Converter · 纯前端</footer>
 <script>
-function convert() {
-  const s = document.getElementById('num').value.trim();
-  const from = parseInt(document.getElementById('from').value);
-  if (!s) { ['b2','b8','b10','b16'].forEach(id => document.getElementById(id).textContent = '—'); return; }
-  try {
-    const n = parseInt(s, from);
-    if (isNaN(n)) throw new Error('invalid');
-    document.getElementById('b2').textContent = n.toString(2);
-    document.getElementById('b8').textContent = n.toString(8);
-    document.getElementById('b10').textContent = n.toString(10);
-    document.getElementById('b16').textContent = n.toString(16);
-  } catch (e) { ['b2','b8','b10','b16'].forEach(id => document.getElementById(id).textContent = '无效输入'); }
+function conv(){
+  const s=document.getElementById('in').value.trim();
+  let n;
+  if(/^[01]+$/.test(s))n=parseInt(s,2);
+  else if(/^[0-7]+$/.test(s))n=parseInt(s,8);
+  else if(/^[0-9]+$/.test(s))n=parseInt(s,10);
+  else if(/^[0-9a-fA-F]+$/.test(s))n=parseInt(s,16);
+  else n=NaN;
+  if(isNaN(n)){['b2','b8','b10','b16'].forEach(x=>document.getElementById(x).value='无效');return}
+  document.getElementById('b2').value=n.toString(2);
+  document.getElementById('b8').value=n.toString(8);
+  document.getElementById('b10').value=n.toString(10);
+  document.getElementById('b16').value=n.toString(16).toUpperCase();
 }
-document.getElementById('num').addEventListener('input', convert);
-document.getElementById('from').addEventListener('change', convert);
-convert();
+conv();
 </script>
 </body>
 </html>
