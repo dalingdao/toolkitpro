@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Markdown to HTML - 鍏嶈垂鍦ㄧ嚎Markdown杞琀TML</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎Markdown杞琀TML宸ュ叿锛岀矘璐碝arkdown鍗虫椂杞琀TML浠ｇ爜锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="markdown to html,md杞琱tml,Markdown,杞崲,鍏嶈垂宸ュ叿,agent">
+<title>Markdown to HTML - 免费在线Markdown转HTML</title>
+<meta name="description" content="免费在线Markdown转HTML工具，粘贴Markdown即时转HTML代码，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="markdown to html,md转html,Markdown,转换,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -25,23 +25,26 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃摑 Markdown to HTML</h1>
-  <p>鍏嶈垂鍦ㄧ嚎Markdown杞琀TML鈥斺€?绮樿创鍗虫椂杞崲銆傛敮鎸??md= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">MD杞琀TML</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📝 Markdown to HTML</h1>
+  <p>免费在线Markdown转HTML—— 粘贴即时转换。支持 ?md= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">MD转HTML</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <textarea id="md" placeholder="# 鏍囬&#10;&#10;**鍔犵矖** 鍜?*鏂滀綋*&#10;&#10;- 鍒楄〃椤?># 浣犲ソ锛屼笘鐣?杩欐槸涓€娈?**鍔犵矖** 鍜?*鏂滀綋* 鏂囨湰銆?- 椤圭洰涓€
-- 椤圭洰浜?
-[閾炬帴](https://example.com)</textarea>
-    <button class="btn" onclick="conv()">杞?HTML</button>
-    <button class="btn ghost" onclick="document.getElementById('out').value=''">娓呯┖</button>
-    <textarea id="out" style="margin-top:12px" placeholder="HTML 杈撳嚭"></textarea>
+    <textarea id="md" placeholder="# 标题&#10;&#10;**加粗** 和 *斜体*&#10;&#10;- 列表项"># 你好，世界
+这是一段 **加粗** 和 *斜体* 文本。
+- 项目一
+- 项目二
+
+[链接](https://example.com)</textarea>
+    <button class="btn" onclick="conv()">转 HTML</button>
+    <button class="btn ghost" onclick="document.getElementById('out').value=''">清空</button>
+    <textarea id="out" style="margin-top:12px" placeholder="HTML 输出"></textarea>
   </div>
 </div>
-<footer>ToolkitPro 路 Markdown to HTML 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Markdown to HTML · 纯前端 · Agent可用</footer>
 <script>
 function mdToHtml(md){
   var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
