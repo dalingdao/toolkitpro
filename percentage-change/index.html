@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Percentage Change - 鍏嶈垂鍦ㄧ嚎娑ㄨ穼骞呰绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鐧惧垎姣斿彉鍖栬绠楀櫒锛岃绠楀闀?鍑忓皯鐧惧垎姣斻€佹定璺屽箙锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鐧惧垎姣斿彉鍖?percentage change,娑ㄨ穼骞?澧為暱鐜?鍙樺寲鐧惧垎姣?鍏嶈垂宸ュ叿">
+<title>Percentage Change - 免费在线涨跌幅计算器</title>
+<meta name="description" content="免费在线百分比变化计算器，计算增长/减少百分比、涨跌幅，纯前端，无需注册。">
+<meta name="keywords" content="百分比变化,percentage change,涨跌幅,增长率,变化百分比,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,28 +27,28 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搱 Percentage Change</h1>
-  <p>鍏嶈垂鍦ㄧ嚎娑ㄨ穼骞呰绠楀櫒鈥斺€?涓や釜鏁板€间箣闂寸殑鍙樺寲鐧惧垎姣斻€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">娑ㄨ穼骞?/span><span class="badge">澧為暱鐜?/span></div>
+  <h1>📈 Percentage Change</h1>
+  <p>免费在线涨跌幅计算器—— 两个数值之间的变化百分比。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">涨跌幅</span><span class="badge">增长率</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鍘熷€?/label><input type="number" id="a" value="80" oninput="calc()"></div>
-    <div class="field"><label>鏂板€?/label><input type="number" id="b" value="100" oninput="calc()"></div>
+    <div class="field"><label>原值</label><input type="number" id="a" value="80" oninput="calc()"></div>
+    <div class="field"><label>新值</label><input type="number" id="b" value="100" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Percentage Change 路 绾墠绔?/footer>
+<footer>ToolkitPro · Percentage Change · 纯前端</footer>
 <script>
 function calc(){
   var a=+document.getElementById('a').value||0,b=+document.getElementById('b').value||0;
   var el=document.getElementById('res');
-  if(a===0){el.innerHTML='<div class="sub">鍘熷€间笉鑳戒负 0</div>';return;}
+  if(a===0){el.innerHTML='<div class="sub">原值不能为 0</div>';return;}
   var ch=(b-a)/a*100, diff=b-a;
-  var arrow=ch>0?'馃搱 涓婃定':(ch<0?'馃搲 涓嬭穼':'鉃?鎸佸钩');
-  el.innerHTML='<div class="big">'+(ch>0?'+':'')+ch.toFixed(2)+'%</div><div class="sub">'+arrow+'<br>鍙樺寲閲?'+(diff>0?'+':'')+diff.toLocaleString('zh-CN')+'</div>';
+  var arrow=ch>0?'📈 上涨':(ch<0?'📉 下跌':'➖ 持平');
+  el.innerHTML='<div class="big">'+(ch>0?'+':'')+ch.toFixed(2)+'%</div><div class="sub">'+arrow+'<br>变化量 '+(diff>0?'+':'')+diff.toLocaleString('zh-CN')+'</div>';
 }
 calc();
 </script>
