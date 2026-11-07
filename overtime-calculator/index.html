@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overtime Calculator - 鍏嶈垂鍦ㄧ嚎鍔犵彮璐硅绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍔犵彮璐硅绠楀櫒锛屾寜鏃惰柂/鍊嶆暟锛?.5/2/3鍊嶏級璁＄畻宸ヤ綔鏃ャ€佸懆鏈€佽妭鍋囨棩鍔犵彮璐癸紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鍔犵彮璐硅绠楀櫒,overtime calculator,鍔犵彮,1.5鍊?2鍊?3鍊?鏃惰柂,鍏嶈垂宸ュ叿">
+<title>Overtime Calculator - 免费在线加班费计算器</title>
+<meta name="description" content="免费在线加班费计算器，按时薪/倍数（1.5/2/3倍）计算工作日、周末、节假日加班费，纯前端，无需注册。">
+<meta name="keywords" content="加班费计算器,overtime calculator,加班,1.5倍,2倍,3倍,时薪,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,27 +27,27 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃寵 Overtime Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍔犵彮璐硅绠楀櫒鈥斺€?宸ヤ綔鏃?鍛ㄦ湯/鑺傚亣鏃ュ€嶆暟銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍔犵彮</span><span class="badge">1.5/2/3鍊?/span></div>
+  <h1>🌙 Overtime Calculator</h1>
+  <p>免费在线加班费计算器—— 工作日/周末/节假日倍数。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">加班</span><span class="badge">1.5/2/3倍</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏃惰柂锛堝厓锛?/label><input type="number" id="h" value="30" min="0" oninput="calc()"></div>
-    <div class="field"><label>宸ヤ綔鏃ュ姞鐝紙灏忔椂锛?.5鍊嶏級</label><input type="number" id="a" value="2" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍛ㄦ湯鍔犵彮锛堝皬鏃讹紝2鍊嶏級</label><input type="number" id="b" value="0" min="0" oninput="calc()"></div>
-    <div class="field"><label>鑺傚亣鏃ュ姞鐝紙灏忔椂锛?鍊嶏級</label><input type="number" id="c" value="0" min="0" oninput="calc()"></div>
+    <div class="field"><label>时薪（元）</label><input type="number" id="h" value="30" min="0" oninput="calc()"></div>
+    <div class="field"><label>工作日加班（小时，1.5倍）</label><input type="number" id="a" value="2" min="0" oninput="calc()"></div>
+    <div class="field"><label>周末加班（小时，2倍）</label><input type="number" id="b" value="0" min="0" oninput="calc()"></div>
+    <div class="field"><label>节假日加班（小时，3倍）</label><input type="number" id="c" value="0" min="0" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Overtime Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Overtime Calculator · 纯前端</footer>
 <script>
 function calc(){
   var h=+document.getElementById('h').value||0,a=+document.getElementById('a').value||0,b=+document.getElementById('b').value||0,c=+document.getElementById('c').value||0;
   var wd=h*a*1.5,we=h*b*2,hd=h*c*3,total=wd+we+hd;
-  document.getElementById('res').innerHTML='<div class="big">楼'+total.toFixed(2)+'</div><div class="sub">宸ヤ綔鏃?楼'+wd.toFixed(2)+' 路 鍛ㄦ湯 楼'+we.toFixed(2)+'<br>鑺傚亣鏃?楼'+hd.toFixed(2)+'</div>';
+  document.getElementById('res').innerHTML='<div class="big">¥'+total.toFixed(2)+'</div><div class="sub">工作日 ¥'+wd.toFixed(2)+' · 周末 ¥'+we.toFixed(2)+'<br>节假日 ¥'+hd.toFixed(2)+'</div>';
 }
 calc();
 </script>
