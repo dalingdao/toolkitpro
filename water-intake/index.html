@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Water Intake - 鍏嶈垂鍦ㄧ嚎楗按鐩爣璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎楗按璁＄畻鍣紝鎸変綋閲?杩愬姩/澶╂皵浼扮畻姣忔棩楗按閲忥紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="楗按,water intake,鍠濇按,楗按閲?琛ユ按,鍏嶈垂宸ュ叿">
+<title>Water Intake - 免费在线饮水目标计算器</title>
+<meta name="description" content="免费在线饮水计算器，按体重/运动/天气估算每日饮水量，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="饮水,water intake,喝水,饮水量,补水,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,30 +27,30 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃挧 Water Intake</h1>
-  <p>鍏嶈垂鍦ㄧ嚎楗按鐩爣璁＄畻鍣ㄢ€斺€?浣撻噸脳杩愬姩脳澶╂皵銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">楗按</span><span class="badge">Agent鍙敤</span></div>
+  <h1>💧 Water Intake</h1>
+  <p>免费在线饮水目标计算器—— 体重×运动×天气。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">饮水</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>浣撻噸锛坘g锛?/label><input type="number" id="w" value="65" min="1" oninput="calc()"></div>
-    <div class="field"><label>杩愬姩閲?/label><select id="ex" onchange="calc()">
-      <option value="0.5">灏戦噺锛?.5L锛?/option><option value="0.75" selected>涓瓑锛?.75L锛?/option><option value="1">澶ч噺锛?L+锛?/option>
+    <div class="field"><label>体重（kg）</label><input type="number" id="w" value="65" min="1" oninput="calc()"></div>
+    <div class="field"><label>运动量</label><select id="ex" onchange="calc()">
+      <option value="0.5">少量（0.5L）</option><option value="0.75" selected>中等（0.75L）</option><option value="1">大量（1L+）</option>
     </select></div>
-    <div class="field"><label>澶╂皵</label><select id="wx" onchange="calc()">
-      <option value="0" selected>鍑夌埥</option><option value="0.5">鐐庣儹</option><option value="0.75">閰风儹</option>
+    <div class="field"><label>天气</label><select id="wx" onchange="calc()">
+      <option value="0" selected>凉爽</option><option value="0.5">炎热</option><option value="0.75">酷热</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Water Intake 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Water Intake · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var w=+document.getElementById('w').value||0,ex=+document.getElementById('ex').value||0,wx=+document.getElementById('wx').value||0;
   var L=w*0.033+ex+wx;
-  document.getElementById('res').innerHTML='<div class="big">'+L.toFixed(2)+' L</div><div class="sub">姣忔棩寤鸿楗按閲?br>绾?'+(L*1000/250).toFixed(0)+' 鏉紙250ml锛?/div>';
+  document.getElementById('res').innerHTML='<div class="big">'+L.toFixed(2)+' L</div><div class="sub">每日建议饮水量<br>约 '+(L*1000/250).toFixed(0)+' 杯（250ml）</div>';
 }
 calc();
 (function(){
