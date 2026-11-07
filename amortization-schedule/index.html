@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amortization Schedule - 鍏嶈垂鍦ㄧ嚎璐锋杩樻璁″垝琛?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎璐锋杩樻璁″垝琛紝绛夐鏈伅閫愭湀鏈噾/鍒╂伅/鍓╀綑浣欓鏄庣粏锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="杩樻璁″垝琛?amortization schedule,绛夐鏈伅,鏈噾,鍒╂伅,璐锋鏄庣粏,鍏嶈垂宸ュ叿">
+<title>Amortization Schedule - 免费在线贷款还款计划表</title>
+<meta name="description" content="免费在线贷款还款计划表，等额本息逐月本金/利息/剩余余额明细，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="还款计划表,amortization schedule,等额本息,本金,利息,贷款明细,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -32,24 +32,24 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搳 Amortization Schedule</h1>
-  <p>鍏嶈垂鍦ㄧ嚎璐锋杩樻璁″垝琛ㄢ€斺€?绛夐鏈伅閫愭湀鏄庣粏銆傛敮鎸??loan= &rate= &years= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">閫愭湀鏄庣粏</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📊 Amortization Schedule</h1>
+  <p>免费在线贷款还款计划表—— 等额本息逐月明细。支持 ?loan= &rate= &years= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">逐月明细</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="fields">
-      <div class="field"><label>璐锋棰濓紙涓囧厓锛?/label><input type="number" id="p" value="100" oninput="calc()"></div>
-      <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
-      <div class="field"><label>骞撮檺</label><input type="number" id="n" value="30" oninput="calc()"></div>
+      <div class="field"><label>贷款额（万元）</label><input type="number" id="p" value="100" oninput="calc()"></div>
+      <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
+      <div class="field"><label>年限</label><input type="number" id="n" value="30" oninput="calc()"></div>
     </div>
     <div class="summary" id="sum"></div>
-    <table><thead><tr><th>鏈?/th><th>鏈堜緵</th><th>鏈噾</th><th>鍒╂伅</th><th>鍓╀綑</th></tr></thead><tbody id="tb"></tbody></table>
+    <table><thead><tr><th>期</th><th>月供</th><th>本金</th><th>利息</th><th>剩余</th></tr></thead><tbody id="tb"></tbody></table>
   </div>
 </div>
-<footer>ToolkitPro 路 Amortization Schedule 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Amortization Schedule · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var p=+document.getElementById('p').value||0,r=+document.getElementById('r').value||0,n=+document.getElementById('n').value||1;
@@ -60,11 +60,11 @@ function calc(){
     var bal=p,ti=0;
     for(var i=1;i<=months;i++){var int=bal*mr,prin=mf-int;if(bal<prin)prin=bal;bal-=prin;ti+=int;
       if(i<=60||i>months-2){var tr=document.createElement('tr');tr.innerHTML='<td>'+i+'</td><td>'+fmt(mf)+'</td><td>'+fmt(prin)+'</td><td>'+fmt(int)+'</td><td>'+fmt(bal)+'</td>';tb.appendChild(tr);}
-      else if(i===61){var tr2=document.createElement('tr');tr2.innerHTML='<td colspan="5" style="text-align:center;color:#94a3b8">鈥?/td>';tb.appendChild(tr2);}
+      else if(i===61){var tr2=document.createElement('tr');tr2.innerHTML='<td colspan="5" style="text-align:center;color:#94a3b8">…</td>';tb.appendChild(tr2);}
     }
-    document.getElementById('sum').innerHTML='<div class="big">楼'+fmt(mf)+'/鏈?/div><div class="sub">鎬诲埄鎭?楼'+fmt(ti)+' 路 鎬昏繕娆?楼'+fmt(ti+p)+'</div>';
+    document.getElementById('sum').innerHTML='<div class="big">¥'+fmt(mf)+'/月</div><div class="sub">总利息 ¥'+fmt(ti)+' · 总还款 ¥'+fmt(ti+p)+'</div>';
   } else {
-    var mf0=p/months;document.getElementById('sum').innerHTML='<div class="big">楼'+fmt(mf0)+'/鏈?/div><div class="sub">鍒╃巼涓?0</div>';
+    var mf0=p/months;document.getElementById('sum').innerHTML='<div class="big">¥'+fmt(mf0)+'/月</div><div class="sub">利率为 0</div>';
   }
 }
 function fmt(x){return x.toLocaleString('zh-CN',{maximumFractionDigits:0});}
