@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inflation Calculator - 鍏嶈垂鍦ㄧ嚎閫氳儉/璐拱鍔涜绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎閫氳揣鑶ㄨ儉璁＄畻鍣紝鎸夐€氳儉鐜囪绠楁湭鏉ヨ喘涔板姏涓庣瓑鍊奸噾棰濓紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="閫氳儉璁＄畻鍣?inflation calculator,閫氳揣鑶ㄨ儉,璐拱鍔?鐗╀环,绛夊€奸噾棰?鍏嶈垂宸ュ叿">
+<title>Inflation Calculator - 免费在线通胀/购买力计算器</title>
+<meta name="description" content="免费在线通货膨胀计算器，按通胀率计算未来购买力与等值金额，纯前端，无需注册。">
+<meta name="keywords" content="通胀计算器,inflation calculator,通货膨胀,购买力,物价,等值金额,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,26 +27,26 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搲 Inflation Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎閫氳儉璁＄畻鍣ㄢ€斺€?鐗╀环涓婃定鍚庤喘涔板姏鍙樺寲銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">閫氳儉</span><span class="badge">璐拱鍔?/span></div>
+  <h1>📉 Inflation Calculator</h1>
+  <p>免费在线通胀计算器—— 物价上涨后购买力变化。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">通胀</span><span class="badge">购买力</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>閲戦锛堝厓锛?/label><input type="number" id="a" value="10000" min="0" oninput="calc()"></div>
-    <div class="field"><label>骞撮€氳儉鐜囷紙%锛?/label><input type="number" id="r" value="3" min="0" step="0.1" oninput="calc()"></div>
-    <div class="field"><label>骞存暟</label><input type="number" id="y" value="10" min="1" oninput="calc()"></div>
+    <div class="field"><label>金额（元）</label><input type="number" id="a" value="10000" min="0" oninput="calc()"></div>
+    <div class="field"><label>年通胀率（%）</label><input type="number" id="r" value="3" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>年数</label><input type="number" id="y" value="10" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Inflation Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Inflation Calculator · 纯前端</footer>
 <script>
 function calc(){
   var a=+document.getElementById('a').value||0,r=+document.getElementById('r').value||0,y=+document.getElementById('y').value||0;
   var eq=a*Math.pow(1+r/100,y), buy=a/Math.pow(1+r/100,y);
-  document.getElementById('res').innerHTML='<div class="big">楼'+eq.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">'+y+' 骞村悗绛夊€奸噾棰?br>璐拱鍔涗粎鐩稿綋浜庝粖澶╃殑 楼'+buy.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>璐拱鍔涗笅闄?'+(1-Math.pow(1+r/100,-y))*100+'%</div>';
+  document.getElementById('res').innerHTML='<div class="big">¥'+eq.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">'+y+' 年后等值金额<br>购买力仅相当于今天的 ¥'+buy.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>购买力下降 '+(1-Math.pow(1+r/100,-y))*100+'%</div>';
 }
 calc();
 </script>
