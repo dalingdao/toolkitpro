@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Quote - 鍏嶈垂鍦ㄧ嚎姣忔棩鍚嶈█</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎姣忔棩鍚嶈█锛岄殢鏈烘縺鍔辫褰曪紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="姣忔棩鍚嶈█,daily quote,鍚嶈█,璇綍,婵€鍔?鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#1e293b;color:#60a5fa}
+.quote{max-width:560px;margin:20px;padding:30px;border-left:4px solid #3b82f6;text-align:left;font-size:20px;line-height:1.9;font-style:italic}
+.quote .by{font-size:14px;color:#94a3b8;margin-top:14px;font-style:normal;text-align:right}
+.ctrl button{padding:12px 28px;border-radius:24px;border:none;cursor:pointer;font-size:16px;font-weight:600;background:#3b82f6;color:#fff}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃摐 Daily Quote</h1>
+  <p>姣忔棩鍚嶈█鈥斺€?涓€鍙ユ縺鍔憋紝寮€濮嬩竴澶┿€?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍚嶈█</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="quote" id="q"></div>
+<div class="ctrl"><button onclick="pick()">鎹竴鍙?/button></div>
+<script>
+var Q=[
+['琛屽姩鏄敼鍙樼殑寮€濮嬨€?,'浣氬悕'],['浣犱笉闇€瑕佸畬缇庯紝鍙渶瑕佸紑濮嬨€?,'浣氬悕'],['鍗冮噷涔嬭濮嬩簬瓒充笅銆?,'鑰佸瓙'],['涓嶇Н璺鏃犱互鑷冲崈閲屻€?,'鑽€瀛?],['鎴愬姛鏄範鎯殑绉疮銆?,'浣氬悕'],['瓒婂姫鍔涜秺骞歌繍銆?,'浣氬悕'],['浠婂ぉ鐨勪簨浠婂ぉ鍋氥€?,'浣氬悕'],['鍧氭寔灏辨槸鑳滃埄銆?,'浣氬悕'],['绉嶄竴妫垫爲鏈€濂界殑鏃堕棿鏄幇鍦ㄣ€?,'浣氬悕'],['蹇冧箣鎵€鍚戠礌灞ヤ互寰€銆?,'涓冨爣骞?]];
+function pick(){var x=Q[Math.floor(Math.random()*Q.length)];document.getElementById('q').innerHTML='鈥?+x[0]+'鈥?div class="by">鈥斺€?'+x[1]+'</div>';}
+pick();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){var x=Q[Math.floor(Math.random()*Q.length)];document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({quote:x[0],author:x[1]},null,2)+'</pre>';}
+})();
+</script>
+</body>
+</html>
