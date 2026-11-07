@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ideal Weight - 鍏嶈垂鍦ㄧ嚎鐞嗘兂浣撻噸璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鐞嗘兂浣撻噸璁＄畻鍣紝Devine/Robinson/Hamwi娉曟寜韬珮鎬у埆浼扮畻鐞嗘兂浣撻噸锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鐞嗘兂浣撻噸,ideal weight,鏍囧噯浣撻噸,韬珮,鍋ュ悍浣撻噸,鍏嶈垂宸ュ叿">
+<title>Ideal Weight - 免费在线理想体重计算器</title>
+<meta name="description" content="免费在线理想体重计算器，Devine/Robinson/Hamwi法按身高性别估算理想体重，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="理想体重,ideal weight,标准体重,身高,健康体重,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,20 +27,20 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈿栵笍 Ideal Weight</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鐞嗘兂浣撻噸璁＄畻鍣ㄢ€斺€?Devine/Robinson/Hamwi銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鐞嗘兂浣撻噸</span><span class="badge">Agent鍙敤</span></div>
+  <h1>⚖️ Ideal Weight</h1>
+  <p>免费在线理想体重计算器—— Devine/Robinson/Hamwi。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">理想体重</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鎬у埆</label><select id="g" onchange="calc()"><option value="m" selected>鐢?/option><option value="f">濂?/option></select></div>
-    <div class="field"><label>韬珮锛坈m锛?/label><input type="number" id="h" value="175" min="1" oninput="calc()"></div>
+    <div class="field"><label>性别</label><select id="g" onchange="calc()"><option value="m" selected>男</option><option value="f">女</option></select></div>
+    <div class="field"><label>身高（cm）</label><input type="number" id="h" value="175" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Ideal Weight 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Ideal Weight · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var g=document.getElementById('g').value,h=+document.getElementById('h').value||0;
@@ -49,7 +49,7 @@ function calc(){
   var dev=g==='m'?50+2.3*((h-152.4)/2.54):45.5+2.3*((h-152.4)/2.54);
   var rob=g==='m'?52+1.9*((h-152.4)/2.54):49+1.7*((h-152.4)/2.54);
   var ham=g==='m'?48+2.7*((h-152.4)/2.54):45.5+2.2*((h-152.4)/2.54);
-  el.innerHTML='<div class="big">Devine '+dev.toFixed(1)+' kg<br>Robinson '+rob.toFixed(1)+' kg<br>Hamwi '+ham.toFixed(1)+' kg</div><div class="sub">绠€鍖栦及绠?'+over.toFixed(1)+' kg</div>';
+  el.innerHTML='<div class="big">Devine '+dev.toFixed(1)+' kg<br>Robinson '+rob.toFixed(1)+' kg<br>Hamwi '+ham.toFixed(1)+' kg</div><div class="sub">简化估算 '+over.toFixed(1)+' kg</div>';
 }
 calc();
 (function(){
