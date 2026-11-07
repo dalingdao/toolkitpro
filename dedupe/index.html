@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dedupe - 鍏嶈垂鍦ㄧ嚎鍒楄〃鍘婚噸宸ュ叿</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍒楄〃鍘婚噸宸ュ叿锛屽幓闄ら噸澶嶉」骞剁粺璁″悇鍑虹幇娆℃暟锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鍘婚噸,dedupe,鍒楄〃鍘婚噸,閲嶅椤?璁℃暟,鍏嶈垂宸ュ叿">
+<title>Dedupe - 免费在线列表去重工具</title>
+<meta name="description" content="免费在线列表去重工具，去除重复项并统计各出现次数，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="去重,dedupe,列表去重,重复项,计数,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -23,26 +23,26 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃Ч Dedupe</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍒楄〃鍘婚噸鈥斺€?鍘婚櫎閲嶅椤癸紝缁熻娆℃暟銆傛敮鎸??items= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍘婚噸</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🧹 Dedupe</h1>
+  <p>免费在线列表去重—— 去除重复项，统计次数。支持 ?items= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">去重</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <textarea id="in" placeholder="姣忚涓€椤癸紝鎴栫敤閫楀彿鍒嗛殧">apple,banana,apple,cherry,banana,apple</textarea>
+    <textarea id="in" placeholder="每行一项，或用逗号分隔">apple,banana,apple,cherry,banana,apple</textarea>
     <div class="result" id="out"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Dedupe 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Dedupe · 纯前端 · Agent可用</footer>
 <script>
 function parse(s){return s.split(/[\n,]/).map(function(x){return x.trim();}).filter(Boolean);}
 function run(){
   var items=parse(document.getElementById('in').value);
   var count={},unique=[];
   items.forEach(function(x){if(!count[x]){count[x]=0;unique.push(x);}count[x]++;});
-  document.getElementById('out').textContent='鍘婚噸鍚?'+unique.length+' 椤筡n'+unique.join(', ')+'\n\n娆℃暟:\n'+Object.keys(count).map(function(k){return k+': '+count[k];}).join('\n');
+  document.getElementById('out').textContent='去重后 '+unique.length+' 项\n'+unique.join(', ')+'\n\n次数:\n'+Object.keys(count).map(function(k){return k+': '+count[k];}).join('\n');
 }
 run();
 document.getElementById('in').addEventListener('input',run);
