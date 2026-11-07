@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Time Converter - 鍏嶈垂鍦ㄧ嚎鏃堕棿鍗曚綅鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鏃堕棿鍗曚綅鎹㈢畻鍣紝绉?鍒?鏃?澶?鍛?骞翠簰杞紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鏃堕棿鎹㈢畻,time converter,绉?鍒嗛挓,灏忔椂,澶?鍏嶈垂宸ュ叿">
+<title>Time Converter - 免费在线时间单位换算</title>
+<meta name="description" content="免费在线时间单位换算器，秒/分/时/天/周/年互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="时间换算,time converter,秒,分钟,小时,天,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃晲 Time Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鏃堕棿鍗曚綅鎹㈢畻鈥斺€?绉?鍒?鏃?澶?鍛?骞淬€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">绉?/span><span class="badge">鏃?/span><span class="badge">澶?/span></div>
+  <h1>🕐 Time Converter</h1>
+  <p>免费在线时间单位换算—— 秒/分/时/天/周/年。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">秒</span><span class="badge">时</span><span class="badge">天</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="s" selected>绉?s</option><option value="min">鍒?min</option><option value="h">鏃?h</option><option value="d">澶?d</option><option value="w">鍛?w</option><option value="y">骞?y</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="s" selected>秒 s</option><option value="min">分 min</option><option value="h">时 h</option><option value="d">天 d</option><option value="w">周 w</option><option value="y">年 y</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Time Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Time Converter · 纯前端</footer>
 <script>
 var R={s:1,min:60,h:3600,d:86400,w:604800,y:31536000};
 function calc(){
