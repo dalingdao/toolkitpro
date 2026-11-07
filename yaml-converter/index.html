@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML Converter - 免费在线 YAML/JSON 互转工具</title>
+<meta name="description" content="免费在线 YAML 转换器，YAML 转 JSON/JSON 转 YAML，即时转换，纯前端，无需注册。">
+<meta name="keywords" content="yaml转换,yaml to json,yaml converter,json转yaml,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.tools{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#2563eb}
+textarea{width:100%;min-height:280px;padding:14px;border-radius:10px;border:1px solid #cbd5e1;font-size:13px;font-family:monospace;resize:vertical;background:#0f172a;color:#22c55e}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🔁 YAML Converter</h1>
+  <p>免费在线 YAML/JSON 互转工具—— 即时转换，纯前端。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">YAML↔JSON</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="tools">
+      <button class="btn" onclick="y2j()">YAML → JSON</button>
+      <button class="btn" onclick="j2y()">JSON → YAML</button>
+    </div>
+    <textarea id="ta" spellcheck="false">name: 张三
+age: 30
+city: 北京
+skills:
+  - 前端
+  - 后端
+active: true</textarea>
+  </div>
+</div>
+<footer>ToolkitPro · YAML Converter · 纯前端</footer>
+<script>
+// 轻量 YAML 解析（子集）
+function parseYAML(t){
+  const lines=t.split('\n');
+  const obj={};let stack=[obj];const indents=[-1];
+  lines.forEach(line=>{
+    if(!line.trim()||line.trim().startsWith('#'))return;
+    const ind=line.match(/^ */)[0].length;
+    while(ind<=indents[indents.length-1]){stack.pop();indents.pop()}
+    const cur=stack[stack.length-1];
+    const m=line.trim().match(/^([^:]+):(.*)$/);
+    if(!m)return;
+    const key=m[1].trim().replace(/^['"]|['"]$/g,''),val=m[2].trim();
+    if(val.startsWith('- ')){
+      if(!Array.isArray(cur[key])){cur[key]=[]}
+      cur[key].push(parseVal(val.slice(2).trim()));
+    }else if(val===''){
+      const nv={};cur[key]=nv;stack.push(nv);indents.push(ind);
+    }else{
+      cur[key]=parseVal(val);
+    }
+  });
+  return obj;
+}
+function parseVal(v){
+  if(v==='null')return null;
+  if(v==='true')return true;
+  if(v==='false')return false;
+  if(v.startsWith('[')&&v.endsWith(']'))return v.slice(1,-1).split(',').map(x=>parseVal(x.trim()));
+  if(!isNaN(v))return +v;
+  return v.replace(/^['"]|['"]$/g,'');
+}
+function toYAML(o,ind){
+  ind=ind||0;const pad='  '.repeat(ind);let out='';
+  if(Array.isArray(o)){o.forEach(v=>{out+=pad+'- '+toYAML(v,0).trim()+'\n'});return out}
+  if(typeof o==='object'&&o!==null){
+    Object.keys(o).forEach(k=>{
+      const v=o[k];
+      if(typeof v==='object'&&v!==null){out+=pad+k+':\n'+toYAML(v,ind+1)}
+      else out+=pad+k+': '+v+'\n';
+    });
+    return out;
+  }
+  return String(o);
+}
+function y2j(){
+  try{const obj=parseYAML(document.getElementById('ta').value);document.getElementById('ta').value=JSON.stringify(obj,null,2)}catch(e){alert('YAML 解析失败')}
+}
+function j2y(){
+  try{const obj=JSON.parse(document.getElementById('ta').value);document.getElementById('ta').value=toYAML(obj)}catch(e){alert('JSON 无效')}
+}
+</script>
+</body>
+</html>
