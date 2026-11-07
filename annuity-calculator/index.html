@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Annuity Calculator - 鍏嶈垂鍦ㄧ嚎骞撮噾璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎骞撮噾璁＄畻鍣紝骞撮噾棰?鍒╃巼/鏈熸暟绠楀勾閲戠幇鍊间笌缁堝€硷紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="骞撮噾,annuity,骞撮噾鐜板€?骞撮噾缁堝€?鍏昏€侀噾,鍏嶈垂宸ュ叿">
+<title>Annuity Calculator - 免费在线年金计算器</title>
+<meta name="description" content="免费在线年金计算器，年金额/利率/期数算年金现值与终值，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="年金,annuity,年金现值,年金终值,养老金,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,21 +27,21 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搮 Annuity</h1>
-  <p>鍏嶈垂鍦ㄧ嚎骞撮噾璁＄畻鍣ㄢ€斺€?骞撮噾鐜板€间笌缁堝€笺€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">骞撮噾</span><span class="badge">Agent鍙敤</span></div>
+  <h1>📅 Annuity</h1>
+  <p>免费在线年金计算器—— 年金现值与终值。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">年金</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>姣忔湡閲戦锛堝厓锛?/label><input type="number" id="a" value="5000" min="0" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="4" min="0" step="0.1" oninput="calc()"></div>
-    <div class="field"><label>鏈熸暟锛堝勾锛?/label><input type="number" id="n" value="20" min="1" oninput="calc()"></div>
+    <div class="field"><label>每期金额（元）</label><input type="number" id="a" value="5000" min="0" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="4" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>期数（年）</label><input type="number" id="n" value="20" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Annuity 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · Annuity · 纯前端 · Agent可用</footer>
 <script>
 function calc(){
   var a=+document.getElementById('a').value||0,r=+document.getElementById('r').value||0,n=+document.getElementById('n').value||1;
@@ -49,7 +49,7 @@ function calc(){
   var i=r/100;
   var pv=a*(1-Math.pow(1+i,-n))/i;
   var fv=a*(Math.pow(1+i,n)-1)/i;
-  el.innerHTML='<div class="big">楼'+pv.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">骞撮噾鐜板€?PV<br>骞撮噾缁堝€?FV 楼'+fv.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>鎬绘姇鍏?楼'+(a*n).toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  el.innerHTML='<div class="big">¥'+pv.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">年金现值 PV<br>年金终值 FV ¥'+fv.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>总投入 ¥'+(a*n).toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 calc();
 (function(){
