@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON Schema Generator - 鍏嶈垂鍦ㄧ嚎JSON杞琂SON Schema</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎JSON Schema鐢熸垚鍣紝浠庣ず渚婮SON鑷姩鐢熸垚JSON Schema锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="json schema,JSON Schema,鐢熸垚鍣?schema,鍏嶈垂宸ュ叿,agent">
+<title>JSON Schema Generator - 免费在线JSON转JSON Schema</title>
+<meta name="description" content="免费在线JSON Schema生成器，从示例JSON自动生成JSON Schema，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="json schema,JSON Schema,生成器,schema,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -23,20 +23,20 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃К JSON Schema Generator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎JSON杞琂SON Schema鈥斺€?鑷姩鐢熸垚銆傛敮鎸??input= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">JSON Schema</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🧬 JSON Schema Generator</h1>
+  <p>免费在线JSON转JSON Schema—— 自动生成。支持 ?input= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">JSON Schema</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
     <textarea id="json" placeholder='{"name":"Alice","age":30,"tags":["a","b"]}'>{"name":"Alice","age":30,"score":95.5,"active":true,"tags":["admin","user"],"address":{"city":"Beijing","zip":"100000"}}</textarea>
-    <button class="btn" onclick="conv()">鐢熸垚 Schema</button>
-    <textarea id="out" style="margin-top:12px" placeholder="JSON Schema 杈撳嚭"></textarea>
+    <button class="btn" onclick="conv()">生成 Schema</button>
+    <textarea id="out" style="margin-top:12px" placeholder="JSON Schema 输出"></textarea>
   </div>
 </div>
-<footer>ToolkitPro 路 JSON Schema Generator 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · JSON Schema Generator · 纯前端 · Agent可用</footer>
 <script>
 function typeOf(v){
   if(v===null)return {type:'null'};
@@ -57,7 +57,7 @@ function build(obj){
 function conv(){
   var el=document.getElementById('out');
   try{var o=JSON.parse(document.getElementById('json').value);el.value=JSON.stringify(build(o),null,2);}
-  catch(e){el.value='锛圝SON 鏍煎紡涓嶆纭級';}
+  catch(e){el.value='（JSON 格式不正确）';}
 }
 conv();
 (function(){
