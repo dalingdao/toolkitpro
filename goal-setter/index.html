@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goal Setter - 鍏嶈垂鍦ㄧ嚎鐩爣璁惧畾</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鐩爣璁惧畾鍣紝SMART鐩爣+杩涘害鏉★紝localStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鐩爣璁惧畾,goal setter,SMART鐩爣,鐩爣,杩涘害,鍏嶈垂宸ュ叿">
+<title>Goal Setter - 免费在线目标设定</title>
+<meta name="description" content="免费在线目标设定器，SMART目标+进度条，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="目标设定,goal setter,SMART目标,目标,进度,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -34,23 +34,23 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃幆 Goal Setter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鐩爣璁惧畾鈥斺€?SMART鐩爣+杩涘害銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鐩爣</span><span class="badge">鏈湴瀛樺偍</span></div>
+  <h1>🎯 Goal Setter</h1>
+  <p>免费在线目标设定—— SMART目标+进度。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">目标</span><span class="badge">本地存储</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="add">
-      <input id="g" placeholder="鏂扮洰鏍団€? onkeydown="if(event.key==='Enter')add()">
-      <input id="t" type="number" placeholder="鐩爣鍊? style="max-width:100px">
-      <button onclick="add()">娣诲姞</button>
+      <input id="g" placeholder="新目标…" onkeydown="if(event.key==='Enter')add()">
+      <input id="t" type="number" placeholder="目标值" style="max-width:100px">
+      <button onclick="add()">添加</button>
     </div>
     <div id="list"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Goal Setter 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<footer>ToolkitPro · Goal Setter · 纯前端 · 本地存储</footer>
 <script>
 var goals=JSON.parse(localStorage.getItem('gs_goals')||'[]');
 function save(){localStorage.setItem('gs_goals',JSON.stringify(goals));render();}
@@ -60,8 +60,8 @@ function del(i){goals.splice(i,1);save();}
 function render(){
   document.getElementById('list').innerHTML=goals.map(function(x,i){
     var pct=Math.min(100,Math.round(x.current/x.target*100));
-    return '<div class="goal"><div class="top"><span class="name">'+x.name+'</span><div><span class="pct">'+pct+'%</span> <button class="del" onclick="del('+i+')">鉁?/button></div></div><div class="bar"><div class="fill" style="width:'+pct+'%"></div></div><div class="ctrl"><input type="number" placeholder="褰撳墠鍊硷紙/'+x.target+'锛? onchange="setCur('+i+',this.value)"><button onclick="setCur('+i+','+x.target+')">瀹屾垚</button></div></div>';
-  }).join('')||'<div class="goal"><span class="name">娣诲姞绗竴涓洰鏍?/span></div>';
+    return '<div class="goal"><div class="top"><span class="name">'+x.name+'</span><div><span class="pct">'+pct+'%</span> <button class="del" onclick="del('+i+')">✕</button></div></div><div class="bar"><div class="fill" style="width:'+pct+'%"></div></div><div class="ctrl"><input type="number" placeholder="当前值（/'+x.target+'）" onchange="setCur('+i+',this.value)"><button onclick="setCur('+i+','+x.target+')">完成</button></div></div>';
+  }).join('')||'<div class="goal"><span class="name">添加第一个目标</span></div>';
 }
 render();
 </script>
