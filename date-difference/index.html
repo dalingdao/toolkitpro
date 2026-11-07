@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Date Difference - 鍏嶈垂鍦ㄧ嚎鏃ユ湡宸绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鏃ユ湡宸绠楀櫒锛岃绠椾袱涓棩鏈熶箣闂寸浉宸灏戝ぉ/鍛?鏈?骞达紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鏃ユ湡宸?date difference,鏃ユ湡璁＄畻,澶╂暟璁＄畻,涓や釜鏃ユ湡鐩稿樊,鍏嶈垂宸ュ叿">
+<title>Date Difference - 免费在线日期差计算器</title>
+<meta name="description" content="免费在线日期差计算器，计算两个日期之间相差多少天/周/月/年，纯前端，无需注册。">
+<meta name="keywords" content="日期差,date difference,日期计算,天数计算,两个日期相差,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,30 +27,30 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搮 Date Difference</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鏃ユ湡宸绠楀櫒鈥斺€?涓や釜鏃ユ湡涔嬮棿鐩稿樊澶氬皯澶?/ 鍛?/ 鏈?/ 骞淬€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">澶╂暟</span><span class="badge">宸ヤ綔鏃?/span></div>
+  <h1>📅 Date Difference</h1>
+  <p>免费在线日期差计算器—— 两个日期之间相差多少天 / 周 / 月 / 年。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">天数</span><span class="badge">工作日</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>寮€濮嬫棩鏈?/label><input type="date" id="a" value="2025-01-01" oninput="calc()"></div>
-    <div class="field"><label>缁撴潫鏃ユ湡</label><input type="date" id="b" value="2026-11-08" oninput="calc()"></div>
+    <div class="field"><label>开始日期</label><input type="date" id="a" value="2025-01-01" oninput="calc()"></div>
+    <div class="field"><label>结束日期</label><input type="date" id="b" value="2026-11-08" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Date Difference 路 绾墠绔?/footer>
+<footer>ToolkitPro · Date Difference · 纯前端</footer>
 <script>
 function calc(){
   var a=new Date(document.getElementById('a').value),b=new Date(document.getElementById('b').value);
   var el=document.getElementById('res');
-  if(isNaN(a)||isNaN(b)){el.innerHTML='<div class="sub">璇烽€夋嫨鏃ユ湡</div>';return;}
+  if(isNaN(a)||isNaN(b)){el.innerHTML='<div class="sub">请选择日期</div>';return;}
   var d=Math.abs(b-a)/86400000;
-  var dir=b>=a?'':'锛堝€掑簭锛屽彇缁濆鍊硷級';
+  var dir=b>=a?'':'（倒序，取绝对值）';
   var weeks=d/7, months=(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth()), years=d/365.25;
   var wd=0;for(var t=new Date(Math.min(a,b));t<=new Date(Math.max(a,b));t.setDate(t.getDate()+1)){var g=t.getDay();if(g>0&&g<6)wd++;}
-  el.innerHTML='<div class="big">'+Math.round(d)+' 澶?/div><div class="sub">绾?'+weeks.toFixed(1)+' 鍛?br>绾?'+months+' 涓湀<br>绾?'+years.toFixed(1)+' 骞?br>宸ヤ綔鏃ワ紙鍛ㄤ竴鑷冲懆浜旓級绾?'+wd+' 澶?/div>';
+  el.innerHTML='<div class="big">'+Math.round(d)+' 天</div><div class="sub">约 '+weeks.toFixed(1)+' 周<br>约 '+months+' 个月<br>约 '+years.toFixed(1)+' 年<br>工作日（周一至周五）约 '+wd+' 天</div>';
 }
 calc();
 </script>
