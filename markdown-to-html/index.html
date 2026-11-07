@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown to HTML - 鍏嶈垂鍦ㄧ嚎Markdown杞琀TML</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎Markdown杞琀TML宸ュ叿锛岀矘璐碝arkdown鍗虫椂杞琀TML浠ｇ爜锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="markdown to html,md杞琱tml,Markdown,杞崲,鍏嶈垂宸ュ叿,agent">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:760px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+textarea{width:100%;height:220px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;font-family:monospace;resize:vertical;margin-bottom:12px}
+.btn{padding:9px 16px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;background:#2563eb;color:#fff;margin-right:8px}
+.btn.ghost{background:#e0f2fe;color:#0369a1}
+.result{margin-top:14px;background:#f8fafc;border-radius:12px;padding:16px;font-size:13px;font-family:monospace;max-height:320px;overflow:auto;white-space:pre-wrap;border:1px solid #e2e8f0}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃摑 Markdown to HTML</h1>
+  <p>鍏嶈垂鍦ㄧ嚎Markdown杞琀TML鈥斺€?绮樿创鍗虫椂杞崲銆傛敮鎸??md= &format=json 渚?Agent 璋冪敤銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">MD杞琀TML</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <textarea id="md" placeholder="# 鏍囬&#10;&#10;**鍔犵矖** 鍜?*鏂滀綋*&#10;&#10;- 鍒楄〃椤?># 浣犲ソ锛屼笘鐣?杩欐槸涓€娈?**鍔犵矖** 鍜?*鏂滀綋* 鏂囨湰銆?- 椤圭洰涓€
+- 椤圭洰浜?
+[閾炬帴](https://example.com)</textarea>
+    <button class="btn" onclick="conv()">杞?HTML</button>
+    <button class="btn ghost" onclick="document.getElementById('out').value=''">娓呯┖</button>
+    <textarea id="out" style="margin-top:12px" placeholder="HTML 杈撳嚭"></textarea>
+  </div>
+</div>
+<footer>ToolkitPro 路 Markdown to HTML 路 绾墠绔?路 Agent鍙敤</footer>
+<script>
+function mdToHtml(md){
+  var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var lines=md.replace(/\r/g,'').split('\n'),html='',inList=false;
+  function closeList(){if(inList){html+='</ul>';inList=false;}}
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(/^###\s/.test(l)){closeList();html+='<h3>'+esc(l.replace(/^###\s+/,''))+'</h3>';}
+    else if(/^##\s/.test(l)){closeList();html+='<h2>'+esc(l.replace(/^##\s+/,''))+'</h2>';}
+    else if(/^#\s/.test(l)){closeList();html+='<h1>'+esc(l.replace(/^#\s+/,''))+'</h1>';}
+    else if(/^[-*]\s/.test(l)){if(!inList){html+='<ul>';inList=true;}html+='<li>'+esc(l.replace(/^[-*]\s+/,''))+'</li>';}
+    else if(/^\s*$/.test(l)){closeList();}
+    else if(/^---\s*$/.test(l)){closeList();html+='<hr>';}
+    else{closeList();html+='<p>'+esc(l)+'</p>';}
+  }
+  closeList();
+  return html;
+}
+function conv(){document.getElementById('out').value=mdToHtml(document.getElementById('md').value);}
+conv();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var md=q.get('md')||'';
+    var res={ok:true,html:mdToHtml(md)};
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify(res,null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
