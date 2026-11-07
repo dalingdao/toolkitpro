@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Credit Card Payoff - 鍏嶈垂鍦ㄧ嚎淇＄敤鍗¤繕娆捐绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎淇＄敤鍗¤繕娆捐绠楀櫒锛屾寜娆犳/鍒╃巼/鏈堣繕娆捐绠楄繕娓呮椂闂翠笌鎬诲埄鎭紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="淇＄敤鍗¤繕娆?credit card payoff,鏈€浣庤繕娆?娆犳,鍒╂伅,杩樻竻鏃堕棿,鍏嶈垂宸ュ叿">
+<title>Credit Card Payoff - 免费在线信用卡还款计算器</title>
+<meta name="description" content="免费在线信用卡还款计算器，按欠款/利率/月还款计算还清时间与总利息，纯前端，无需注册。">
+<meta name="keywords" content="信用卡还款,credit card payoff,最低还款,欠款,利息,还清时间,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,30 +27,30 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃挸 Credit Card Payoff</h1>
-  <p>鍏嶈垂鍦ㄧ嚎淇＄敤鍗¤繕娆捐绠楀櫒鈥斺€?澶氫箙杩樻竻銆佹€诲埄鎭€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">娆犳</span><span class="badge">杩樻竻鏃堕棿</span></div>
+  <h1>💳 Credit Card Payoff</h1>
+  <p>免费在线信用卡还款计算器—— 多久还清、总利息。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">欠款</span><span class="badge">还清时间</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>娆犳锛堝厓锛?/label><input type="number" id="bal" value="10000" min="1" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="apr" value="18" min="0" step="0.1" oninput="calc()"></div>
-    <div class="field"><label>姣忔湀杩樻锛堝厓锛?/label><input type="number" id="pay" value="500" min="1" oninput="calc()"></div>
+    <div class="field"><label>欠款（元）</label><input type="number" id="bal" value="10000" min="1" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="apr" value="18" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>每月还款（元）</label><input type="number" id="pay" value="500" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Credit Card Payoff 路 绾墠绔?/footer>
+<footer>ToolkitPro · Credit Card Payoff · 纯前端</footer>
 <script>
 function calc(){
   var bal=+document.getElementById('bal').value||0,apr=+document.getElementById('apr').value||0,pay=+document.getElementById('pay').value||0;
   var el=document.getElementById('res');
   var mr=apr/100/12,int0=bal*mr;
-  if(pay<=int0){el.innerHTML='<div class="sub">鈿?鏈堣繕娆句綆浜庡埄鎭紙楼'+int0.toFixed(2)+'锛夛紝姘歌繙杩樹笉娓?/div>';return;}
+  if(pay<=int0){el.innerHTML='<div class="sub">⚠ 月还款低于利息（¥'+int0.toFixed(2)+'），永远还不清</div>';return;}
   var months=0,interest=0;
   while(bal>0&&months<1200){var int=bal*mr;var prin=Math.min(pay-int,bal);if(prin<0)prin=0;bal-=prin;interest+=int;months++;}
-  el.innerHTML='<div class="big">'+Math.floor(months/12)+' 骞?'+months%12+' 涓湀</div><div class="sub">绾?'+months+' 涓湀杩樻竻<br>鎬诲埄鎭?楼'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  el.innerHTML='<div class="big">'+Math.floor(months/12)+' 年 '+months%12+' 个月</div><div class="sub">约 '+months+' 个月还清<br>总利息 ¥'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 calc();
 </script>
