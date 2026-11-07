@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mood Tracker - 鍏嶈垂鍦ㄧ嚎蹇冩儏璁板綍</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎蹇冩儏璁板綍鍣紝鎸夋棩璁板綍蹇冩儏/鑳介噺/鍘嬪姏锛宭ocalStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="蹇冩儏璁板綍,mood tracker,蹇冩儏,鎯呯华,蹇冪悊鍋ュ悍,鍏嶈垂宸ュ叿">
+<title>Mood Tracker - 免费在线心情记录</title>
+<meta name="description" content="免费在线心情记录器，按日记录心情/能量/压力，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="心情记录,mood tracker,心情,情绪,心理健康,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -30,33 +30,33 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃幁 Mood Tracker</h1>
-  <p>鍏嶈垂鍦ㄧ嚎蹇冩儏璁板綍鈥斺€?鏈湴淇濆瓨銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">蹇冩儏</span><span class="badge">鏈湴瀛樺偍</span></div>
+  <h1>🎭 Mood Tracker</h1>
+  <p>免费在线心情记录—— 本地保存。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">心情</span><span class="badge">本地存储</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="moods">
-      <button data-m="馃槥" onclick="pick(this)">馃槥</button>
-      <button data-m="馃槓" onclick="pick(this)">馃槓</button>
-      <button data-m="馃檪" class="on" onclick="pick(this)">馃檪</button>
-      <button data-m="馃槃" onclick="pick(this)">馃槃</button>
-      <button data-m="馃ぉ" onclick="pick(this)">馃ぉ</button>
+      <button data-m="😞" onclick="pick(this)">😞</button>
+      <button data-m="😐" onclick="pick(this)">😐</button>
+      <button data-m="🙂" class="on" onclick="pick(this)">🙂</button>
+      <button data-m="😄" onclick="pick(this)">😄</button>
+      <button data-m="🤩" onclick="pick(this)">🤩</button>
     </div>
-    <div class="field"><label>鑳介噺锛?-10锛?/label><input type="range" id="e" min="1" max="10" value="6" oninput="save()"></div>
-    <div class="field"><label>鍘嬪姏锛?-10锛?/label><input type="range" id="s" min="1" max="10" value="4" oninput="save()"></div>
+    <div class="field"><label>能量（1-10）</label><input type="range" id="e" min="1" max="10" value="6" oninput="save()"></div>
+    <div class="field"><label>压力（1-10）</label><input type="range" id="s" min="1" max="10" value="4" oninput="save()"></div>
     <div id="rec"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Mood Tracker 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<footer>ToolkitPro · Mood Tracker · 纯前端 · 本地存储</footer>
 <script>
-var mood='馃檪',recs=JSON.parse(localStorage.getItem('mt_recs')||'[]');
+var mood='🙂',recs=JSON.parse(localStorage.getItem('mt_recs')||'[]');
 function pick(b){mood=b.dataset.m;document.querySelectorAll('.moods button').forEach(function(x){x.className=x===b?'on':'';});save();}
 function today(){return new Date().toISOString().slice(0,10);}
 function save(){var t=today();var i=recs.findIndex(function(r){return r.d===t;});if(i<0)recs.push({d:t});i=recs.findIndex(function(r){return r.d===t;});recs[i].m=mood;recs[i].e=+document.getElementById('e').value;recs[i].s=+document.getElementById('s').value;localStorage.setItem('mt_recs',JSON.stringify(recs));render();}
-function render(){document.getElementById('rec').innerHTML=recs.slice().reverse().slice(0,14).map(function(r){return '<div class="rec"><span class="e">'+r.d+'</span><span class="v">'+r.m+' 路 鑳介噺'+r.e+' 路 鍘嬪姏'+r.s+'</span></div>';}).join('')||'<div class="rec"><span class="e">鏆傛棤璁板綍</span></div>';}
+function render(){document.getElementById('rec').innerHTML=recs.slice().reverse().slice(0,14).map(function(r){return '<div class="rec"><span class="e">'+r.d+'</span><span class="v">'+r.m+' · 能量'+r.e+' · 压力'+r.s+'</span></div>';}).join('')||'<div class="rec"><span class="e">暂无记录</span></div>';}
 render();
 </script>
 </body>
