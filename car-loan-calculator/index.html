@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Car Loan Calculator - 鍏嶈垂鍦ㄧ嚎杞﹁捶璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎杞﹁捶璁＄畻鍣紝绛夐鏈伅/绛夐鏈噾鏈堜緵銆佹€诲埄鎭€侀浠樻瘮渚嬶紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="杞﹁捶璁＄畻鍣?car loan,姹借溅璐锋,鏈堜緵,棣栦粯,璐锋璁＄畻,鍏嶈垂宸ュ叿">
+<title>Car Loan Calculator - 免费在线车贷计算器</title>
+<meta name="description" content="免费在线车贷计算器，等额本息/等额本金月供、总利息、首付比例，纯前端，无需注册。">
+<meta name="keywords" content="车贷计算器,car loan,汽车贷款,月供,首付,贷款计算,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -30,22 +30,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃殫 Car Loan Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎杞﹁捶璁＄畻鍣ㄢ€斺€?棣栦粯銆佹湀渚涖€佹€诲埄鎭€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">棣栦粯</span><span class="badge">鏈堜緵</span></div>
+  <h1>🚗 Car Loan Calculator</h1>
+  <p>免费在线车贷计算器—— 首付、月供、总利息。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">首付</span><span class="badge">月供</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>杞︿环锛堜竾鍏冿級</label><input type="number" id="p" value="15" min="1" oninput="calc()"></div>
-    <div class="field"><label>棣栦粯姣斾緥锛?锛?/label><input type="number" id="dp" value="30" min="0" max="100" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="4.5" min="0" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>璐锋骞撮檺锛堝勾锛?/label><input type="number" id="n" value="3" min="1" max="10" oninput="calc()"></div>
+    <div class="field"><label>车价（万元）</label><input type="number" id="p" value="15" min="1" oninput="calc()"></div>
+    <div class="field"><label>首付比例（%）</label><input type="number" id="dp" value="30" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="4.5" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>贷款年限（年）</label><input type="number" id="n" value="3" min="1" max="10" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Car Loan Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Car Loan Calculator · 纯前端</footer>
 <script>
 function calc(){
   var p=+document.getElementById('p').value||0,dp=+document.getElementById('dp').value||0,r=+document.getElementById('r').value||0,n=+document.getElementById('n').value||1;
@@ -54,9 +54,9 @@ function calc(){
   if(mr>0){
     var mf=loan*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
     var total=mf*months,interest=total-loan;
-    el.innerHTML='<div class="big">楼'+mf.toLocaleString('zh-CN',{maximumFractionDigits:0})+'/鏈?/div><div class="sub">棣栦粯 楼'+down.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>璐锋 楼'+loan.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>鎬诲埄鎭?楼'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+    el.innerHTML='<div class="big">¥'+mf.toLocaleString('zh-CN',{maximumFractionDigits:0})+'/月</div><div class="sub">首付 ¥'+down.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>贷款 ¥'+loan.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>总利息 ¥'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
   } else {
-    el.innerHTML='<div class="big">楼'+(loan/months).toLocaleString('zh-CN',{maximumFractionDigits:0})+'/鏈?/div><div class="sub">棣栦粯 楼'+down.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>璐锋 楼'+loan.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+    el.innerHTML='<div class="big">¥'+(loan/months).toLocaleString('zh-CN',{maximumFractionDigits:0})+'/月</div><div class="sub">首付 ¥'+down.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>贷款 ¥'+loan.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
   }
 }
 calc();
