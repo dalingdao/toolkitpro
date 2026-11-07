@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>List Sort - 鍏嶈垂鍦ㄧ嚎鍒楄〃鎺掑簭宸ュ叿</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍒楄〃鎺掑簭宸ュ叿锛屾暟瀛?瀛楁瘝鎺掑簭锛屽崌搴?闄嶅簭锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鎺掑簭,list sort,鍒楄〃鎺掑簭,鍗囧簭,闄嶅簭,鍏嶈垂宸ュ叿">
+<title>List Sort - 免费在线列表排序工具</title>
+<meta name="description" content="免费在线列表排序工具，数字/字母排序，升序/降序，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="排序,list sort,列表排序,升序,降序,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -26,23 +26,23 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃敘 List Sort</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍒楄〃鎺掑簭鈥斺€?鏁板瓧/瀛楁瘝锛屽崌闄嶅簭銆傛敮鎸??items= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎺掑簭</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🔢 List Sort</h1>
+  <p>免费在线列表排序—— 数字/字母，升降序。支持 ?items= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">排序</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <textarea id="in" placeholder="姣忚涓€椤?>5,3,9,1,7</textarea>
+    <textarea id="in" placeholder="每行一项">5,3,9,1,7</textarea>
     <div class="seg">
-      <button id="s1" class="on" onclick="m(1)">鍗囧簭</button>
-      <button id="s2" onclick="m(2)">闄嶅簭</button>
+      <button id="s1" class="on" onclick="m(1)">升序</button>
+      <button id="s2" onclick="m(2)">降序</button>
     </div>
     <div class="result" id="out"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 List Sort 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · List Sort · 纯前端 · Agent可用</footer>
 <script>
 var M=1;
 function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';run();}
