@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rent vs Buy - 鍏嶈垂鍦ㄧ嚎绉熸埧涔版埧瀵规瘮璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎绉熸埧vs涔版埧瀵规瘮璁＄畻鍣紝姣旇緝N骞村悗绉熸埧鎬绘垚鏈笌涔版埧鎬绘垚鏈紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="绉熸埧涔版埧,rent vs buy,涔版埧杩樻槸绉熸埧,璐埧,绉熸埧鎴愭湰,鍏嶈垂宸ュ叿">
+<title>Rent vs Buy - 免费在线租房买房对比计算器</title>
+<meta name="description" content="免费在线租房vs买房对比计算器，比较N年后租房总成本与买房总成本，纯前端，无需注册。">
+<meta name="keywords" content="租房买房,rent vs buy,买房还是租房,购房,租房成本,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,23 +27,23 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃彔 Rent vs Buy</h1>
-  <p>鍏嶈垂鍦ㄧ嚎绉熸埧vs涔版埧瀵规瘮鈥斺€?N骞村悗鎬绘垚鏈€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">绉熸埧</span><span class="badge">涔版埧</span></div>
+  <h1>🏠 Rent vs Buy</h1>
+  <p>免费在线租房vs买房对比—— N年后总成本。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">租房</span><span class="badge">买房</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鎴夸环锛堜竾鍏冿級</label><input type="number" id="h" value="100" oninput="calc()"></div>
-    <div class="field"><label>棣栦粯姣斾緥锛?锛?/label><input type="number" id="d" value="30" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>鏈堢锛堝厓锛?/label><input type="number" id="rent" value="3000" oninput="calc()"></div>
-    <div class="field"><label>骞存暟</label><input type="number" id="y" value="10" oninput="calc()"></div>
+    <div class="field"><label>房价（万元）</label><input type="number" id="h" value="100" oninput="calc()"></div>
+    <div class="field"><label>首付比例（%）</label><input type="number" id="d" value="30" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>月租（元）</label><input type="number" id="rent" value="3000" oninput="calc()"></div>
+    <div class="field"><label>年数</label><input type="number" id="y" value="10" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Rent vs Buy 路 绾墠绔?/footer>
+<footer>ToolkitPro · Rent vs Buy · 纯前端</footer>
 <script>
 function calc(){
   var h=+document.getElementById('h').value||0,d=+document.getElementById('d').value||0,r=+document.getElementById('r').value||0,rent=+document.getElementById('rent').value||0,y=+document.getElementById('y').value||1;
@@ -53,8 +53,8 @@ function calc(){
   var buyTotal=down+mf*months;
   var rentTotal=rent*months;
   var diff=buyTotal-rentTotal;
-  var win=diff<0?'涔版埧鏇寸渷 楼'+Math.abs(diff).toLocaleString('zh-CN',{maximumFractionDigits:0}):'绉熸埧鏇寸渷 楼'+diff.toLocaleString('zh-CN',{maximumFractionDigits:0});
-  el.innerHTML='<div class="big">'+win+'</div><div class="sub">'+y+' 骞翠拱鎴挎€绘垚鏈?楼'+buyTotal.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>'+y+' 骞寸鎴挎€绘垚鏈?楼'+rentTotal.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>锛堜笉鍚埧浠峰鍊?鏈轰細鎴愭湰锛屼粎渚涘弬鑰冿級</div>';
+  var win=diff<0?'买房更省 ¥'+Math.abs(diff).toLocaleString('zh-CN',{maximumFractionDigits:0}):'租房更省 ¥'+diff.toLocaleString('zh-CN',{maximumFractionDigits:0});
+  el.innerHTML='<div class="big">'+win+'</div><div class="sub">'+y+' 年买房总成本 ¥'+buyTotal.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>'+y+' 年租房总成本 ¥'+rentTotal.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>（不含房价增值/机会成本，仅供参考）</div>';
 }
 calc();
 </script>
