@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sales Tax Calculator - 鍏嶈垂鍦ㄧ嚎鍚◣浠疯绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎閿€鍞◣璁＄畻鍣紝绋庡墠浠?绋庣巼璁＄畻鍚◣鎬讳环涓庣◣棰濓紝鍙嶅悜姹傜◣鍓嶄环锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="閿€鍞◣璁＄畻鍣?sales tax,鍚◣浠?绋庡墠浠?绋庨,绋庣巼,鍏嶈垂宸ュ叿">
+<title>Sales Tax Calculator - 免费在线含税价计算器</title>
+<meta name="description" content="免费在线销售税计算器，税前价/税率计算含税总价与税额，反向求税前价，纯前端，无需注册。">
+<meta name="keywords" content="销售税计算器,sales tax,含税价,税前价,税额,税率,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -30,32 +30,32 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃Ь Sales Tax Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍚◣浠疯绠楀櫒鈥斺€?绋庡墠浠?绋庣巼锛屾眰鍚◣鎬讳环涓庣◣棰濄€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍚◣浠?/span><span class="badge">绋庨</span></div>
+  <h1>🧾 Sales Tax Calculator</h1>
+  <p>免费在线含税价计算器—— 税前价/税率，求含税总价与税额。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">含税价</span><span class="badge">税额</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="seg">
-      <button id="s1" class="on" onclick="m(1)">绋庡墠 鈫?鍚◣</button>
-      <button id="s2" onclick="m(2)">鍚◣ 鈫?绋庡墠</button>
+      <button id="s1" class="on" onclick="m(1)">税前 → 含税</button>
+      <button id="s2" onclick="m(2)">含税 → 税前</button>
     </div>
-    <div class="field"><label id="lbl">绋庡墠閲戦锛堝厓锛?/label><input type="number" id="a" value="100" min="0" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>绋庣巼锛?锛?/label><input type="number" id="r" value="13" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label id="lbl">税前金额（元）</label><input type="number" id="a" value="100" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>税率（%）</label><input type="number" id="r" value="13" min="0" step="0.01" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Sales Tax Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Sales Tax Calculator · 纯前端</footer>
 <script>
 var M=1;
-function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';document.getElementById('lbl').textContent=M===1?'绋庡墠閲戦锛堝厓锛?:'鍚◣閲戦锛堝厓锛?;calc();}
+function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';document.getElementById('lbl').textContent=M===1?'税前金额（元）':'含税金额（元）';calc();}
 function calc(){
   var a=+document.getElementById('a').value||0,r=+document.getElementById('r').value||0;
   var el=document.getElementById('res');
-  if(M===1){var tax=a*r/100,inc=a+tax;el.innerHTML='<div class="big">楼'+inc.toFixed(2)+'</div><div class="sub">鍚◣鎬讳环<br>绋庨 楼'+tax.toFixed(2)+'</div>';}
-  else{var pre=a/(1+r/100),tax2=a-pre;el.innerHTML='<div class="big">楼'+pre.toFixed(2)+'</div><div class="sub">绋庡墠閲戦<br>绋庨 楼'+tax2.toFixed(2)+'</div>';}
+  if(M===1){var tax=a*r/100,inc=a+tax;el.innerHTML='<div class="big">¥'+inc.toFixed(2)+'</div><div class="sub">含税总价<br>税额 ¥'+tax.toFixed(2)+'</div>';}
+  else{var pre=a/(1+r/100),tax2=a-pre;el.innerHTML='<div class="big">¥'+pre.toFixed(2)+'</div><div class="sub">税前金额<br>税额 ¥'+tax2.toFixed(2)+'</div>';}
 }
 calc();
 </script>
