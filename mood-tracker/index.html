@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mood Tracker - 鍏嶈垂鍦ㄧ嚎蹇冩儏璁板綍</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎蹇冩儏璁板綍鍣紝鎸夋棩璁板綍蹇冩儏/鑳介噺/鍘嬪姏锛宭ocalStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
+<meta name="keywords" content="蹇冩儏璁板綍,mood tracker,蹇冩儏,鎯呯华,蹇冪悊鍋ュ悍,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.moods{display:flex;gap:10px;margin-bottom:16px}
+.moods button{flex:1;padding:14px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;font-size:22px;cursor:pointer}
+.moods button.on{border-color:#2563eb;background:#eff6ff}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input[type=range]{width:100%}
+.rec{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eef2f7;font-size:14px}
+.rec .e{color:#64748b}
+.rec .v{font-weight:600}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃幁 Mood Tracker</h1>
+  <p>鍏嶈垂鍦ㄧ嚎蹇冩儏璁板綍鈥斺€?鏈湴淇濆瓨銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">蹇冩儏</span><span class="badge">鏈湴瀛樺偍</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="moods">
+      <button data-m="馃槥" onclick="pick(this)">馃槥</button>
+      <button data-m="馃槓" onclick="pick(this)">馃槓</button>
+      <button data-m="馃檪" class="on" onclick="pick(this)">馃檪</button>
+      <button data-m="馃槃" onclick="pick(this)">馃槃</button>
+      <button data-m="馃ぉ" onclick="pick(this)">馃ぉ</button>
+    </div>
+    <div class="field"><label>鑳介噺锛?-10锛?/label><input type="range" id="e" min="1" max="10" value="6" oninput="save()"></div>
+    <div class="field"><label>鍘嬪姏锛?-10锛?/label><input type="range" id="s" min="1" max="10" value="4" oninput="save()"></div>
+    <div id="rec"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Mood Tracker 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<script>
+var mood='馃檪',recs=JSON.parse(localStorage.getItem('mt_recs')||'[]');
+function pick(b){mood=b.dataset.m;document.querySelectorAll('.moods button').forEach(function(x){x.className=x===b?'on':'';});save();}
+function today(){return new Date().toISOString().slice(0,10);}
+function save(){var t=today();var i=recs.findIndex(function(r){return r.d===t;});if(i<0)recs.push({d:t});i=recs.findIndex(function(r){return r.d===t;});recs[i].m=mood;recs[i].e=+document.getElementById('e').value;recs[i].s=+document.getElementById('s').value;localStorage.setItem('mt_recs',JSON.stringify(recs));render();}
+function render(){document.getElementById('rec').innerHTML=recs.slice().reverse().slice(0,14).map(function(r){return '<div class="rec"><span class="e">'+r.d+'</span><span class="v">'+r.m+' 路 鑳介噺'+r.e+' 路 鍘嬪姏'+r.s+'</span></div>';}).join('')||'<div class="rec"><span class="e">鏆傛棤璁板綍</span></div>';}
+render();
+</script>
+</body>
+</html>
