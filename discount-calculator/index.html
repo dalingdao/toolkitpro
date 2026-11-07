@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discount Calculator - 鍏嶈垂鍦ㄧ嚎鎶樻墸璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎶樻墸璁＄畻鍣紝鍘熶环/鎶樻墸浠?鑺傜渷閲戦涓€閿绠楋紝鎶樺悗浠蜂竴鐩簡鐒讹紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鎶樻墸璁＄畻鍣?discount calculator,鎵撴姌,鍘熶环,鎶樺悗浠?鐪侀挶,鍏嶈垂宸ュ叿">
+<title>Discount Calculator - 免费在线折扣计算器</title>
+<meta name="description" content="免费在线折扣计算器，原价/折扣价/节省金额一键计算，折后价一目了然，纯前端，无需注册。">
+<meta name="keywords" content="折扣计算器,discount calculator,打折,原价,折后价,省钱,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,26 +27,26 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃彿锔?Discount Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鎶樻墸璁＄畻鍣ㄢ€斺€?鍘熶环銆佹姌鎵ｏ紝鎶樺悗浠蜂笌鑺傜渷閲戦銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎵撴姌</span><span class="badge">鐪侀挶</span><span class="badge">鏀寔 JSON</span></div>
+  <h1>🏷️ Discount Calculator</h1>
+  <p>免费在线折扣计算器—— 原价、折扣，折后价与节省金额。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">打折</span><span class="badge">省钱</span><span class="badge">支持 JSON</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鍘熶环锛堝厓锛?/label><input type="number" id="p" value="199" min="0" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>鎶樻墸锛?锛?/label><input type="number" id="d" value="20" min="0" max="100" oninput="calc()"></div>
-    <div class="field"><label>鏁伴噺</label><input type="number" id="q" value="1" min="1" oninput="calc()"></div>
+    <div class="field"><label>原价（元）</label><input type="number" id="p" value="199" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>折扣（%）</label><input type="number" id="d" value="20" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>数量</label><input type="number" id="q" value="1" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Discount Calculator 路 绾墠绔?路 鏀寔 ?format=json</footer>
+<footer>ToolkitPro · Discount Calculator · 纯前端 · 支持 ?format=json</footer>
 <script>
 function calc(){
   var p=+document.getElementById('p').value||0,d=+document.getElementById('d').value||0,q=+document.getElementById('q').value||1;
   var save=p*d/100, after=(p-save)*q, saved=save*q;
-  document.getElementById('res').innerHTML='<div class="big">楼'+after.toFixed(2)+'</div><div class="sub">鎶樺悗鍗曚环 楼'+(p-save).toFixed(2)+'<br>鍏辫妭鐪?楼'+saved.toFixed(2)+'锛?+(d*q)+' 鎶樹紭鎯狅級</div>';
+  document.getElementById('res').innerHTML='<div class="big">¥'+after.toFixed(2)+'</div><div class="sub">折后单价 ¥'+(p-save).toFixed(2)+'<br>共节省 ¥'+saved.toFixed(2)+'（'+(d*q)+' 折优惠）</div>';
 }
 calc();
 (function(){
