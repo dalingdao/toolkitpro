@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Energy Converter - 鍏嶈垂鍦ㄧ嚎鑳介噺鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鑳介噺鎹㈢畻鍣紝鐒﹁€?鍗冪劍/鍗?鍗冨崱/鍗冪摝鏃朵簰杞紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鑳介噺鎹㈢畻,energy converter,鐒﹁€?鍗冨崱,鍗冪摝鏃?鍗¤矾閲?鍏嶈垂宸ュ叿">
+<title>Energy Converter - 免费在线能量换算</title>
+<meta name="description" content="免费在线能量换算器，焦耳/千焦/卡/千卡/千瓦时互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="能量换算,energy converter,焦耳,千卡,千瓦时,卡路里,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈿?Energy Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鑳介噺鎹㈢畻鈥斺€?J/kJ/cal/kcal/kWh銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">kJ</span><span class="badge">kcal</span><span class="badge">kWh</span></div>
+  <h1>⚡ Energy Converter</h1>
+  <p>免费在线能量换算—— J/kJ/cal/kcal/kWh。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">kJ</span><span class="badge">kcal</span><span class="badge">kWh</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="J" selected>鐒﹁€?J</option><option value="kJ">鍗冪劍 kJ</option><option value="cal">鍗?cal</option><option value="kcal">鍗冨崱 kcal</option><option value="kwh">鍗冪摝鏃?kWh</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="J" selected>焦耳 J</option><option value="kJ">千焦 kJ</option><option value="cal">卡 cal</option><option value="kcal">千卡 kcal</option><option value="kwh">千瓦时 kWh</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Energy Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Energy Converter · 纯前端</footer>
 <script>
 var R={J:1,kJ:0.001,cal:0.239006,kcal:0.000239006,kwh:2.7778e-7};
 function calc(){
