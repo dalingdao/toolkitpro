@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo List - 鍏嶈垂鍦ㄧ嚎寰呭姙娓呭崟</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎寰呭姙娓呭崟锛屾坊鍔?瀹屾垚/鍒犻櫎浠诲姟锛宭ocalStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
+<meta name="keywords" content="寰呭姙娓呭崟,todo list,寰呭姙,todo,浠诲姟,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.add{display:flex;gap:8px;margin-bottom:16px}
+.add input{flex:1;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.add button{padding:11px 18px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #eef2f7}
+.item input[type=checkbox]{width:18px;height:18px;cursor:pointer}
+.item .txt{flex:1;font-size:15px}
+.item .txt.done{text-decoration:line-through;color:#94a3b8}
+.item .del{color:#ef4444;cursor:pointer;background:none;border:none;font-size:16px}
+.count{text-align:center;color:#64748b;font-size:13px;margin-top:14px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃搵 Todo List</h1>
+  <p>鍏嶈垂鍦ㄧ嚎寰呭姙娓呭崟鈥斺€?鏈湴淇濆瓨銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">寰呭姙</span><span class="badge">鏈湴瀛樺偍</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="add">
+      <input id="t" placeholder="娣诲姞浠诲姟鈥? onkeydown="if(event.key==='Enter')add()">
+      <button onclick="add()">娣诲姞</button>
+    </div>
+    <div id="list"></div>
+    <div class="count" id="cnt"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Todo List 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<script>
+var items=JSON.parse(localStorage.getItem('tl_items')||'[]');
+function save(){localStorage.setItem('tl_items',JSON.stringify(items));render();}
+function add(){var v=document.getElementById('t').value.trim();if(!v)return;items.push({t:v,done:false});document.getElementById('t').value='';save();}
+function tog(i){items[i].done=!items[i].done;save();}
+function del(i){items.splice(i,1);save();}
+function render(){
+  document.getElementById('list').innerHTML=items.map(function(x,i){return '<div class="item"><input type="checkbox" '+(x.done?'checked':'')+' onchange="tog('+i+')"><span class="txt'+(x.done?' done':'')+'">'+x.t+'</span><button class="del" onclick="del('+i+')">鉁?/button></div>';}).join('')||'<div class="item"><span class="txt">鏆傛棤浠诲姟</span></div>';
+  var d=items.filter(function(x){return x.done;}).length;
+  document.getElementById('cnt').textContent='宸插畬鎴?'+d+' / '+items.length;
+}
+render();
+</script>
+</body>
+</html>
