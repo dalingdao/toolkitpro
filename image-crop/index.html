@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Crop Pro - 免费在线图片裁剪工具</title>
+<meta name="description" content="免费在线图片裁剪工具，上传图片选择裁剪区域，支持比例/像素，导出裁剪结果，纯前端，无需注册。">
+<meta name="keywords" content="图片裁剪,image crop,crop image,裁剪图片,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:760px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.upload{border:2px dashed #cbd5e1;border-radius:12px;padding:40px;text-align:center;color:#64748b;cursor:pointer;margin-bottom:16px}
+.upload:hover{border-color:#3b82f6;color:#3b82f6}
+.upload input{display:none}
+.work{display:none}
+#cvWrap{position:relative;overflow:hidden;border-radius:10px;background:#f8fafc;text-align:center}
+#cv{max-width:100%;display:block;margin:0 auto;cursor:crosshair}
+#sel{position:absolute;border:2px solid #3b82f6;background:rgba(59,130,246,0.2);display:none}
+.controls{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn.gray{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+select,input[type=number]{padding:9px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>✂️ Image Crop Pro</h1>
+  <p>免费在线图片裁剪工具—— 上传图片选择裁剪区域，导出裁剪结果。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">canvas</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="upload" id="up"><b>📁 点击上传图片</b><br><span>或拖拽到此处（JPG/PNG/WebP）</span><input type="file" id="file" accept="image/*"></div>
+    <div class="work" id="work">
+      <div id="cvWrap"><canvas id="cv"></canvas><div id="sel"></div></div>
+      <div class="controls">
+        <label>比例：</label><select id="ratio"><option value="free">自由</option><option value="1:1">1:1</option><option value="4:3">4:3</option><option value="16:9">16:9</option><option value="3:4">3:4</option></select>
+        <button class="btn gray" onclick="resetSel()">重置选区</button>
+        <button class="btn" onclick="crop()">✂️ 裁剪导出</button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>ToolkitPro · Image Crop Pro · 纯前端</footer>
+<script>
+let img=null,scale=1,sx=0,sy=0,sw=0,sh=0,drag=false,startX=0,startY=0;
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+document.getElementById('file').onchange=e=>load(e.target.files[0]);
+document.getElementById('up').ondragover=e=>e.preventDefault();
+document.getElementById('up').ondrop=e=>{e.preventDefault();load(e.dataTransfer.files[0])};
+function load(f){
+  if(!f)return;const r=new FileReader();
+  r.onload=()=>{const i=new Image();i.onload=()=>{img=i;setup()};i.src=r.result};
+  r.readAsDataURL(f);
+}
+function setup(){
+  const maxW=600,scale=Math.min(1,maxW/img.width);
+  cv.width=img.width*scale;cv.height=img.height*scale;
+  ctx.drawImage(img,0,0,cv.width,cv.height);
+  document.getElementById('work').style.display='block';
+  resetSel();
+}
+function resetSel(){
+  const r=document.getElementById('ratio').value;
+  let w=cv.width*0.7,h=cv.height*0.7;
+  if(r!=='free'){const [rw,rh]=r.split(':').map(Number);const box=Math.min(cv.width*0.7,cv.height*0.7);w=box;h=box*rh/rw}
+  sx=(cv.width-w)/2;sy=(cv.height-h)/2;sw=w;sh=h;drawSel();
+}
+function drawSel(){
+  const sel=document.getElementById('sel');
+  sel.style.display='block';
+  sel.style.left=sx+'px';sel.style.top=sy+'px';sel.style.width=sw+'px';sel.style.height=sh+'px';
+}
+cv.addEventListener('mousedown',e=>{drag=true;startX=e.offsetX;startY=e.offsetY;drawSel()});
+cv.addEventListener('mousemove',e=>{
+  if(!drag)return;
+  let x=Math.min(startX,e.offsetX),y=Math.min(startY,e.offsetY);
+  let w=Math.abs(e.offsetX-startX),h=Math.abs(e.offsetY-startY);
+  const r=document.getElementById('ratio').value;
+  if(r!=='free'){const [rw,rh]=r.split(':').map(Number);if(w/h>rw/rh)w=h*rw/rh;else h=w*rh/rw}
+  sx=Math.max(0,x);sy=Math.max(0,y);sw=Math.min(w,cv.width-sx);sh=Math.min(h,cv.height-sy);drawSel();
+});
+window.addEventListener('mouseup',()=>drag=false);
+function crop(){
+  if(!img||!sw)return;
+  const c=document.createElement('canvas');
+  c.width=sw;c.height=sh;
+  c.getContext('2d').drawImage(img,sx/scale,sy/scale,sw/scale,sh/scale,0,0,sw,sh);
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='cropped-'+Date.now()+'.png';a.click();
+}
+</script>
+</body>
+</html>
