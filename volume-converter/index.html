@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Volume Converter - 鍏嶈垂鍦ㄧ嚎浣撶Н鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎浣撶Н鎹㈢畻鍣紝鍗?姣崌/绔嬫柟绫?鍔犱粦/鍝佽劚浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="浣撶Н鎹㈢畻,volume converter,鍗?姣崌,鍔犱粦,绔嬫柟绫?鍏嶈垂宸ュ叿">
+<title>Volume Converter - 免费在线体积换算</title>
+<meta name="description" content="免费在线体积换算器，升/毫升/立方米/加仑/品脱互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="体积换算,volume converter,升,毫升,加仑,立方米,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃И Volume Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎浣撶Н鎹㈢畻鈥斺€?L/mL/m鲁/gal銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍗?/span><span class="badge">鍔犱粦</span><span class="badge">mL</span></div>
+  <h1>🧪 Volume Converter</h1>
+  <p>免费在线体积换算—— L/mL/m³/gal。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">升</span><span class="badge">加仑</span><span class="badge">mL</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="L" selected>鍗?L</option><option value="mL">姣崌 mL</option><option value="m3">绔嬫柟绫?m鲁</option><option value="gal">缇庡埗鍔犱粦 gal</option><option value="pt">鍝佽劚 pt</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="L" selected>升 L</option><option value="mL">毫升 mL</option><option value="m3">立方米 m³</option><option value="gal">美制加仑 gal</option><option value="pt">品脱 pt</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Volume Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Volume Converter · 纯前端</footer>
 <script>
 var R={L:1,mL:1000,m3:0.001,gal:0.264172,pt:2.11338};
 function calc(){
