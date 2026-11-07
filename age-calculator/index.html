@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Age Calculator - 鍏嶈垂鍦ㄧ嚎骞撮緞璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎骞撮緞璁＄畻鍣紝绮剧‘璁＄畻鍛ㄥ瞾銆佽櫄宀併€佽窛绂讳笅涓敓鏃ヨ繕鏈夊灏戝ぉ锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="骞撮緞璁＄畻鍣?age calculator,鍛ㄥ瞾,铏氬瞾,鐢熸棩鍊掕鏃?鍏嶈垂宸ュ叿">
+<title>Age Calculator - 免费在线年龄计算器</title>
+<meta name="description" content="免费在线年龄计算器，精确计算周岁、虚岁、距离下个生日还有多少天，纯前端，无需注册。">
+<meta name="keywords" content="年龄计算器,age calculator,周岁,虚岁,生日倒计时,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,26 +27,26 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃巶 Age Calculator</h1>
-  <p>鍏嶈垂鍦ㄧ嚎骞撮緞璁＄畻鍣ㄢ€斺€?鍛ㄥ瞾 / 铏氬瞾 / 涓嬩釜鐢熸棩鍊掕鏃躲€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍛ㄥ瞾</span><span class="badge">铏氬瞾</span><span class="badge">鐢熸棩</span></div>
+  <h1>🎂 Age Calculator</h1>
+  <p>免费在线年龄计算器—— 周岁 / 虚岁 / 下个生日倒计时。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">周岁</span><span class="badge">虚岁</span><span class="badge">生日</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鍑虹敓鏃ユ湡</label><input type="date" id="b" value="1995-06-15" oninput="calc()"></div>
-    <div class="field"><label>鍙傝€冩棩鏈燂紙榛樿涓轰粖澶╋級</label><input type="date" id="now" oninput="calc()"></div>
+    <div class="field"><label>出生日期</label><input type="date" id="b" value="1995-06-15" oninput="calc()"></div>
+    <div class="field"><label>参考日期（默认为今天）</label><input type="date" id="now" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Age Calculator 路 绾墠绔?/footer>
+<footer>ToolkitPro · Age Calculator · 纯前端</footer>
 <script>
 function calc(){
   var bv=document.getElementById('b').value, nv=document.getElementById('now').value;
   var b=new Date(bv), n=nv?new Date(nv):new Date();
   var el=document.getElementById('res');
-  if(isNaN(b)||isNaN(n)){el.innerHTML='<div class="sub">璇烽€夋嫨鏃ユ湡</div>';return;}
+  if(isNaN(b)||isNaN(n)){el.innerHTML='<div class="sub">请选择日期</div>';return;}
   var y=n.getFullYear()-b.getFullYear(),m=n.getMonth()-b.getMonth(),d=n.getDate()-b.getDate();
   if(d<0){m--;d+=new Date(n.getFullYear(),n.getMonth(),0).getDate();}
   if(m<0){y--;m+=12;}
@@ -55,8 +55,8 @@ function calc(){
   var nb=new Date(n.getFullYear(),b.getMonth(),b.getDate());
   if(nb<n)nb=new Date(n.getFullYear()+1,b.getMonth(),b.getDate());
   var bd=Math.ceil((nb-n)/86400000);
-  var dow=['鏃?,'涓€','浜?,'涓?,'鍥?,'浜?,'鍏?];
-  el.innerHTML='<div class="big">'+y+' 鍛ㄥ瞾</div><div class="sub">铏氬瞾 '+xusui+' 宀?br>鍑虹敓 '+totalD.toLocaleString('zh-CN')+' 澶?br>鏈堥緞 '+y*12+m+' 涓湀<br>璺濈涓嬩竴涓敓鏃ヨ繕鏈?'+bd+' 澶╋紙鍛?+dow[nb.getDay()]+'锛?/div>';
+  var dow=['日','一','二','三','四','五','六'];
+  el.innerHTML='<div class="big">'+y+' 周岁</div><div class="sub">虚岁 '+xusui+' 岁<br>出生 '+totalD.toLocaleString('zh-CN')+' 天<br>月龄 '+y*12+m+' 个月<br>距离下一个生日还有 '+bd+' 天（周'+dow[nb.getDay()]+'）</div>';
 }
 calc();
 </script>
