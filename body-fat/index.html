@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Fat - 鍏嶈垂鍦ㄧ嚎浣撹剛鐜囪绠楀櫒</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎浣撹剛鐜囪绠楀櫒锛孶S Navy娉曟寜鑵板洿/韬珮/鎬у埆浼扮畻浣撹剛鐜囷紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="浣撹剛鐜?body fat,浣撹剛,鑵板洿,US Navy,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:30px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃 Body Fat</h1>
+  <p>鍏嶈垂鍦ㄧ嚎浣撹剛鐜囪绠楀櫒鈥斺€?US Navy娉曪紙鑵板洿/韬珮锛夈€?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">浣撹剛</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>鎬у埆</label><select id="g" onchange="calc()"><option value="m" selected>鐢?/option><option value="f">濂?/option></select></div>
+    <div class="field"><label>韬珮锛坈m锛?/label><input type="number" id="h" value="175" min="1" oninput="calc()"></div>
+    <div class="field"><label>鑵板洿锛坈m锛岃倸鑴愬锛?/label><input type="number" id="wa" value="80" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Body Fat 路 绾墠绔?路 Agent鍙敤</footer>
+<script>
+function calc(){
+  var g=document.getElementById('g').value,h=+document.getElementById('h').value||0,wa=+document.getElementById('wa').value||0;
+  var el=document.getElementById('res');
+  var bf=g==='m'?(495/(1.0324-0.19077*Math.log10(wa-h*0.0324)+0.15456*Math.log10(h))-450)/10:(495/(1.29579-0.35004*Math.log10(wa+h*0.0324-1))+0.22100*Math.log10(h)-450)/10;
+  var cat=bf<10?'鏋佺槮':bf<20?'杩愬姩鍨?:bf<25?'鍋ュ悍':bf<30?'鍋忛珮':'鑲ヨ儢';
+  el.innerHTML='<div class="big">'+bf.toFixed(1)+'%</div><div class="sub">'+cat+'锛堝弬鑰冿級</div>';
+}
+calc();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var g=q.get('gender')||'m',h=+q.get('height')||175,wa=+q.get('waist')||80;
+    var bf=g==='m'?(495/(1.0324-0.19077*Math.log10(wa-h*0.0324)+0.15456*Math.log10(h))-450)/10:(495/(1.29579-0.35004*Math.log10(wa+h*0.0324-1))+0.22100*Math.log10(h)-450)/10;
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({body_fat_pct:bf},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
