@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home Affordability - 鍏嶈垂鍦ㄧ嚎璐埧鑳藉姏璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎璐埧鑳藉姏璁＄畻鍣紝鎸夊搴湀鏀跺叆/棣栦粯/鍒╃巼浼扮畻鍙壙鍙楁埧浠凤紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="璐埧鑳藉姏,home affordability,鑳戒拱澶氬ぇ鎴垮瓙,鎴夸环鎵垮彈,鏈堜緵,鍏嶈垂宸ュ叿">
+<title>Home Affordability - 免费在线购房能力计算器</title>
+<meta name="description" content="免费在线购房能力计算器，按家庭月收入/首付/利率估算可承受房价，纯前端，无需注册。">
+<meta name="keywords" content="购房能力,home affordability,能买多大房子,房价承受,月供,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,22 +27,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃彙 Home Affordability</h1>
-  <p>鍏嶈垂鍦ㄧ嚎璐埧鑳藉姏璁＄畻鍣ㄢ€斺€?鏈堜緵涓嶈秴杩囨敹鍏?30% 鐨勪及绠椼€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎴夸环</span><span class="badge">鏈堜緵</span></div>
+  <h1>🏡 Home Affordability</h1>
+  <p>免费在线购房能力计算器—— 月供不超过收入 30% 的估算。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">房价</span><span class="badge">月供</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>瀹跺涵鏈堟敹鍏ワ紙鍏冿級</label><input type="number" id="inc" value="20000" min="1" oninput="calc()"></div>
-    <div class="field"><label>棣栦粯锛堝厓锛?/label><input type="number" id="down" value="400000" min="0" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="3.6" min="0" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>璐锋骞撮檺锛堝勾锛?/label><input type="number" id="n" value="30" min="1" max="40" oninput="calc()"></div>
+    <div class="field"><label>家庭月收入（元）</label><input type="number" id="inc" value="20000" min="1" oninput="calc()"></div>
+    <div class="field"><label>首付（元）</label><input type="number" id="down" value="400000" min="0" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>贷款年限（年）</label><input type="number" id="n" value="30" min="1" max="40" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Home Affordability 路 绾墠绔?/footer>
+<footer>ToolkitPro · Home Affordability · 纯前端</footer>
 <script>
 function calc(){
   var inc=+document.getElementById('inc').value||0,down=+document.getElementById('down').value||0,r=+document.getElementById('r').value||0,n=+document.getElementById('n').value||1;
@@ -51,9 +51,9 @@ function calc(){
   if(mr>0){
     var loan=monthly*(Math.pow(1+mr,months)-1)/(mr*Math.pow(1+mr,months));
     var house=loan+down;
-    el.innerHTML='<div class="big">楼'+house.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">鍙壙鍙楁埧浠凤紙鏈堜緵 鈮?楼'+monthly.toLocaleString('zh-CN',{maximumFractionDigits:0})+'锛?br>闇€璐锋 楼'+loan.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>棣栦粯 楼'+down.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+    el.innerHTML='<div class="big">¥'+house.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">可承受房价（月供 ≤ ¥'+monthly.toLocaleString('zh-CN',{maximumFractionDigits:0})+'）<br>需贷款 ¥'+loan.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>首付 ¥'+down.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
   } else {
-    el.innerHTML='<div class="big">楼'+(monthly*months+down).toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">鏈堜緵 鈮?楼'+monthly.toLocaleString('zh-CN',{maximumFractionDigits:0})+'锛堟棤鎭級</div>';
+    el.innerHTML='<div class="big">¥'+(monthly*months+down).toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div><div class="sub">月供 ≤ ¥'+monthly.toLocaleString('zh-CN',{maximumFractionDigits:0})+'（无息）</div>';
   }
 }
 calc();
