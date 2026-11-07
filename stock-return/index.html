@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stock Return - 鍏嶈垂鍦ㄧ嚎鑲＄エ鏀剁泭鐜囪绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鑲＄エ鏀剁泭鐜囪绠楀櫒锛屼拱鍏ヤ环/鍗栧嚭浠?鏁伴噺璁＄畻鐩堜簭涓庢敹鐩婄巼锛屽惈鎵嬬画璐癸紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鑲＄エ鏀剁泭鐜?stock return,鐩堜簭,鏀剁泭鐜?涔板叆鍗栧嚭,鍏嶈垂宸ュ叿">
+<title>Stock Return - 免费在线股票收益率计算器</title>
+<meta name="description" content="免费在线股票收益率计算器，买入价/卖出价/数量计算盈亏与收益率，含手续费，纯前端，无需注册。">
+<meta name="keywords" content="股票收益率,stock return,盈亏,收益率,买入卖出,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,27 +27,27 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搳 Stock Return</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鑲＄エ鏀剁泭鐜囪绠楀櫒鈥斺€?涔板叆/鍗栧嚭鐩堜簭涓庢敹鐩婄巼銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鐩堜簭</span><span class="badge">鏀剁泭鐜?/span></div>
+  <h1>📊 Stock Return</h1>
+  <p>免费在线股票收益率计算器—— 买入/卖出盈亏与收益率。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">盈亏</span><span class="badge">收益率</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>涔板叆浠凤紙鍏冿級</label><input type="number" id="b" value="10" min="0.01" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>鍗栧嚭浠凤紙鍏冿級</label><input type="number" id="s" value="12" min="0.01" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>鏁伴噺锛堣偂锛?/label><input type="number" id="n" value="1000" min="1" oninput="calc()"></div>
+    <div class="field"><label>买入价（元）</label><input type="number" id="b" value="10" min="0.01" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>卖出价（元）</label><input type="number" id="s" value="12" min="0.01" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>数量（股）</label><input type="number" id="n" value="1000" min="1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Stock Return 路 绾墠绔?/footer>
+<footer>ToolkitPro · Stock Return · 纯前端</footer>
 <script>
 function calc(){
   var b=+document.getElementById('b').value||0,s=+document.getElementById('s').value||0,n=+document.getElementById('n').value||0;
   var cost=b*n,val=s*n,pl=val-cost,roi=b?pl/cost*100:0;
   var color=pl>=0?'#16a34a':'#dc2626';
-  document.getElementById('res').innerHTML='<div class="big" style="color:'+color+'">'+(pl>=0?'+':'')+pl.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div><div class="sub">'+(roi>=0?'+':'')+roi.toFixed(2)+'%<br>鎴愭湰 楼'+cost.toLocaleString('zh-CN',{maximumFractionDigits:2})+' 路 甯傚€?楼'+val.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div>';
+  document.getElementById('res').innerHTML='<div class="big" style="color:'+color+'">'+(pl>=0?'+':'')+pl.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div><div class="sub">'+(roi>=0?'+':'')+roi.toFixed(2)+'%<br>成本 ¥'+cost.toLocaleString('zh-CN',{maximumFractionDigits:2})+' · 市值 ¥'+val.toLocaleString('zh-CN',{maximumFractionDigits:2})+'</div>';
 }
 calc();
 </script>
