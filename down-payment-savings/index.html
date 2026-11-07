@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Down Payment Savings - 鍏嶈垂鍦ㄧ嚎棣栦粯鍌ㄨ搫鐩爣璁＄畻鍣?/title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎棣栦粯鍌ㄨ搫璁＄畻鍣紝鎸夋埧浠?棣栦粯姣斾緥/鏈堝瓨/鏀剁泭浼扮畻澶氫箙鏀掑棣栦粯锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
+<meta name="keywords" content="棣栦粯鍌ㄨ搫,down payment,鏀掗浠?涔版埧,鍌ㄨ搫鐩爣,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:28px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃彟 Down Payment Savings</h1>
+  <p>鍏嶈垂鍦ㄧ嚎棣栦粯鍌ㄨ搫璁＄畻鍣ㄢ€斺€?澶氫箙鏀掑棣栦粯銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">棣栦粯</span><span class="badge">鍌ㄨ搫</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>鎴夸环锛堜竾鍏冿級</label><input type="number" id="h" value="100" min="1" oninput="calc()"></div>
+    <div class="field"><label>棣栦粯姣斾緥锛?锛?/label><input type="number" id="d" value="30" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>宸叉湁鍌ㄨ搫锛堜竾鍏冿級</label><input type="number" id="cur" value="5" min="0" oninput="calc()"></div>
+    <div class="field"><label>姣忔湀鍌ㄨ搫锛堝厓锛?/label><input type="number" id="m" value="5000" min="1" oninput="calc()"></div>
+    <div class="field"><label>骞存敹鐩婄巼锛?锛?/label><input type="number" id="r" value="2" min="0" step="0.1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Down Payment Savings 路 绾墠绔?/footer>
+<script>
+function calc(){
+  var h=+document.getElementById('h').value||0,d=+document.getElementById('d').value||0,cur=+document.getElementById('cur').value||0,m=+document.getElementById('m').value||0,r=+document.getElementById('r').value||0;
+  var target=h*10000*d/100,bal=cur*10000;
+  var months=0;
+  while(bal<target&&months<1200){bal=bal*(1+r/100/12)+m;months++;}
+  document.getElementById('res').innerHTML='<div class="big">'+months+' 涓湀</div><div class="sub">绾?'+Math.floor(months/12)+' 骞?'+months%12+' 涓湀<br>鐩爣棣栦粯 楼'+target.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+}
+calc();
+</script>
+</body>
+</html>
