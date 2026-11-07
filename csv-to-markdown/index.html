@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSV to Markdown - 鍏嶈垂鍦ㄧ嚎CSV杞琈arkdown琛ㄦ牸</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎CSV杞琈arkdown琛ㄦ牸宸ュ叿锛岀矘璐碈SV鍗虫椂杞琈arkdown琛ㄦ牸锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="csv to markdown,CSV杞〃鏍?CSV,Markdown琛ㄦ牸,鍏嶈垂宸ュ叿,agent">
+<title>CSV to Markdown - 免费在线CSV转Markdown表格</title>
+<meta name="description" content="免费在线CSV转Markdown表格工具，粘贴CSV即时转Markdown表格，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="csv to markdown,CSV转表格,CSV,Markdown表格,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -24,22 +24,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃搵 CSV to Markdown</h1>
-  <p>鍏嶈垂鍦ㄧ嚎CSV杞琈arkdown琛ㄦ牸鈥斺€?绮樿创鍗虫椂杞崲銆傛敮鎸??csv= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">CSV杞〃鏍?/span><span class="badge">Agent鍙敤</span></div>
+  <h1>📋 CSV to Markdown</h1>
+  <p>免费在线CSV转Markdown表格—— 粘贴即时转换。支持 ?csv= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">CSV转表格</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
     <textarea id="csv" placeholder="name,age&#10;Alice,30&#10;Bob,25">name,age,city
 Alice,30,NY
 Bob,25,LA</textarea>
-    <button class="btn" onclick="conv()">杞?Markdown</button>
-    <textarea id="out" style="margin-top:12px" placeholder="Markdown 琛ㄦ牸杈撳嚭"></textarea>
+    <button class="btn" onclick="conv()">转 Markdown</button>
+    <textarea id="out" style="margin-top:12px" placeholder="Markdown 表格输出"></textarea>
   </div>
 </div>
-<footer>ToolkitPro 路 CSV to Markdown 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · CSV to Markdown · 纯前端 · Agent可用</footer>
 <script>
 function parseCsv(s){
   var rows=[],row=[''],i=0,inQ=false;
@@ -58,7 +58,7 @@ function parseCsv(s){
 }
 function csvToMd(s){
   var rows=parseCsv(s);
-  if(!rows.length)return '(绌?';
+  if(!rows.length)return '(空)';
   var head=rows[0],out='| '+head.join(' | ')+' |\n| '+head.map(function(){return '---'}).join(' | ')+' |';
   for(var i=1;i<rows.length;i++)out+='\n| '+rows[i].join(' | ')+' |';
   return out;
