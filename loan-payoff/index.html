@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Payoff - 鍏嶈垂鍦ㄧ嚎鎻愬墠杩樻鑺傜渷璁＄畻鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎻愬墠杩樻璁＄畻鍣紝涓€娆℃€?棰濆鏈堜緵鎻愬墠杩樿捶鑳界渷澶氬皯鍒╂伅銆佺缉鐭灏戝勾闄愶紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="鎻愬墠杩樻,loan payoff,鎻愬墠杩樿捶,鐪佸埄鎭?缂╃煭骞撮檺,鍏嶈垂宸ュ叿">
+<title>Loan Payoff - 免费在线提前还款节省计算器</title>
+<meta name="description" content="免费在线提前还款计算器，一次性/额外月供提前还贷能省多少利息、缩短多少年限，纯前端，无需注册。">
+<meta name="keywords" content="提前还款,loan payoff,提前还贷,省利息,缩短年限,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,22 +27,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鈴?Loan Payoff</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鎻愬墠杩樻璁＄畻鍣ㄢ€斺€?鑳界渷澶氬皯鍒╂伅銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎻愬墠杩樿捶</span><span class="badge">鐪佸埄鎭?/span></div>
+  <h1>⏩ Loan Payoff</h1>
+  <p>免费在线提前还款计算器—— 能省多少利息。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">提前还贷</span><span class="badge">省利息</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鍓╀綑鏈噾锛堜竾鍏冿級</label><input type="number" id="p" value="80" oninput="calc()"></div>
-    <div class="field"><label>骞村埄鐜囷紙%锛?/label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
-    <div class="field"><label>鍓╀綑骞撮檺锛堝勾锛?/label><input type="number" id="y" value="20" oninput="calc()"></div>
-    <div class="field"><label>涓€娆℃€ф彁鍓嶈繕娆撅紙涓囧厓锛?/label><input type="number" id="extra" value="20" min="0" oninput="calc()"></div>
+    <div class="field"><label>剩余本金（万元）</label><input type="number" id="p" value="80" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>剩余年限（年）</label><input type="number" id="y" value="20" oninput="calc()"></div>
+    <div class="field"><label>一次性提前还款（万元）</label><input type="number" id="extra" value="20" min="0" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Loan Payoff 路 绾墠绔?/footer>
+<footer>ToolkitPro · Loan Payoff · 纯前端</footer>
 <script>
 function calc(){
   var p=+document.getElementById('p').value||0,r=+document.getElementById('r').value||0,y=+document.getElementById('y').value||0,extra=+document.getElementById('extra').value||0;
@@ -51,12 +51,13 @@ function calc(){
   function totalInterest(P,m){if(mr<=0)return 0;var mf=P*mr*Math.pow(1+mr,m)/(Math.pow(1+mr,m)-1);return mf*m-P;}
   var oldI=totalInterest(p,months);
   var newP=Math.max(0,p-extra*10000);
-  // 璁＄畻鏂拌繕娆炬湀鏁?  var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
+  // 计算新还款月数
+  var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
   var newM=months;
   if(mr>0){var bal=newP;newM=0;while(bal>0&&newM<1200){var int=bal*mr;var prin=Math.min(mf-int,bal);if(prin<0)prin=0;bal-=prin;newM++;}}
   var newI=totalInterest(newP,newM);
   var save=oldI-newI;
-  el.innerHTML='<div class="big">'+(save>0?'鐪佸埄鎭?楼'+save.toLocaleString('zh-CN',{maximumFractionDigits:0}):'鏃犺妭鐪?)+'</div><div class="sub">杩樻缂╃煭绾?'+(months-newM)+' 涓湀锛?+(newM)+' vs '+months+'锛?br>鍘熸€诲埄鎭?楼'+oldI.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>鏂版€诲埄鎭?楼'+newI.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+  el.innerHTML='<div class="big">'+(save>0?'省利息 ¥'+save.toLocaleString('zh-CN',{maximumFractionDigits:0}):'无节省')+'</div><div class="sub">还款缩短约 '+(months-newM)+' 个月（'+(newM)+' vs '+months+'）<br>原总利息 ¥'+oldI.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>新总利息 ¥'+newI.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
 }
 calc();
 </script>
