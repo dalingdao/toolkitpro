@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base62 Encode - 鍏嶈垂鍦ㄧ嚎Base62缂栬В鐮?/title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎Base62缂栫爜瑙ｇ爜宸ュ叿锛屾枃鏈笌Base62浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="base62,Base62缂栫爜,Base62瑙ｇ爜,缂栫爜,鍏嶈垂宸ュ叿,agent">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+textarea{width:100%;height:130px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;font-family:monospace;resize:vertical;margin-bottom:12px}
+.seg{display:flex;gap:8px;margin-bottom:12px}
+.seg button{flex:1;padding:10px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;cursor:pointer;font-size:14px}
+.seg button.on{background:#2563eb;color:#fff;border-color:#2563eb}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃攼 Base62 Encode</h1>
+  <p>鍏嶈垂鍦ㄧ嚎Base62缂栬В鐮佲€斺€?鏂囨湰涓嶣ase62浜掕浆銆傛敮鎸??input= &format=json 渚?Agent 璋冪敤銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">Base62</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="seg">
+      <button id="s1" class="on" onclick="m(1)">缂栫爜</button>
+      <button id="s2" onclick="m(2)">瑙ｇ爜</button>
+    </div>
+    <textarea id="in" placeholder="杈撳叆鏂囨湰">Hello ToolkitPro</textarea>
+    <textarea id="out" placeholder="杈撳嚭"></textarea>
+  </div>
+</div>
+<footer>ToolkitPro 路 Base62 Encode 路 绾墠绔?路 Agent鍙敤</footer>
+<script>
+var CH='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',M=1;
+function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';run();}
+function b62(bytes,enc){
+  if(enc){var out='',val=0;for(var i=0;i<bytes.length;i++){val=val*256+bytes[i];}
+    // big-int free: process byte by byte
+    var num=Array.from(bytes);
+    var digits=[];
+    while(num.length){var rem=0;for(var j=0;j<num.length;j++){var cur=rem*256+num[j];num[j]=Math.floor(cur/62);rem=cur%62;}digits.push(rem);while(num.length&&num[0]===0)num.shift();}
+    return digits.reverse().map(function(d){return CH[d]}).join('')||'0';
+  }
+  // decode
+  var num=[];for(var i2=0;i2<bytes.length;i2++){var d=CH.indexOf(bytes[i2]);if(d<0)throw 0;
+    var carry=d;for(var j2=0;j2<num.length||carry;j2++){if(j2===num.length)num.push(0);var cur2=num[j2]*62+carry;num[j2]=cur2&255;carry=cur2>>8;}}
+  return num;
+}
+function run(){
+  var v=document.getElementById('in').value,el=document.getElementById('out');
+  try{
+    if(M===1){var bytes=[];for(var i=0;i<v.length;i++){var cp=v.codePointAt(i);var b=[];while(cp){b.unshift(cp&255);cp>>=8;}if(!b.length)b=[0];bytes=bytes.concat(b);}el.value=b62(bytes,true);}
+    else{el.value=b62(v,false).map(function(x){return String.fromCharCode(x)}).join('');}
+  }catch(e){el.value='锛堣緭鍏ユ棤鏁堬級';}
+}
+run();
+document.getElementById('in').addEventListener('input',run);
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var v=q.get('input')||'';
+    var bytes=[];for(var i=0;i<v.length;i++){var cp=v.codePointAt(i);var b=[];while(cp){b.unshift(cp&255);cp>>=8;}if(!b.length)b=[0];bytes=bytes.concat(b);}
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({encoded:b62(bytes,true)},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
