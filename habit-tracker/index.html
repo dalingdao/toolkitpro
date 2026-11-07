@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Tracker - 鍏嶈垂鍦ㄧ嚎涔犳儻鎵撳崱</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎涔犳儻鎵撳崱鍣紝娣诲姞涔犳儻骞舵寜鏃ユ墦鍗★紝localStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
+<meta name="keywords" content="涔犳儻鎵撳崱,habit tracker,涔犳儻,鎵撳崱,鑷緥,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px}
+.add{display:flex;gap:8px;margin-bottom:16px}
+.add input{flex:1;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.add button{padding:11px 18px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.habit{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #eef2f7}
+.habit .name{font-size:16px;font-weight:600}
+.habit .streak{font-size:12px;color:#64748b;margin-top:2px}
+.habit .del{color:#ef4444;cursor:pointer;font-size:14px;margin-left:12px;background:none;border:none}
+.days{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.day{width:30px;height:30px;border-radius:6px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer}
+.day.on{background:#22c55e;color:#fff;border-color:#22c55e}
+.empty{text-align:center;color:#94a3b8;padding:30px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>鉁?Habit Tracker</h1>
+  <p>鍏嶈垂鍦ㄧ嚎涔犳儻鎵撳崱鈥斺€?鏁版嵁淇濆瓨鍦ㄦ湰鍦版祻瑙堝櫒銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎵撳崱</span><span class="badge">鏈湴瀛樺偍</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="add">
+      <input id="h" placeholder="娣诲姞鏂颁範鎯€? onkeydown="if(event.key==='Enter')addHabit()">
+      <button onclick="addHabit()">娣诲姞</button>
+    </div>
+    <div id="list"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Habit Tracker 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<script>
+var habits=JSON.parse(localStorage.getItem('ht_habits')||'[]');
+function today(){return new Date().toISOString().slice(0,10);}
+function save(){localStorage.setItem('ht_habits',JSON.stringify(habits));render();}
+function addHabit(){var v=document.getElementById('h').value.trim();if(!v)return;habits.push({name:v,done:{}});document.getElementById('h').value='';save();}
+function del(i){habits.splice(i,1);save();}
+function toggle(i,d){if(!habits[i].done[d])habits[i].done[d]=1;else delete habits[i].done[d];save();}
+function render(){
+  var el=document.getElementById('list');
+  if(!habits.length){el.innerHTML='<div class="empty">杩樻病鏈変範鎯紝鍏堟坊鍔犱竴涓惂</div>';return;}
+  el.innerHTML=habits.map(function(h,i){
+    var days='';
+    for(var k=13;k>=0;k--){var d=new Date(Date.now()-k*86400000).toISOString().slice(0,10);days+='<div class="day'+(h.done[d]?' on':'')+'" onclick="toggle('+i+',\''+d+'\')">'+d.slice(8)+'</div>';}
+    var streak=0;for(var k2=0;k2<365;k2++){var dd=new Date(Date.now()-k2*86400000).toISOString().slice(0,10);if(h.done[dd])streak++;else break;}
+    return '<div class="habit"><div><div class="name">'+h.name+'</div><div class="streak">杩炵画 '+streak+' 澶?路 杩?4澶╂墦鍗?/div><div class="days">'+days+'</div></div><button class="del" onclick="del('+i+')">鉁?/button></div>';
+  }).join('');
+}
+render();
+</script>
+</body>
+</html>
