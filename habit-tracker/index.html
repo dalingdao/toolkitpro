@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Habit Tracker - 鍏嶈垂鍦ㄧ嚎涔犳儻鎵撳崱</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎涔犳儻鎵撳崱鍣紝娣诲姞涔犳儻骞舵寜鏃ユ墦鍗★紝localStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="涔犳儻鎵撳崱,habit tracker,涔犳儻,鎵撳崱,鑷緥,鍏嶈垂宸ュ叿">
+<title>Habit Tracker - 免费在线习惯打卡</title>
+<meta name="description" content="免费在线习惯打卡器，添加习惯并按日打卡，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="习惯打卡,habit tracker,习惯,打卡,自律,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -32,22 +32,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鉁?Habit Tracker</h1>
-  <p>鍏嶈垂鍦ㄧ嚎涔犳儻鎵撳崱鈥斺€?鏁版嵁淇濆瓨鍦ㄦ湰鍦版祻瑙堝櫒銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎵撳崱</span><span class="badge">鏈湴瀛樺偍</span></div>
+  <h1>✅ Habit Tracker</h1>
+  <p>免费在线习惯打卡—— 数据保存在本地浏览器。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">打卡</span><span class="badge">本地存储</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="add">
-      <input id="h" placeholder="娣诲姞鏂颁範鎯€? onkeydown="if(event.key==='Enter')addHabit()">
-      <button onclick="addHabit()">娣诲姞</button>
+      <input id="h" placeholder="添加新习惯…" onkeydown="if(event.key==='Enter')addHabit()">
+      <button onclick="addHabit()">添加</button>
     </div>
     <div id="list"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Habit Tracker 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<footer>ToolkitPro · Habit Tracker · 纯前端 · 本地存储</footer>
 <script>
 var habits=JSON.parse(localStorage.getItem('ht_habits')||'[]');
 function today(){return new Date().toISOString().slice(0,10);}
@@ -57,12 +57,12 @@ function del(i){habits.splice(i,1);save();}
 function toggle(i,d){if(!habits[i].done[d])habits[i].done[d]=1;else delete habits[i].done[d];save();}
 function render(){
   var el=document.getElementById('list');
-  if(!habits.length){el.innerHTML='<div class="empty">杩樻病鏈変範鎯紝鍏堟坊鍔犱竴涓惂</div>';return;}
+  if(!habits.length){el.innerHTML='<div class="empty">还没有习惯，先添加一个吧</div>';return;}
   el.innerHTML=habits.map(function(h,i){
     var days='';
     for(var k=13;k>=0;k--){var d=new Date(Date.now()-k*86400000).toISOString().slice(0,10);days+='<div class="day'+(h.done[d]?' on':'')+'" onclick="toggle('+i+',\''+d+'\')">'+d.slice(8)+'</div>';}
     var streak=0;for(var k2=0;k2<365;k2++){var dd=new Date(Date.now()-k2*86400000).toISOString().slice(0,10);if(h.done[dd])streak++;else break;}
-    return '<div class="habit"><div><div class="name">'+h.name+'</div><div class="streak">杩炵画 '+streak+' 澶?路 杩?4澶╂墦鍗?/div><div class="days">'+days+'</div></div><button class="del" onclick="del('+i+')">鉁?/button></div>';
+    return '<div class="habit"><div><div class="name">'+h.name+'</div><div class="streak">连续 '+streak+' 天 · 近14天打卡</div><div class="days">'+days+'</div></div><button class="del" onclick="del('+i+')">✕</button></div>';
   }).join('');
 }
 render();
