@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON Diff - 鍏嶈垂鍦ㄧ嚎JSON瀵规瘮宸ュ叿</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎JSON瀵规瘮宸ュ叿锛屾瘮杈冧袱涓狫SON鐨勫樊寮傦紝绾墠绔紝鏃犻渶娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="json diff,JSON瀵规瘮,宸紓,姣旇緝,鍏嶈垂宸ュ叿,agent">
+<title>JSON Diff - 免费在线JSON对比工具</title>
+<meta name="description" content="免费在线JSON对比工具，比较两个JSON的差异，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="json diff,JSON对比,差异,比较,免费工具,agent">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -27,11 +27,11 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃攳 JSON Diff</h1>
-  <p>鍏嶈垂鍦ㄧ嚎JSON瀵规瘮鈥斺€?姣旇緝涓や釜JSON鐨勫樊寮傘€傛敮鎸??a= &b= &format=json 渚?Agent 璋冪敤銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">瀵规瘮</span><span class="badge">宸紓</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🔍 JSON Diff</h1>
+  <p>免费在线JSON对比—— 比较两个JSON的差异。支持 ?a= &b= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">对比</span><span class="badge">差异</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="container">
   <div class="card">
@@ -39,11 +39,11 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
       <textarea id="a" placeholder='{"name":"Alice","age":30}'>{"name":"Alice","age":30,"city":"NY"}</textarea>
       <textarea id="b" placeholder='{"name":"Bob","age":30}'>{"name":"Bob","age":31,"city":"NY","zip":"10001"}</textarea>
     </div>
-    <button class="btn" onclick="diff()">瀵规瘮宸紓</button>
-    <div class="result" id="res">鐐瑰嚮"瀵规瘮宸紓"鏌ョ湅缁撴灉銆?/div>
+    <button class="btn" onclick="diff()">对比差异</button>
+    <div class="result" id="res">点击"对比差异"查看结果。</div>
   </div>
 </div>
-<footer>ToolkitPro 路 JSON Diff 路 绾墠绔?路 Agent鍙敤</footer>
+<footer>ToolkitPro · JSON Diff · 纯前端 · Agent可用</footer>
 <script>
 function parse(s){try{return JSON.parse(s)}catch(e){return null}}
 function deepDiff(a,b,path,out){
@@ -65,9 +65,9 @@ function deepDiff(a,b,path,out){
 function diff(){
   var A=parse(document.getElementById('a').value),B=parse(document.getElementById('b').value);
   var el=document.getElementById('res');
-  if(A===null||B===null){el.innerHTML='<span class="del">閿欒锛欽SON 鏍煎紡涓嶆纭?/span>';return;}
+  if(A===null||B===null){el.innerHTML='<span class="del">错误：JSON 格式不正确</span>';return;}
   var d=deepDiff(A,B,'');
-  if(!d.length){el.innerHTML='<span class="same">鉁?涓や釜JSON瀹屽叏涓€鑷?/span>';return;}
+  if(!d.length){el.innerHTML='<span class="same">✔ 两个JSON完全一致</span>';return;}
   el.innerHTML=d.map(function(x){return '<span class="del">- '+x.path+': '+JSON.stringify(x.from)+'</span>\n<span class="add">+ '+x.path+': '+JSON.stringify(x.to)+'</span>';}).join('\n');
 }
 diff();
