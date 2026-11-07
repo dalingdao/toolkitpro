@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Bill Calculator - 免费在线水费计算器</title>
+<meta name="description" content="免费在线水费计算器，计算用水量/水费/每人日均，纯前端，无需注册。">
+<meta name="keywords" content="水费计算,water bill,用水量,水价,水费,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.box{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:17px;font-weight:800;color:#2563eb;margin-top:4px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🚰 Water Bill</h1>
+  <p>免费在线水费计算器—— 用水量/水费。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">用水量</span><span class="badge">水费</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>用水量（m³/月）</label><input type="number" id="v" value="15" min="1" oninput="calc()"></div>
+    <div class="field"><label>水价（元/m³）</label><input type="number" id="p" value="3.5" min="0.1" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>家庭人数</label><input type="number" id="n" value="3" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Water Bill · 纯前端</footer>
+<script>
+function calc(){
+  const v=+document.getElementById('v').value||0,p=+document.getElementById('p').value||0,n=+document.getElementById('n').value||1;
+  const cost=v*p;
+  const per=v/n;
+  document.getElementById('res').innerHTML='<div class="box"><div class="label">月水费</div><div class="value">¥'+cost.toFixed(2)+'</div></div><div class="box"><div class="label">人均用量</div><div class="value">'+per.toFixed(1)+' m³</div></div><div class="box"><div class="label">日均</div><div class="value">'+((per/30).toFixed(2))+' m³/天</div></div>';
+}
+calc();
+</script>
+</body>
+</html>
