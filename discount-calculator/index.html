@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discount Calculator - 鍏嶈垂鍦ㄧ嚎鎶樻墸璁＄畻鍣?/title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎鎶樻墸璁＄畻鍣紝鍘熶环/鎶樻墸浠?鑺傜渷閲戦涓€閿绠楋紝鎶樺悗浠蜂竴鐩簡鐒讹紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
+<meta name="keywords" content="鎶樻墸璁＄畻鍣?discount calculator,鎵撴姌,鍘熶环,鎶樺悗浠?鐪侀挶,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:30px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃彿锔?Discount Calculator</h1>
+  <p>鍏嶈垂鍦ㄧ嚎鎶樻墸璁＄畻鍣ㄢ€斺€?鍘熶环銆佹姌鎵ｏ紝鎶樺悗浠蜂笌鑺傜渷閲戦銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鎵撴姌</span><span class="badge">鐪侀挶</span><span class="badge">鏀寔 JSON</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>鍘熶环锛堝厓锛?/label><input type="number" id="p" value="199" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>鎶樻墸锛?锛?/label><input type="number" id="d" value="20" min="0" max="100" oninput="calc()"></div>
+    <div class="field"><label>鏁伴噺</label><input type="number" id="q" value="1" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Discount Calculator 路 绾墠绔?路 鏀寔 ?format=json</footer>
+<script>
+function calc(){
+  var p=+document.getElementById('p').value||0,d=+document.getElementById('d').value||0,q=+document.getElementById('q').value||1;
+  var save=p*d/100, after=(p-save)*q, saved=save*q;
+  document.getElementById('res').innerHTML='<div class="big">楼'+after.toFixed(2)+'</div><div class="sub">鎶樺悗鍗曚环 楼'+(p-save).toFixed(2)+'<br>鍏辫妭鐪?楼'+saved.toFixed(2)+'锛?+(d*q)+' 鎶樹紭鎯狅級</div>';
+}
+calc();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var p=+q.get('price')||199,d=+q.get('discount')||20,qt=+q.get('qty')||1;
+    var save=p*d/100;
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({original_price:p,discount_pct:d,qty:qt,unit_price:Math.round((p-save)*100)/100,total:Math.round((p-save)*qt*100)/100,saved:Math.round(save*qt*100)/100},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
