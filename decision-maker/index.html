@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Decision Maker - 鍏嶈垂鍦ㄧ嚎鍐崇瓥鍣?/title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍐崇瓥鍣紝闅忔満甯綘鍋氶€夋嫨锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鍐崇瓥鍣?decision maker,閫夋嫨,闅忔満,鎶涚‖甯?鍏嶈垂宸ュ叿">
+<title>Decision Maker - 免费在线决策器</title>
+<meta name="description" content="免费在线决策器，随机帮你做选择，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="决策器,decision maker,选择,随机,抛硬币,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -22,22 +22,25 @@ textarea{width:100%;height:100px;padding:11px;border-radius:10px;border:none;fon
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃幉 Decision Maker</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍐崇瓥鍣ㄢ€斺€?闅忔満甯綘鍋氶€夋嫨銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">闅忔満</span><span class="badge">Agent鍙敤</span></div>
+  <h1>🎲 Decision Maker</h1>
+  <p>免费在线决策器—— 随机帮你做选择。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">随机</span><span class="badge">Agent可用</span></div>
 </div>
 <div class="card">
-  <textarea id="opts" placeholder="姣忚涓€涓€夐」">鍚冪伀閿?鍚冪儳鐑?鍚冩棩鏂?鍚冮潰</textarea>
-  <button class="btn" onclick="pick()">甯垜鍐冲畾锛?/button>
+  <textarea id="opts" placeholder="每行一个选项">吃火锅
+吃烧烤
+吃日料
+吃面</textarea>
+  <button class="btn" onclick="pick()">帮我决定！</button>
   <div class="ans" id="ans"></div>
 </div>
 <script>
 function pick(){
   var opts=document.getElementById('opts').value.split('\n').map(function(x){return x.trim();}).filter(Boolean);
-  if(!opts.length){document.getElementById('ans').textContent='璇峰厛杈撳叆閫夐」';return;}
-  document.getElementById('ans').textContent='鉁?'+opts[Math.floor(Math.random()*opts.length)];
+  if(!opts.length){document.getElementById('ans').textContent='请先输入选项';return;}
+  document.getElementById('ans').textContent='✨ '+opts[Math.floor(Math.random()*opts.length)];
 }
 (function(){
   var q=new URLSearchParams(location.search);
