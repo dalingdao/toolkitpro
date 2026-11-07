@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pressure Converter - 鍏嶈垂鍦ㄧ嚎鍘嬪姏鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍘嬪姏鎹㈢畻鍣紝Pa/kPa/bar/atm/psi浜掕浆锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鍘嬪姏鎹㈢畻,pressure converter,Pa,bar,atm,psi,鍏嶈垂宸ュ叿">
+<title>Pressure Converter - 免费在线压力换算</title>
+<meta name="description" content="免费在线压力换算器，Pa/kPa/bar/atm/psi互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="压力换算,pressure converter,Pa,bar,atm,psi,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃Р Pressure Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鍘嬪姏鎹㈢畻鈥斺€?Pa/kPa/bar/atm/psi銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">bar</span><span class="badge">atm</span><span class="badge">psi</span></div>
+  <h1>🧲 Pressure Converter</h1>
+  <p>免费在线压力换算—— Pa/kPa/bar/atm/psi。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">bar</span><span class="badge">atm</span><span class="badge">psi</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
-      <option value="pa" selected>甯?Pa</option><option value="kpa">鍗冨笗 kPa</option><option value="bar">宸?bar</option><option value="atm">鏍囧噯澶ф皵鍘?atm</option><option value="psi">psi</option>
+    <div class="field"><label>数值</label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="pa" selected>帕 Pa</option><option value="kpa">千帕 kPa</option><option value="bar">巴 bar</option><option value="atm">标准大气压 atm</option><option value="psi">psi</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Pressure Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Pressure Converter · 纯前端</footer>
 <script>
 var R={pa:1,kpa:0.001,bar:1e-5,atm:9.8692e-6,psi:0.000145038};
 function calc(){
