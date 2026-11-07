@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rule of 72 - 鍏嶈垂鍦ㄧ嚎72娉曞垯/缈诲€嶆椂闂磋绠楀櫒</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎72娉曞垯璁＄畻鍣紝鎸夊勾鏀剁泭鐜囦及绠楄祫閲戠炕鍊嶅勾鏁颁笌缈诲€嶆墍闇€鏀剁泭鐜囷紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
-<meta name="keywords" content="72娉曞垯,rule of 72,缈诲€嶆椂闂?澶嶅埄,璧勯噾缈诲€?鍏嶈垂宸ュ叿">
+<title>Rule of 72 - 免费在线72法则/翻倍时间计算器</title>
+<meta name="description" content="免费在线72法则计算器，按年收益率估算资金翻倍年数与翻倍所需收益率，纯前端，无需注册。">
+<meta name="keywords" content="72法则,rule of 72,翻倍时间,复利,资金翻倍,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -30,33 +30,33 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>鉁栵笍2 Rule of 72</h1>
-  <p>鍏嶈垂鍦ㄧ嚎72娉曞垯璁＄畻鍣ㄢ€斺€?璧勯噾澶氫箙缈诲€嶃€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">72娉曞垯</span><span class="badge">缈诲€?/span></div>
+  <h1>✖️2 Rule of 72</h1>
+  <p>免费在线72法则计算器—— 资金多久翻倍。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">72法则</span><span class="badge">翻倍</span></div>
 </div>
 <div class="container">
   <div class="card">
     <div class="seg">
-      <button id="s1" class="on" onclick="m(1)">鏀剁泭鐜?鈫?缈诲€嶅勾鏁?/button>
-      <button id="s2" onclick="m(2)">缈诲€嶅勾鏁?鈫?鏀剁泭鐜?/button>
+      <button id="s1" class="on" onclick="m(1)">收益率 → 翻倍年数</button>
+      <button id="s2" onclick="m(2)">翻倍年数 → 收益率</button>
     </div>
-    <div class="field"><label id="lbl">骞存敹鐩婄巼锛?锛?/label><input type="number" id="a" value="8" min="0.1" step="0.1" oninput="calc()"></div>
+    <div class="field"><label id="lbl">年收益率（%）</label><input type="number" id="a" value="8" min="0.1" step="0.1" oninput="calc()"></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Rule of 72 路 绾墠绔?/footer>
+<footer>ToolkitPro · Rule of 72 · 纯前端</footer>
 <script>
 var M=1;
-function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';document.getElementById('lbl').textContent=M===1?'骞存敹鐩婄巼锛?锛?:'鎯冲嚑骞寸炕鍊?;document.getElementById('a').value=M===1?'8':'9';calc();}
+function m(x){M=x;document.getElementById('s1').className=M===1?'on':'';document.getElementById('s2').className=M===2?'on':'';document.getElementById('lbl').textContent=M===1?'年收益率（%）':'想几年翻倍';document.getElementById('a').value=M===1?'8':'9';calc();}
 function calc(){
   var a=+document.getElementById('a').value||0;
   var el=document.getElementById('res');
   if(M===1){var yrs=72/a;
-    el.innerHTML='<div class="big">'+yrs.toFixed(1)+' 骞?/div><div class="sub">鎸?'+a+'% 澶嶅埄锛岀害 '+yrs.toFixed(1)+' 骞寸炕鍊?/div>';}
+    el.innerHTML='<div class="big">'+yrs.toFixed(1)+' 年</div><div class="sub">按 '+a+'% 复利，约 '+yrs.toFixed(1)+' 年翻倍</div>';}
   else{var r=72/a;
-    el.innerHTML='<div class="big">'+r.toFixed(1)+'%</div><div class="sub">鎯?'+a+' 骞寸炕鍊嶏紝绾﹂渶 '+r.toFixed(1)+'% 骞存敹鐩婄巼</div>';}
+    el.innerHTML='<div class="big">'+r.toFixed(1)+'%</div><div class="sub">想 '+a+' 年翻倍，约需 '+r.toFixed(1)+'% 年收益率</div>';}
 }
 calc();
 </script>
