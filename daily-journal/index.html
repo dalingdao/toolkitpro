@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Journal - 鍏嶈垂鍦ㄧ嚎鏃ヨ</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鏃ヨ鏈紝鎸夋棩鏈熻褰曪紝localStorage鏈湴瀛樺偍锛岀函鍓嶇锛屾棤闇€娉ㄥ唽銆?>
-<meta name="keywords" content="鏃ヨ,daily journal,鏃ヨ鏈?璁板綍,鍐欎綔,鍏嶈垂宸ュ叿">
+<title>Daily Journal - 免费在线日记</title>
+<meta name="description" content="免费在线日记本，按日期记录，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="日记,daily journal,日记本,记录,写作,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -26,27 +26,27 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃摉 Daily Journal</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鏃ヨ鏈€斺€?鏈湴淇濆瓨銆?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鏃ヨ</span><span class="badge">鏈湴瀛樺偍</span></div>
+  <h1>📖 Daily Journal</h1>
+  <p>免费在线日记本—— 本地保存。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">日记</span><span class="badge">本地存储</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏃ユ湡</label><input type="date" id="d"></div>
-    <div class="field"><label>姝ｆ枃</label><textarea id="t" placeholder="鍐欎笅浠婂ぉ鈥?></textarea></div>
-    <button class="btn" onclick="save()">淇濆瓨</button>
+    <div class="field"><label>日期</label><input type="date" id="d"></div>
+    <div class="field"><label>正文</label><textarea id="t" placeholder="写下今天…"></textarea></div>
+    <button class="btn" onclick="save()">保存</button>
   </div>
 </div>
-<footer>ToolkitPro 路 Daily Journal 路 绾墠绔?路 鏈湴瀛樺偍</footer>
+<footer>ToolkitPro · Daily Journal · 纯前端 · 本地存储</footer>
 <script>
 var notes=JSON.parse(localStorage.getItem('dj_notes')||'{}');
 var d=new Date().toISOString().slice(0,10);
 document.getElementById('d').value=d;document.getElementById('d').onchange=load;
 document.getElementById('t').value=notes[d]||'';
 function load(){d=document.getElementById('d').value;document.getElementById('t').value=notes[d]||'';}
-function save(){notes[d]=document.getElementById('t').value;localStorage.setItem('dj_notes',JSON.stringify(notes));alert('宸蹭繚瀛?);}
+function save(){notes[d]=document.getElementById('t').value;localStorage.setItem('dj_notes',JSON.stringify(notes));alert('已保存');}
 </script>
 </body>
 </html>
