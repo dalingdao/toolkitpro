@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dedupe - 鍏嶈垂鍦ㄧ嚎鍒楄〃鍘婚噸宸ュ叿</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍒楄〃鍘婚噸宸ュ叿锛屽幓闄ら噸澶嶉」骞剁粺璁″悇鍑虹幇娆℃暟锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
+<meta name="keywords" content="鍘婚噸,dedupe,鍒楄〃鍘婚噸,閲嶅椤?璁℃暟,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+textarea{width:100%;height:130px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;font-family:monospace;resize:vertical;margin-bottom:12px}
+.result{margin-top:12px;background:#eff6ff;border-radius:12px;padding:18px;font-family:monospace;font-size:14px;color:#2563eb;word-break:break-all;white-space:pre-wrap}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃Ч Dedupe</h1>
+  <p>鍏嶈垂鍦ㄧ嚎鍒楄〃鍘婚噸鈥斺€?鍘婚櫎閲嶅椤癸紝缁熻娆℃暟銆傛敮鎸??items= &format=json 渚?Agent 璋冪敤銆?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">鍘婚噸</span><span class="badge">Agent鍙敤</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <textarea id="in" placeholder="姣忚涓€椤癸紝鎴栫敤閫楀彿鍒嗛殧">apple,banana,apple,cherry,banana,apple</textarea>
+    <div class="result" id="out"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Dedupe 路 绾墠绔?路 Agent鍙敤</footer>
+<script>
+function parse(s){return s.split(/[\n,]/).map(function(x){return x.trim();}).filter(Boolean);}
+function run(){
+  var items=parse(document.getElementById('in').value);
+  var count={},unique=[];
+  items.forEach(function(x){if(!count[x]){count[x]=0;unique.push(x);}count[x]++;});
+  document.getElementById('out').textContent='鍘婚噸鍚?'+unique.length+' 椤筡n'+unique.join(', ')+'\n\n娆℃暟:\n'+Object.keys(count).map(function(k){return k+': '+count[k];}).join('\n');
+}
+run();
+document.getElementById('in').addEventListener('input',run);
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var items=parse(q.get('items')||''),count={},unique=[];
+    items.forEach(function(x){if(!count[x]){count[x]=0;unique.push(x);}count[x]++;});
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({unique:unique,count:count},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
