@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bond Yield - 鍏嶈垂鍦ㄧ嚎鍊哄埜鏀剁泭鐜囪绠楀櫒</title>
+<meta name="description" content="鍏嶈垂鍦ㄧ嚎鍊哄埜鏀剁泭鐜囪绠楀櫒锛岀エ闈㈠埄鐜?涔板叆浠?鍒版湡骞撮檺浼扮畻鍒版湡鏀剁泭鐜囷紝绾墠绔紝鏃犻渶娉ㄥ唽銆?>
+<meta name="keywords" content="鍊哄埜鏀剁泭鐜?bond yield,鍒版湡鏀剁泭鐜?绁ㄩ潰鍒╃巼,鍊哄埜,鍏嶈垂宸ュ叿">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:28px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<div class="header">
+  <h1>馃搱 Bond Yield</h1>
+  <p>鍏嶈垂鍦ㄧ嚎鍊哄埜鏀剁泭鐜囪绠楀櫒鈥斺€?浼扮畻鍒版湡鏀剁泭鐜囥€?/p>
+  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">YTM</span><span class="badge">鍊哄埜</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>绁ㄩ潰鍒╃巼锛?锛?/label><input type="number" id="cr" value="3" min="0" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>闈㈠€硷紙鍏冿級</label><input type="number" id="fv" value="100" min="1" oninput="calc()"></div>
+    <div class="field"><label>涔板叆浠凤紙鍏冿級</label><input type="number" id="pr" value="95" min="0.01" oninput="calc()"></div>
+    <div class="field"><label>鍒版湡骞撮檺锛堝勾锛?/label><input type="number" id="y" value="5" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro 路 Bond Yield 路 绾墠绔?/footer>
+<script>
+function calc(){
+  var cr=+document.getElementById('cr').value||0,fv=+document.getElementById('fv').value||100,pr=+document.getElementById('pr').value||0,y=+document.getElementById('y').value||1;
+  var el=document.getElementById('res');
+  var coupon=fv*cr/100;
+  // 绠€鍖?YTM 鈮?(绁ㄦ伅 + (闈㈠€?涔板叆浠?/骞撮檺) / ((闈㈠€?涔板叆浠?/2)
+  var ytm=(coupon+(fv-pr)/y)/((fv+pr)/2)*100;
+  var cur=fv>0?coupon/pr*100:0;
+  el.innerHTML='<div class="big">'+ytm.toFixed(2)+'%</div><div class="sub">浼扮畻鍒版湡鏀剁泭鐜?(YTM)<br>褰撴湡鏀剁泭鐜?'+cur.toFixed(2)+'%<br>骞寸エ鎭?楼'+coupon.toFixed(2)+'</div>';
+}
+calc();
+</script>
+</body>
+</html>
