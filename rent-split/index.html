@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rent Split - 免费在线房租/合租分摊计算器</title>
+<meta name="description" content="免费在线房租分摊计算器，按人数/面积/权重分摊房租水电，纯前端，无需注册。">
+<meta name="keywords" content="房租分摊,rent split,合租计算,房租水电,平摊,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:30px;font-weight:800;color:#2563eb}
+.result .sub{font-size:15px;color:#475569;margin-top:10px;line-height:2}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🏠 Rent Split</h1>
+  <p>免费在线房租分摊计算器—— 合租平摊/按面积。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">平摊</span><span class="badge">按面积</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>月租（元）</label><input type="number" id="r" value="3000" min="1" oninput="calc()"></div>
+    <div class="field"><label>合租人数</label><input type="number" id="n" value="2" min="2" oninput="calc()"></div>
+    <div class="field"><label>我的房间面积（m²）</label><input type="number" id="a" value="15" min="1" oninput="calc()"></div>
+    <div class="field"><label>总面积（m²）</label><input type="number" id="t" value="80" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Rent Split · 纯前端</footer>
+<script>
+function calc(){
+  const r=+document.getElementById('r').value||0,n=+document.getElementById('n').value||2,a=+document.getElementById('a').value||1,t=+document.getElementById('t').value||1;
+  const eq=r/n;
+  const byArea=r*a/t;
+  document.getElementById('res').innerHTML='<div class="big">¥'+eq.toFixed(2)+'</div><div class="sub">平摊（每人）<br>按面积：¥'+byArea.toFixed(2)+'</div>';
+}
+calc();
+</script>
+</body>
+</html>
