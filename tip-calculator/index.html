@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip Calculator Pro - 免费在线小费/账单分摊计算器</title>
+<meta name="description" content="免费在线小费计算器，计算小费金额/人均分摊/总金额，支持自定义小费比例，纯前端，无需注册。">
+<meta name="keywords" content="小费计算,tip calculator,账单分摊,小费比例,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.tips{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tip{padding:9px 16px;border-radius:8px;border:1px solid #cbd5e1;cursor:pointer;font-size:14px;font-weight:600;background:#f1f5f9}
+.tip.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.result{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.box{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:19px;font-weight:800;color:#2563eb;margin-top:4px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>💵 Tip Calculator Pro</h1>
+  <p>免费在线小费计算器—— 小费金额/人均分摊/总金额，即时计算。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">小费</span><span class="badge">分摊</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>账单金额（¥）</label><input type="number" id="bill" value="200" oninput="calc()"></div>
+    <div class="field"><label>小费比例</label>
+      <div class="tips">
+        <button class="tip" data-t="10" onclick="setTip(this)">10%</button>
+        <button class="tip active" data-t="15" onclick="setTip(this)">15%</button>
+        <button class="tip" data-t="18" onclick="setTip(this)">18%</button>
+        <button class="tip" data-t="20" onclick="setTip(this)">20%</button>
+        <button class="tip" data-t="25" onclick="setTip(this)">25%</button>
+      </div>
+    </div>
+    <div class="field"><label>分摊人数</label><input type="number" id="ppl" value="1" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Tip Calculator Pro · 纯前端</footer>
+<script>
+let tip=15;
+function setTip(el){tip=+el.dataset.t;document.querySelectorAll('.tip').forEach(b=>b.classList.remove('active'));el.classList.add('active');calc()}
+function calc(){
+  const bill=+document.getElementById('bill').value||0,ppl=Math.max(1,+document.getElementById('ppl').value||1);
+  const tipAmt=bill*tip/100,total=bill+tipAmt;
+  document.getElementById('res').innerHTML='<div class="box"><div class="label">小费</div><div class="value">¥'+fmt(tipAmt)+'</div></div><div class="box"><div class="label">总额</div><div class="value">¥'+fmt(total)+'</div></div><div class="box"><div class="label">人均</div><div class="value">¥'+fmt(total/ppl)+'</div></div>';
+}
+function fmt(n){return Math.round(n*100)/100}
+calc();
+</script>
+</body>
+</html>
