@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Size Converter - 鍏嶈垂鍦ㄧ嚎鏁版嵁澶у皬鎹㈢畻</title>
-<meta name="description" content="鍏嶈垂鍦ㄧ嚎鏁版嵁澶у皬鎹㈢畻鍣紝B/KB/MB/GB/TB浜掕浆锛屼簩杩涘埗涓庡崄杩涘埗锛岀函鍓嶇锛屾棤闇€娉ㄥ唽锛屾敮鎸乁RL鍙傛暟渚汚I Agent璋冪敤銆?>
-<meta name="keywords" content="鏁版嵁澶у皬,data size,KB,MB,GB,TB,瀛樺偍鎹㈢畻,鍏嶈垂宸ュ叿">
+<title>Data Size Converter - 免费在线数据大小换算</title>
+<meta name="description" content="免费在线数据大小换算器，B/KB/MB/GB/TB互转，二进制与十进制，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="数据大小,data size,KB,MB,GB,TB,存储换算,免费工具">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
@@ -28,22 +28,22 @@ footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
-<a class="back" href="/toolkitpro/">鈫?杩斿洖宸ュ叿绠?/a>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
 <div class="header">
-  <h1>馃捑 Data Size Converter</h1>
-  <p>鍏嶈垂鍦ㄧ嚎鏁版嵁澶у皬鎹㈢畻鈥斺€?B/KB/MB/GB/TB锛?KB=1024B锛夈€?/p>
-  <div class="badges"><span class="badge">绾墠绔?/span><span class="badge">瀛樺偍</span><span class="badge">鎹㈢畻</span></div>
+  <h1>💾 Data Size Converter</h1>
+  <p>免费在线数据大小换算—— B/KB/MB/GB/TB（1KB=1024B）。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">存储</span><span class="badge">换算</span></div>
 </div>
 <div class="container">
   <div class="card">
-    <div class="field"><label>鏁板€?/label><input type="number" id="v" value="1024" min="0" oninput="calc()"></div>
-    <div class="field"><label>鍗曚綅</label><select id="u" onchange="calc()">
+    <div class="field"><label>数值</label><input type="number" id="v" value="1024" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
       <option value="B">B</option><option value="KB" selected>KB</option><option value="MB">MB</option><option value="GB">GB</option><option value="TB">TB</option>
     </select></div>
     <div class="result" id="res"></div>
   </div>
 </div>
-<footer>ToolkitPro 路 Data Size Converter 路 绾墠绔?/footer>
+<footer>ToolkitPro · Data Size Converter · 纯前端</footer>
 <script>
 var P={B:0,KB:1,MB:2,GB:3,TB:4};
 function calc(){
