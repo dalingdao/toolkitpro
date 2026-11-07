@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Calculator Pro - 免费在线贷款月供计算器</title>
+<meta name="description" content="免费在线贷款计算器，计算等额本息月供、总利息、总还款，支持自定义贷款金额、年利率、期限，纯前端。">
+<meta name="keywords" content="贷款计算,loan calculator,月供计算,房贷计算,利息计算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.box{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:20px;font-weight:800;color:#2563eb;margin-top:4px}
+.box.highlight{background:#dcfce7}
+.box.highlight .value{color:#166534}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🏦 Loan Calculator Pro</h1>
+  <p>免费在线贷款计算器—— 等额本息月供/总利息/总还款，即时计算。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">等额本息</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>贷款金额（元）</label><input type="number" id="p" value="1000000" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.85" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>贷款期限（年）</label><input type="number" id="n" value="30" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Loan Calculator Pro · 纯前端</footer>
+<script>
+function calc(){
+  const P=parseFloat(document.getElementById('p').value)||0,R=parseFloat(document.getElementById('r').value)/100/12,N=parseInt(document.getElementById('n').value)*12;
+  if(!P||!N){document.getElementById('res').innerHTML='<div class="box"><div class="label">请输入数值</div></div>';return}
+  const m=R?P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1):P/N;
+  const total=m*N;
+  document.getElementById('res').innerHTML='<div class="box highlight"><div class="label">月供</div><div class="value">¥'+fmt(m)+'</div></div><div class="box"><div class="label">总利息</div><div class="value">¥'+fmt(total-P)+'</div></div><div class="box"><div class="label">总还款</div><div class="value">¥'+fmt(total)+'</div></div>';
+}
+function fmt(n){return Math.round(n).toLocaleString()}
+calc();
+</script>
+</body>
+</html>
