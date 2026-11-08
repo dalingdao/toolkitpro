@@ -209,9 +209,10 @@ def marketing_score(i):
             'length':ln,'suggestions':sugg,'platform':platform}
 
 def dq_type(v):
+    if v is None: return 'empty'
     s=str(v).strip()
     low=s.lower()
-    if s=='' or low in ('null','unknown','未知','nan'): return 'empty'
+    if s=='' or low in ('null','none','unknown','未知','nan'): return 'empty'
     if s.replace('-','',1).isdigit() and s!='': return 'number'
     try:
         float(s); return 'number'
@@ -220,9 +221,10 @@ def dq_type(v):
     return 'string'
 
 def dq_num(v):
+    if v is None: return False
     s=str(v).strip()
     low=s.lower()
-    if s=='' or low in ('null','unknown','未知','nan'): return False
+    if s=='' or low in ('null','none','unknown','未知','nan'): return False
     try:
         float(s); return True
     except ValueError: return False
