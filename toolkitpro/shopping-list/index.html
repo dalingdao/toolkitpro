@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping List - 免费在线购物清单/购物车工具</title>
+<meta name="description" content="免费在线购物清单工具，添加商品/数量/价格，计算总价，本地保存，纯前端，无需注册。">
+<meta name="keywords" content="购物清单,shopping list,购物车,购物计算,清单工具,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:700px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px}
+.row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.row input{padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;flex:1;min-width:100px}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#2563eb}
+.btn.red{background:#ef4444}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px;text-align:left;border-bottom:1px solid #e2e8f0}
+th{color:#64748b;font-weight:600}
+.done{text-decoration:line-through;color:#94a3b8}
+.total{text-align:right;font-size:20px;font-weight:800;color:#2563eb;padding-top:12px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🛒 Shopping List</h1>
+  <p>免费在线购物清单工具—— 添加商品/数量/价格，计算总价。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">本地</span><span class="badge">总价</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="row">
+      <input type="text" id="name" placeholder="商品名">
+      <input type="number" id="qty" placeholder="数量" value="1" min="1">
+      <input type="number" id="price" placeholder="单价" min="0">
+    </div>
+    <button class="btn" onclick="add()">➕ 添加</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th></th><th>商品</th><th>数量</th><th>单价</th><th>小计</th><th></th></tr></thead><tbody id="list"></tbody></table>
+    <div class="total" id="total"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Shopping List · 纯前端</footer>
+<script>
+let items=JSON.parse(localStorage.getItem('shoplist')||'[]');
+function save(){localStorage.setItem('shoplist',JSON.stringify(items))}
+function add(){
+  const name=document.getElementById('name').value.trim();
+  if(!name){alert('输入商品名');return}
+  items.push({name,qty:+document.getElementById('qty').value||1,price:+document.getElementById('price').value||0,done:false,id:Date.now()});
+  document.getElementById('name').value='';document.getElementById('price').value='';
+  save();render();
+}
+function toggle(id){items=items.map(i=>i.id===id?{...i,done:!i.done}:i);save();render()}
+function del(id){items=items.filter(i=>i.id!==id);save();render()}
+function render(){
+  document.getElementById('list').innerHTML=items.map(i=>'<tr><td><input type="checkbox" '+(i.done?'checked':'')+' onchange="toggle('+i.id+')"></td><td class="'+(i.done?'done':'')+'">'+i.name+'</td><td>'+i.qty+'</td><td>¥'+i.price.toFixed(2)+'</td><td>¥'+(i.qty*i.price).toFixed(2)+'</td><td><button class="btn red" style="padding:4px 10px;font-size:12px" onclick="del('+i.id+')">删</button></td></tr>').join('')||'<tr><td colspan="6" style="text-align:center;color:#94a3b8">暂无商品</td></tr>';
+  const total=items.reduce((a,b)=>a+b.qty*b.price,0);
+  document.getElementById('total').textContent='总价：¥'+total.toFixed(2);
+}
+render();
+</script>
+</body>
+</html>
