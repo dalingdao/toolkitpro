@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAG 分块策略对比 - 选择最佳 Chunking 策略</title>
+<meta name="description" content="同一文本用字符/递归/语义三种分块策略对比 chunk 数/重叠/覆盖率/预估 token，推荐最优分块参数，用于 RAG 工程。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:780px;margin:0 auto}h1{font-size:24px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:4px}textarea{width:100%;min-height:120px;padding:12px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}button{width:100%;padding:12px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:14px;margin-top:12px;font-size:14px;white-space:pre-wrap;line-height:1.7}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}.best{color:#34d399}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>RAG 分块策略对比 <span class="tag">原创 · RAG 工程</span></h1>
+<h2>字符/递归/语义三策略对比 · 选最优 chunking · 不用靠猜</h2>
+<div class="card">
+<label>文本</label><textarea id="text" placeholder="粘贴要分块的文本（长文本效果更明显）"></textarea>
+<div class="row">
+<div><label>块大小(字符)</label><input id="chunk" type="number" value="500" min="100"></div>
+<div><label>重叠</label><input id="overlap" type="number" value="50" min="0"></div>
+<div><label>语义阈值(句)</label><input id="sem" type="number" value="3" min="1"></div>
+</div>
+<button onclick="cmp()">对比分块策略</button>
+<div class="out" id="out">输入文本后对比。</div>
+</div>
+</div>
+<script>
+function estTok(s){const cjk=(s.match(/[\u4e00-\u9fff]/g)||[]).length;return Math.ceil(cjk*1.5+(s.length-cjk)/4)}
+function cmp(){
+  const text=document.getElementById('text').value;if(!text){document.getElementById('out').innerHTML='请输入文本。';return}
+  const cs=+document.getElementById('chunk').value||500,ov=+document.getElementById('overlap').value||50,sem=+document.getElementById('sem').value||3;
+  const totTok=estTok(text);const len=text.length;
+  // 字符策略: 每cs字符一块,重叠ov
+  const charChunks=Math.max(1,Math.ceil((len-ov)/(cs-ov)));
+  // 递归策略: 按段落/句切,每块<=cs
+  const paras=text.split(/\n+/).filter(x=>x.trim());let recChunks=0;let cur=0;for(const p of paras){if(cur+p.length>cs&&cur>0){recChunks++;cur=0}cur+=p.length+1}if(cur>0)recChunks++;
+  // 语义策略: 每sem句一块
+  const sents=text.split(/[。！？.!?]+/).filter(x=>x.trim());const semChunks=Math.max(1,Math.ceil(sents.length/sem));
+  const rows=[['字符(固定)','按字符切',charChunks,cs],['递归(段落)','按段落/句递归',recChunks,cs],['语义(句子)','按语义句子',semChunks,Math.round(len/semChunks)]];
+  let h=`<b>文本：</b>${len} 字符 / 约 ${totTok} tokens\n\n<b>策略对比：</b>\n`;
+  rows.forEach(r=>{const avgTok=Math.round(totTok/r[2]);h+=`${r[0]}：${r[2]} 块（每块约 ${r[3]}字符/${avgTok}tokens，${r[1]}）\n`});
+  // 推荐
+  const best=rows.reduce((a,b)=>b[2]<a[2]?b:a);
+  h+=`\n<b>推荐：</b><span class="best">${best[0]}</span>（块数最适中，${best[1]}）\n<b>原则：</b>块太大→检索模糊，块太小→上下文碎片；RAG 常用 300-800 字符，重叠 10-20%。`;
+  document.getElementById('out').innerHTML=h;
+  window._last={tool:'chunk-comparer',input:{chunk:cs,overlap:ov},output:{char_chunks:charChunks,recursive_chunks:recChunks,semantic_chunks:semChunks,recommended:best[0]}};
+}
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const text=d.text||'';if(!text){document.body.textContent=JSON.stringify({tool:'chunk-comparer',error:'text required'});return}const cs=+d.chunk||500,ov=+d.overlap||50,sem=+d.sem||3;const len=text.length,totTok=estTok(text);const charChunks=Math.max(1,Math.ceil((len-ov)/(cs-ov)));const paras=text.split(/\n+/).filter(x=>x.trim());let recChunks=0,cur=0;for(const p of paras){if(cur+p.length>cs&&cur>0){recChunks++;cur=0}cur+=p.length+1}if(cur>0)recChunks++;const sents=text.split(/[。！？.!?]+/).filter(x=>x.trim());const semChunks=Math.max(1,Math.ceil(sents.length/sem));const best=Math.min(charChunks,recChunks,semChunks);document.body.textContent=JSON.stringify({tool:'chunk-comparer',input:d,output:{char_chunks:charChunks,recursive_chunks:recChunks,semantic_chunks:semChunks,total_tokens:totTok,recommended:best===charChunks?'char':best===recChunks?'recursive':'semantic'}})}catch(e){document.body.textContent=JSON.stringify({tool:'chunk-comparer',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
