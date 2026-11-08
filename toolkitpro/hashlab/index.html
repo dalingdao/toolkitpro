@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hash Lab - UUID/Hash在线生成器</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#10b981;--text:#e2e8f0;--muted:#94a3b8;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+header{text-align:center;margin-bottom:20px}
+header h1{font-size:24px;color:var(--acc)}
+header p{color:var(--muted);font-size:13px;margin-top:4px}
+.container{max-width:700px;margin:0 auto}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.section h3{font-size:14px;color:var(--muted);margin-bottom:12px}
+.row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+button{background:var(--acc);border:none;color:#0f172a;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+button.sec{background:var(--border);color:var(--text)}
+input[type=text],input[type=number]{flex:1;min-width:150px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-family:monospace;font-size:13px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:'Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;word-break:break-all;margin-bottom:8px;min-height:36px}
+.output .label{color:var(--muted);font-size:11px;margin-bottom:2px}
+.output .val{color:var(--acc)}
+.list{max-height:200px;overflow:auto}
+.list .item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-family:monospace;font-size:12px}
+.copy-btn{background:var(--border);color:var(--text);border:none;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--acc);color:#0f172a;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header><h1>🔐 Hash Lab</h1><p>UUID/Hash在线生成器 · SHA-1/SHA-256/SHA-512 · UUID v4 · Base64 · 密码生成 · 纯前端</p></header>
+<div class="container">
+  <div class="section">
+    <h3>UUID v4 生成器</h3>
+    <div class="row">
+      <label>数量</label>
+      <input type="number" id="uuidCount" value="5" min="1" max="100" style="width:80px">
+      <button onclick="genUUID()">生成</button>
+      <button class="sec" onclick="copyAll()">复制全部</button>
+    </div>
+    <div class="list" id="uuidList"></div>
+  </div>
+  <div class="section">
+    <h3>Hash 计算器 (Web Crypto API)</h3>
+    <label>输入文本</label>
+    <input type="text" id="hashInput" value="Hello World" oninput="calcHash()">
+    <div style="margin-top:12px" id="hashResults"></div>
+  </div>
+  <div class="section">
+    <h3>Base64 编解码</h3>
+    <label>输入</label>
+    <input type="text" id="b64Input" value="Hello World" oninput="calcB64()">
+    <div style="margin-top:12px">
+      <div class="output"><div class="label">Base64 编码</div><div class="val" id="b64Enc"></div></div>
+      <div class="output"><div class="label">Base64 解码</div><div class="val" id="b64Dec"></div></div>
+    </div>
+  </div>
+  <div class="section">
+    <h3>随机密码生成器</h3>
+    <div class="row">
+      <label>长度</label>
+      <input type="number" id="pwdLen" value="16" min="4" max="128" style="width:80px">
+      <label><input type="checkbox" id="pwdUpper" checked> 大写</label>
+      <label><input type="checkbox" id="pwdLower" checked> 小写</label>
+      <label><input type="checkbox" id="pwdNum" checked> 数字</label>
+      <label><input type="checkbox" id="pwdSym" checked> 符号</label>
+      <button onclick="genPwd()">生成</button>
+    </div>
+    <div class="output"><div class="label">密码</div><div class="val" id="pwdOut" style="font-size:16px"></div></div>
+    <button class="sec" onclick="copyText(document.getElementById('pwdOut').textContent)">复制密码</button>
+  </div>
+</div>
+<div class="toast" id="toast">已复制!</div>
+<script>
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},1500);}
+function copyText(t){navigator.clipboard.writeText(t).then(function(){showToast('已复制!');});}
+function genUUID(){var n=Math.min(parseInt(document.getElementById('uuidCount').value)||1,100);var list=document.getElementById('uuidList');var html='';for(var i=0;i<n;i++){var u=crypto.randomUUID();html+='<div class="item"><span>'+u+'</span><button class="copy-btn" onclick="copyText(\''+u+'\')">复制</button></div>';}list.innerHTML=html;}
+function copyAll(){var items=[].slice.call(document.querySelectorAll('#uuidList .item span')).map(function(e){return e.textContent;});if(items.length===0){showToast('列表为空');return;}copyText(items.join('\n'));}
+function calcHash(){var input=document.getElementById('hashInput').value;if(!input){document.getElementById('hashResults').innerHTML='';return;}var enc=new TextEncoder().encode(input);var algos=['SHA-1','SHA-256','SHA-512'];var html='';algos.forEach(function(a){crypto.subtle.digest(a,enc).then(function(buf){var hex=[].slice.call(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');html+='<div class="output"><div class="label">'+a+'</div><div class="val">'+hex+'</div><button class="copy-btn" onclick="copyText(\''+hex+'\')">复制</button></div>';document.getElementById('hashResults').innerHTML=html;});});}
+function calcB64(){var input=document.getElementById('b64Input').value;try{document.getElementById('b64Enc').textContent=btoa(unescape(encodeURIComponent(input)));}catch(e){document.getElementById('b64Enc').textContent='编码错误';}try{document.getElementById('b64Dec').textContent=decodeURIComponent(escape(atob(input)));}catch(e){document.getElementById('b64Dec').textContent='(非有效Base64)';}}
+function genPwd(){var len=parseInt(document.getElementById('pwdLen').value)||16;var chars='';if(document.getElementById('pwdUpper').checked)chars+='ABCDEFGHIJKLMNOPQRSTUVWXYZ';if(document.getElementById('pwdLower').checked)chars+='abcdefghijklmnopqrstuvwxyz';if(document.getElementById('pwdNum').checked)chars+='0123456789';if(document.getElementById('pwdSym').checked)chars+='!@#$%^&*()_+-=[]{}|;:,.<>?';if(!chars){document.getElementById('pwdOut').textContent='请至少选择一种字符类型';return;}var arr=new Uint32Array(len);crypto.getRandomValues(arr);var pwd='';for(var i=0;i<len;i++)pwd+=chars[arr[i]%chars.length];document.getElementById('pwdOut').textContent=pwd;}
+genUUID();calcHash();calcB64();genPwd();
+</script>
+</body>
+</html>
