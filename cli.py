@@ -182,9 +182,35 @@ def api_contract(i):
     if rs is not None: out['response'] = {'contract': json.dumps(api_infer(rs), ensure_ascii=False, indent=2)}
     return out
 
+# ---- marketing-score ----
+def marketing_score(i):
+    t=(i.get('title') or '').strip(); d=(i.get('desc') or '').strip()
+    if not t: raise ValueError('title required')
+    ln=len(t); platform=i.get('platform') or 'ecommerce'
+    ranges={'ecommerce':[10,30],'social':[5,15],'email':[15,40]}
+    r=ranges.get(platform, ranges['ecommerce'])
+    if ln<r[0]: len_score=max(0,100-(r[0]-ln)*8)
+    elif ln>r[1]: len_score=max(0,100-(ln-r[1])*4)
+    else: len_score=100
+    kw=[x for x in re.findall(r'[\u4e00-\u9fff]{2,}|[A-Za-z]{3,}|[0-9]+',t) if len(x)>=2]
+    kw_score=min(100,len(kw)*15+20)
+    emo=len(re.findall(r'超值|新品|爆款|限时|免费|省|划算|独家|升级|热销|全新|惊喜|优惠|立减|赠送',t+d))
+    emo_score=min(100,40+emo*15)
+    cta=len(re.findall(r'立即|点击|下单|咨询|了解|购买|加入|领取|抢购|预约',t+d))
+    cta_score=min(100,30+cta*20)
+    score=round(len_score*0.3+kw_score*0.25+emo_score*0.2+cta_score*0.25)
+    sugg=[]
+    if len_score<70: sugg.append(f'标题长度建议{r[0]}-{r[1]}字（当前{ln}字）')
+    if kw_score<70: sugg.append('加入具体关键词（品牌/品类/数字/卖点）')
+    if emo_score<70: sugg.append('加入情感触发词（超值/新品/限时/立减）')
+    if cta_score<70: sugg.append('加入行动号召（立即/下单/咨询/领取）')
+    return {'score':score,'grade':'A' if score>=85 else 'B' if score>=70 else 'C' if score>=50 else 'D',
+            'lenScore':len_score,'kwScore':kw_score,'emoScore':emo_score,'ctaScore':cta_score,
+            'length':ln,'suggestions':sugg,'platform':platform}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
-         'thought-organizer':thought_organizer,'api-contract':api_contract}
+         'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score}
 
 # ---- entry ----
 def main():
