@@ -495,6 +495,55 @@ function testCaseGen(input){
   return {name:input.name||'模块',count:cases.length,cases};
 }
 
+// ---- content-idea-miner ----
+const CIM_NICHES={
+  '健身':[
+    ['{aud} 每天10分钟{niche}，30天变化看得见','12:00','高','痛点：没时间'],
+    ['{niche}新手最容易犯的3个错误','08:00','高','避坑'],
+    ['{aud} {niche}计划表，照做就能瘦','18:00','中','实用清单'],
+    ['{niche}后吃什么？恢复餐安排','20:00','中','知识科普'],
+    ['{niche}和熬夜，哪个先毁了你','22:00','高','争议话题'],
+    ['{aud}为什么越练越没效果？','07:00','中','误区解析']
+  ],
+  '科技':[
+    ['2026年{niche}趋势，普通人该关注什么','09:00','高','趋势预测'],
+    ['{aud}必看的{niche}小工具TOP5','12:00','中','实用合集'],
+    ['{niche}新品实测：值不值得买','19:00','高','评测'],
+    ['{niche}里的隐藏功能，90%人不知道','21:00','中','冷知识'],
+    ['{niche}会取代你的工作吗？','20:00','高','争议话题'],
+    ['{aud}如何用{niche}提高效率','08:30','中','效率提升']
+  ],
+  '美食':[
+    ['{aud}必学的一道{niche}，10分钟搞定','11:30','高','快手教程'],
+    ['{niche}这样做，孩子抢着吃','17:00','中','亲子'],
+    ['{niche}的隐藏吃法，餐厅都不说','13:00','中','冷知识'],
+    ['{niche}减脂版，好吃不胖','18:30','高','健康'],
+    ['{niche}翻车现场，笑不活了','19:30','中','娱乐'],
+    ['{aud}一周{niche}不重样','16:00','中','实用清单']
+  ]
+};
+const CIM_FORMULAS=['痛点+解决方案','数字+利益点','悬念+反转','对比+反差','清单+干货','争议+观点'];
+function cimMine(niche,audience,count){
+  const aud=audience||'大众';
+  const keys=Object.keys(CIM_NICHES);
+  const k=keys.find(x=>niche.toLowerCase().includes(x.toLowerCase()))||keys[0];
+  const bank=CIM_NICHES[k];
+  const out=[];
+  for(let i=0;i<count;i++){
+    const t=bank[i%bank.length];
+    const title=t[0].replace('{aud}',aud).replace('{niche}',niche);
+    const score=i<count/2?Math.min(95,80+Math.floor(Math.random()*15)):Math.min(90,60+Math.floor(Math.random()*25));
+    out.push({title,time:t[1],heat:t[2],score,formula:CIM_FORMULAS[i%CIM_FORMULAS.length],note:t[3]});
+  }
+  return out.sort((a,b)=>b.score-a.score);
+}
+function contentIdeaMiner(input){
+  if(!input.niche||!input.niche.trim()) throw new Error('niche required');
+  const count=Math.max(3,Math.min(12,+input.count||6));
+  const ideas=cimMine(input.niche.trim(),(input.audience||'').trim(),count);
+  return {niche:input.niche,count:ideas.length,ideas};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -510,7 +559,8 @@ const TOOLS={
   'priority-matrix':priorityMatrix,
   'faq-generator':faqGenerator,
   'i18n-checker':i18nChecker,
-  'test-case-gen':testCaseGen
+  'test-case-gen':testCaseGen,
+  'content-idea-miner':contentIdeaMiner
 };
 
 // ---- entry ----
