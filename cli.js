@@ -176,6 +176,31 @@ function apiContract(input){
   return out;
 }
 
+// ---- marketing-score ----
+function marketingScore(input){
+  const t=(input.title||'').trim(),d=(input.desc||'').trim();
+  if(!t) throw new Error('title required');
+  const len=t.length;
+  const ranges={ecommerce:[10,30],social:[5,15],email:[15,40]};
+  const r=ranges[input.platform]||ranges.ecommerce;
+  let lenScore=100;
+  if(len<r[0])lenScore=Math.max(0,100-(r[0]-len)*8);
+  else if(len>r[1])lenScore=Math.max(0,100-(len-r[1])*4);
+  const kw=(t.match(/[\u4e00-\u9fff]{2,}|[A-Za-z]{3,}|[0-9]+/g)||[]).filter(x=>x.length>=2);
+  const kwScore=Math.min(100,kw.length*15+20);
+  const emo=(t+d).match(/超值|新品|爆款|限时|免费|省|划算|独家|升级|热销|全新|惊喜|优惠|立减|赠送/g)||[];
+  const emoScore=Math.min(100,40+emo.length*15);
+  const cta=(t+d).match(/立即|点击|下单|咨询|了解|购买|加入|领取|抢购|预约/g)||[];
+  const ctaScore=Math.min(100,30+cta.length*20);
+  const score=Math.round(lenScore*0.3+kwScore*0.25+emoScore*0.2+ctaScore*0.25);
+  const sugg=[];
+  if(lenScore<70)sugg.push('标题长度建议'+r[0]+'-'+r[1]+'字（当前'+len+'字）');
+  if(kwScore<70)sugg.push('加入具体关键词（品牌/品类/数字/卖点）');
+  if(emoScore<70)sugg.push('加入情感触发词（超值/新品/限时/立减）');
+  if(ctaScore<70)sugg.push('加入行动号召（立即/下单/咨询/领取）');
+  return {score,grade:score>=85?'A':score>=70?'B':score>=50?'C':'D',lenScore,kwScore,emoScore,ctaScore,length:len,suggestions:sugg,platform:input.platform||'ecommerce'};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -184,7 +209,8 @@ const TOOLS={
   'token-budget-planner':tokenBudget,
   'ai-output-health':aiHealth,
   'thought-organizer':thoughtOrganizer,
-  'api-contract':apiContract
+  'api-contract':apiContract,
+  'marketing-score':marketingScore
 };
 
 // ---- entry ----
