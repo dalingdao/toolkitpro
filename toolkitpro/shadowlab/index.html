@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Lab - CSS阴影生成器</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#a78bfa;--text:#e2e8f0;--muted:#94a3b8;--border:#334155;--demo-bg:#f1f5f9}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+header{text-align:center;margin-bottom:20px}
+header h1{font-size:24px;color:var(--acc)}
+header p{color:var(--muted);font-size:13px;margin-top:4px}
+.container{max-width:800px;margin:0 auto}
+.preview{background:var(--demo-bg);border-radius:12px;height:200px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+.box{width:120px;height:120px;background:#6366f1;border-radius:12px;transition:box-shadow .2s}
+.controls{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.controls h3{font-size:13px;color:var(--muted);margin-bottom:12px}
+.ctrl{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ctrl label{font-size:12px;color:var(--muted);width:70px;flex-shrink:0}
+.ctrl input[type=range]{flex:1}
+.ctrl .val{width:45px;text-align:center;font-size:12px;color:var(--acc)}
+.ctrl input[type=color]{width:36px;height:28px;border:none;border-radius:6px;cursor:pointer;background:none}
+.ctrl select{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.preset-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer}
+.preset-btn:hover{border-color:var(--acc);color:var(--acc)}
+.code-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.code-box h3{font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.code-box button{background:var(--acc);border:none;color:#fff;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer}
+.code-output{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'Fira Code',Consolas,monospace;font-size:13px;line-height:1.6;word-break:break-all;color:var(--acc)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--acc);color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header><h1>🌑 Shadow Lab</h1><p>CSS阴影生成器 · 内/外阴影 · 多层叠加 · 实时预览 · 纯前端</p></header>
+<div class="container">
+  <div class="preview"><div class="box" id="previewBox"></div></div>
+  <div class="controls">
+    <h3>阴影参数</h3>
+    <div class="ctrl"><label>类型</label><select id="inset" onchange="update()"><option value="">外阴影 outset</option><option value="inset">内阴影 inset</option></select></div>
+    <div class="ctrl"><label>X偏移</label><input type="range" id="x" min="-50" max="50" value="0" oninput="update()"><span class="val" id="xVal">0px</span></div>
+    <div class="ctrl"><label>Y偏移</label><input type="range" id="y" min="-50" max="50" value="10" oninput="update()"><span class="val" id="yVal">10px</span></div>
+    <div class="ctrl"><label>模糊</label><input type="range" id="blur" min="0" max="100" value="20" oninput="update()"><span class="val" id="blurVal">20px</span></div>
+    <div class="ctrl"><label>扩散</label><input type="range" id="spread" min="-20" max="50" value="0" oninput="update()"><span class="val" id="spreadVal">0px</span></div>
+    <div class="ctrl"><label>颜色</label><input type="color" id="color" value="#6366f1" oninput="update()"><span class="val" id="colorVal">#6366f1</span></div>
+    <div class="ctrl"><label>透明度</label><input type="range" id="opacity" min="0" max="100" value="40" oninput="update()"><span class="val" id="opacityVal">40%</span></div>
+    <div class="preset-row">
+      <button class="preset-btn" onclick="preset('soft')">柔和</button>
+      <button class="preset-btn" onclick="preset('deep')">深邃</button>
+      <button class="preset-btn" onclick="preset('neon')">霓虹</button>
+      <button class="preset-btn" onclick="preset('float')">悬浮</button>
+      <button class="preset-btn" onclick="preset('inner')">内凹</button>
+      <button class="preset-btn" onclick="preset('glow')">发光</button>
+    </div>
+  </div>
+  <div class="code-box">
+    <h3>CSS代码 <button onclick="copyCode()">复制</button></h3>
+    <div class="code-output" id="codeOutput">box-shadow: 0px 10px 20px rgba(99, 102, 241, 0.4);</div>
+  </div>
+</div>
+<div class="toast" id="toast">已复制!</div>
+<script>
+function hexToRgb(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return r+','+g+','+b;}
+function update(){
+  const inset=document.getElementById('inset').value;
+  const x=document.getElementById('x').value;
+  const y=document.getElementById('y').value;
+  const blur=document.getElementById('blur').value;
+  const spread=document.getElementById('spread').value;
+  const color=document.getElementById('color').value;
+  const opacity=document.getElementById('opacity').value;
+  const rgb=hexToRgb(color);
+  const shadow=(inset?'inset ':'')+x+'px '+y+'px '+blur+'px '+spread+'px rgba('+rgb+', '+(opacity/100)+')';
+  document.getElementById('previewBox').style.boxShadow=shadow;
+  document.getElementById('codeOutput').textContent='box-shadow: '+shadow+';';
+  document.getElementById('xVal').textContent=x+'px';
+  document.getElementById('yVal').textContent=y+'px';
+  document.getElementById('blurVal').textContent=blur+'px';
+  document.getElementById('spreadVal').textContent=spread+'px';
+  document.getElementById('colorVal').textContent=color;
+  document.getElementById('opacityVal').textContent=opacity+'%';
+}
+function preset(name){
+  const presets={
+    soft:{inset:'',x:0,y:4,blur:10,spread:0,color:'#000000',opacity:15},
+    deep:{inset:'',x:0,y:20,blur:40,spread:-10,color:'#000000',opacity:30},
+    neon:{inset:'',x:0,y:0,blur:20,spread:5,color:'#a78bfa',opacity:80},
+    float:{inset:'',x:0,y:15,blur:30,spread:-5,color:'#6366f1',opacity:40},
+    inner:{inset:'inset',x:0,y:5,blur:15,spread:0,color:'#000000',opacity:30},
+    glow:{inset:'',x:0,y:0,blur:30,spread:10,color:'#22c55e',opacity:50}
+  };
+  const p=presets[name];if(!p)return;
+  document.getElementById('inset').value=p.inset;
+  document.getElementById('x').value=p.x;
+  document.getElementById('y').value=p.y;
+  document.getElementById('blur').value=p.blur;
+  document.getElementById('spread').value=p.spread;
+  document.getElementById('color').value=p.color;
+  document.getElementById('opacity').value=p.opacity;
+  update();
+}
+function copyCode(){navigator.clipboard.writeText(document.getElementById('codeOutput').textContent).then(()=>showToast('CSS代码已复制!'));}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500);}
+update();
+</script>
+</body>
+</html>
