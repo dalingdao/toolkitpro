@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payback Period - 免费在线投资回收期计算器</title>
+<meta name="description" content="免费在线投资回收期计算器，投资额/年净收益计算回收年限与回报率，纯前端，无需注册。">
+<meta name="keywords" content="投资回收期,payback period,回本,投资回报,回收年限,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:30px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>⏱️ Payback Period</h1>
+  <p>免费在线投资回收期计算器—— 多久回本。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">回本</span><span class="badge">回报率</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>初始投资（元）</label><input type="number" id="i" value="100000" min="1" oninput="calc()"></div>
+    <div class="field"><label>年净收益（元）</label><input type="number" id="a" value="20000" min="1" oninput="calc()"></div>
+    <div class="field"><label>年数</label><input type="number" id="y" value="5" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Payback Period · 纯前端</footer>
+<script>
+function calc(){
+  var i=+document.getElementById('i').value||0,a=+document.getElementById('a').value||0,y=+document.getElementById('y').value||1;
+  var el=document.getElementById('res');
+  if(a<=0){el.innerHTML='<div class="sub">年净收益需大于 0</div>';return;}
+  var years=i/a, total=a*y, roi=(total-i)/i*100;
+  var py=Math.floor(years),pm=Math.round((years-py)*12);
+  el.innerHTML='<div class="big">'+years.toFixed(1)+' 年</div><div class="sub">约 '+py+' 年 '+pm+' 个月回本<br>'+y+' 年累计收益 ¥'+total.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>ROI '+roi.toFixed(1)+'%</div>';
+}
+calc();
+</script>
+</body>
+</html>
