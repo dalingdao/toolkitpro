@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dice Roller - 免费在线骰子模拟器</title>
+<meta name="description" content="免费在线骰子模拟器，掷 1-10 个骰子，显示点数/总和/统计，纯前端，无需注册。">
+<meta name="keywords" content="骰子模拟,dice roller,掷骰子,骰子游戏,随机数,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh}
+.header{text-align:center;padding:36px 20px 20px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#1e293b;color:#93c5fd}
+.container{max-width:720px;margin:0 auto;padding:20px;text-align:center}
+.dice{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:30px 0}
+.die{width:72px;height:72px;background:#1e293b;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#fbbf24;box-shadow:0 4px 12px rgba(0,0,0,0.3);animation:pop .3s}
+@keyframes pop{from{transform:scale(0.5)}to{transform:scale(1)}}
+.btn{background:#fbbf24;color:#0f172a;border:none;padding:14px 40px;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer}
+.btn:hover{background:#f59e0b}
+.row{display:flex;gap:10px;justify-content:center;margin:20px 0;align-items:center}
+.row label{font-size:14px;color:#94a3b8}
+input[type=number]{width:80px;padding:10px;border-radius:8px;border:1px solid #334155;font-size:16px;background:#1e293b;color:#fff;text-align:center}
+.total{font-size:22px;font-weight:800;color:#22c55e;margin-top:16px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#475569;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🎲 Dice Roller</h1>
+  <p>免费在线骰子模拟器—— 掷 1-10 个骰子。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">1-10个</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="row"><label>骰子数量：</label><input type="number" id="n" value="2" min="1" max="10" onchange="roll()"></div>
+  <div class="dice" id="dice"></div>
+  <div class="total" id="total"></div>
+  <button class="btn" onclick="roll()">🎲 掷骰子</button>
+</div>
+<footer>ToolkitPro · Dice Roller · 纯前端</footer>
+<script>
+function roll(){
+  const n=Math.min(10,Math.max(1,+document.getElementById('n').value||2));
+  const faces=['⚀','⚁','⚂','⚃','⚄','⚅'];let sum=0;
+  const dice=document.getElementById('dice');dice.innerHTML='';
+  for(let i=0;i<n;i++){
+    const v=Math.floor(Math.random()*6)+1;sum+=v;
+    dice.innerHTML+='<div class="die">'+faces[v-1]+'</div>';
+  }
+  document.getElementById('total').textContent='总点数：'+sum+(n>1?' / 平均 '+Math.round(sum/n*10)/10:'');
+}
+roll();
+</script>
+</body>
+</html>
