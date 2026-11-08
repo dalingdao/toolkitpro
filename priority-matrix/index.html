@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需求优先级矩阵 Priority Matrix</title>
+<meta name="description" content="需求优先级矩阵：输入需求的价值/成本/风险/依赖，四维量化 → 自动计算优先级得分并排序，生成优先级矩阵图，产品经理需求排期必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:220px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.tbl th,.tbl td{border:1px solid #2a2e3d;padding:7px 10px;text-align:left}
+.tbl th{background:#1f2333;color:#9ca3af}
+.prio{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700}
+.prio.P0{background:rgba(239,68,68,.2);color:#f87171}
+.prio.P1{background:rgba(245,158,11,.2);color:#fbbf24}
+.prio.P2{background:rgba(59,130,246,.2);color:#60a5fa}
+.prio.P3{background:rgba(107,114,128,.2);color:#9ca3af}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+.bar{height:8px;background:#1f2333;border-radius:4px;overflow:hidden;margin-top:4px}
+.bar>div{height:100%;background:#8b5cf6;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/priority-matrix/">需求优先级矩阵</a>
+    <a href="?tool=priority-matrix&input={\"items\":[{\"name\":\"登录\",\"value\":8,\"cost\":2,\"risk\":3,\"dep\":1}]}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>需求优先级矩阵</h1>
+  <p class="sub">输入需求的价值/成本/风险/依赖 → 四维量化 → 优先级得分排序 + 矩阵图。产品经理需求排期、Scrum 冲刺规划必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>产品经理每季度要排需求优先级，<b>光看"价值高"不够——还要看成本、风险、依赖</b>。手动权衡易拍脑袋，本工具把价值/成本/风险/依赖四维量化，自动算出优先级得分并排序，生成 P0/P1/P2/P3 分级 + 矩阵图，直接进排期文档。
+  </div>
+
+  <div class="card">
+    <h2>输入需求（每行一个：名称,价值,成本,风险,依赖）</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample()">示例</div>
+    </div>
+    <textarea id="input" placeholder="格式：名称,价值(1-10),成本(1-10),风险(1-10),依赖(1-10)&#10;例如：&#10;用户登录,9,2,2,1&#10;支付系统,8,6,5,3&#10;搜索功能,7,4,3,2"></textarea>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">计算优先级</button>
+      <button class="btn ghost" onclick="document.getElementById('input').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>产品经理冲刺规划；Scrum 团队排 backlog。<b>痛点：</b>只凭"价值"排序会忽略成本/风险/依赖，导致高风险高成本需求排太前。<b>用法：</b>输入需求四维评分 → 得到优先级得分+排序+P0-P3分级+矩阵图。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入"用户登录,9,2,2,1"和"支付系统,8,6,5,3"——登录价值9/成本2/风险2/依赖1 → 得分高（低成本高价值）排P0；支付系统成本6/风险5/依赖3 → 排后。符合"先做低风险高价值"的排期逻辑。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=priority-matrix&input={"items":[{"name":"登录","value":9,"cost":2,"risk":2,"dep":1}]}&format=json</code> 返回 JSON（排序+分级+矩阵），Agent 可直接读入排期。
+    </div>
+  </div>
+</div>
+
+<script>
+const input=document.getElementById('input');
+const out=document.getElementById('out');
+
+function loadSample(){
+  input.value='用户登录,9,2,2,1\n支付系统,8,6,5,3\n搜索功能,7,4,3,2\n数据导出,6,7,4,5\n消息通知,5,2,1,2\n报表中心,8,5,6,4';
+  run();
+}
+
+// 计算优先级：得分 = value*2 - cost - risk - dep*0.5 (价值加权最高，减成本/风险/依赖)
+function compute(items){
+  return items.map(it=>{
+    const v=+it.value||0,c=+it.cost||0,r=+it.risk||0,d=+it.dep||0;
+    const score=v*2-c-r-d*0.5;
+    let prio;
+    if(score>=13)prio='P0';
+    else if(score>=9)prio='P1';
+    else if(score>=5)prio='P2';
+    else prio='P3';
+    return {name:it.name,value:v,cost:c,risk:r,dep:d,score:Math.round(score*10)/10,priority:prio};
+  }).sort((a,b)=>b.score-a.score);
+}
+
+function run(){
+  const text=input.value.trim();
+  if(!text){out.style.display='block';out.textContent='请先输入需求（每行一个：名称,价值,成本,风险,依赖）。';return;}
+  const items=[];
+  text.split(/\r?\n/).forEach((line,li)=>{
+    const parts=line.split(',').map(s=>s.trim());
+    if(parts.length>=5&&parts[0]){
+      items.push({name:parts[0],value:+parts[1],cost:+parts[2],risk:+parts[3],dep:+parts[4]});
+    }
+  });
+  if(!items.length){out.style.display='block';out.textContent='未解析到有效需求行。';return;}
+  const res=compute(items);
+  out.style.display='block';
+  out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">📊 优先级排序（'+res.length+'项）</div>'+
+    '<table class="tbl"><tr><th>排名</th><th>需求</th><th>价值</th><th>成本</th><th>风险</th><th>依赖</th><th>得分</th><th>优先级</th></tr>'+
+    res.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+r.name+'</td><td>'+r.value+'</td><td>'+r.cost+'</td><td>'+r.risk+'</td><td>'+r.dep+'</td><td>'+r.score+'</td><td><span class="prio '+r.priority+'">'+r.priority+'</span></td></tr>').join('')+
+    '</table><div style="margin-top:12px;font-size:13px;color:#9ca3af">得分 = 价值×2 − 成本 − 风险 − 依赖×0.5；P0≥13 立即做，P1≥9 近期，P2≥5 中期，P3&lt;5 远期/砍掉</div>';
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      if(!parsed.items||!parsed.items.length)throw new Error('items required');
+      const res=compute(parsed.items);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,count:res.length,ranked:res},null,2)+'</pre>';
+      document.title='priority-matrix JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
