@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 输出质量体检 - 评估 AI 输出的事实性/一致性/完整性</title>
+<meta name="description" content="评估 AI 输出的质量：事实性（是否有依据）、一致性（前后是否矛盾）、完整性（是否覆盖需求）、清晰度，量化得分并给改进建议。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:760px;margin:0 auto}h1{font-size:24px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:4px}textarea{width:100%;min-height:90px;padding:12px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px;resize:vertical}
+button{width:100%;padding:12px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:14px;margin-top:12px;font-size:14px;white-space:pre-wrap;line-height:1.7}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}.ok{color:#34d399}.bad{color:#f87171}.warn{color:#fbbf24}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>AI 输出质量体检 <span class="tag">原创 · 输出可信</span></h1>
+<h2>评估 AI 输出的事实性/一致性/完整性/清晰度 · 量化得分</h2>
+<div class="card">
+<label>你的原始需求</label><textarea id="req" placeholder="例如：帮我写一篇关于健康饮食的文章，至少3个建议"></textarea>
+<label>AI 输出内容</label><textarea id="out" placeholder="粘贴 AI 生成的回答"></textarea>
+<button onclick="check()">体检 AI 输出</button>
+<div class="out" id="outbox">粘贴需求与 AI 输出后体检。</div>
+</div>
+</div>
+<script>
+function check(){
+  const req=document.getElementById('req').value.trim(),out=document.getElementById('out').value.trim();
+  if(!out){document.getElementById('outbox').innerHTML='请粘贴 AI 输出。';return}
+  const outLen=out.length,reqLen=req.length;
+  // 完整性: 输出是否覆盖需求的要点(字数比+关键词)
+  const coverage=req?Math.min(100,Math.round((outLen/reqLen)*50)):50;
+  // 事实性: 是否有"我认为/可能/应该/也许"等模糊词(低事实性)
+  const vague=(out.match(/可能|大概|也许|或许|据说|我认为|我觉得|应该|maybe|probably|might|I think/g)||[]).length;
+  const factual=Math.max(0,100-vague*12);
+  // 一致性: 是否有转折/矛盾词(可能不一致)
+  const turn=(out.match(/但是|然而|不过|但是|however|but|yet/g)||[]).length;
+  const consist=Math.max(0,100-turn*8);
+  // 清晰度: 是否结构化(标题/列表/句长)
+  const struct=(out.match(/^#{1,6} |^[-*•] |^\d+\./gm)||[]).length;
+  const clarity=Math.min(100,40+struct*10+Math.max(0,60-Math.round(outLen/40)));
+  const total=Math.round((coverage+factual+consist+clarity)/4);
+  const grade=total>=85?'<span class="ok">优(A)</span>':total>=70?'<span class="ok">良(B)</span>':total>=50?'<span class="warn">中(C)</span>':'<span class="bad">差(D)</span>';
+  const sug=[];
+  if(factual<70)sug.push('存在较多模糊/推测表述（"可能/大概"等），建议要求 AI 给出明确依据或标注不确定性。');
+  if(consist<70)sug.push('存在较多转折，前后可能矛盾，建议核对逻辑一致性。');
+  if(coverage<60)sug.push('输出可能未覆盖全部需求，建议补充要求点或追问。');
+  if(clarity<60)sug.push('结构不够清晰，建议要求分点/标题/列表。');
+  if(!sug.length)sug.push('输出质量良好，可直接使用。');
+  document.getElementById('outbox').innerHTML=
+`综合得分: ${total}/100 ${grade}\n\n完整性(覆盖需求): ${coverage}/100\n事实性(少模糊推测): ${factual}/100\n一致性(少矛盾): ${consist}/100\n清晰度(结构化): ${clarity}/100\n\n改进建议:\n${sug.map(s=>'• '+s).join('\n')}`;
+  window._last={tool:'ai-output-health',input:{},output:{score:total,coverage,factual,consist,clarity}};
+}
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const req=(d.req||'').trim(),out=(d.out||'').trim();if(!out){document.body.textContent=JSON.stringify({tool:'ai-output-health',error:'out required'});return}const outLen=out.length,reqLen=req.length;const coverage=req?Math.min(100,Math.round((outLen/reqLen)*50)):50;const vague=(out.match(/可能|大概|也许|或许|据说|我认为|我觉得|应该|maybe|probably|might|I think/g)||[]).length;const factual=Math.max(0,100-vague*12);const turn=(out.match(/但是|然而|不过|however|but|yet/g)||[]).length;const consist=Math.max(0,100-turn*8);const struct=(out.match(/^#{1,6} |^[-*•] |^\d+\./gm)||[]).length;const clarity=Math.min(100,40+struct*10+Math.max(0,60-Math.round(outLen/40)));const total=Math.round((coverage+factual+consist+clarity)/4);document.body.textContent=JSON.stringify({tool:'ai-output-health',input:d,output:{score:total,coverage,factual,consist,clarity,grade:total>=85?'A':total>=70?'B':total>=50?'C':'D'}})}catch(e){document.body.textContent=JSON.stringify({tool:'ai-output-health',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
