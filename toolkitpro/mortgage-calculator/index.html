@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mortgage Calculator - 免费在线房贷计算器</title>
+<meta name="description" content="免费在线房贷计算器，等额本息/等额本金月供、总利息、总还款，纯前端，无需注册。">
+<meta name="keywords" content="房贷计算器,mortgage calculator,等额本息,等额本金,月供,贷款计算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:600px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{flex:1;padding:10px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;cursor:pointer;font-size:14px}
+.seg button.on{background:#2563eb;color:#fff;border-color:#2563eb}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:28px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.7}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+th,td{padding:8px;text-align:right;border-bottom:1px solid #e2e8f0}
+th{color:#64748b;font-weight:600}
+td:first-child,th:first-child{text-align:left}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🏠 Mortgage Calculator</h1>
+  <p>免费在线房贷计算器—— 等额本息 / 等额本金月供与总利息。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">等额本息</span><span class="badge">等额本金</span><span class="badge">支持 JSON</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>贷款总额（万元）</label><input type="number" id="p" value="100" min="1" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" min="0" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>贷款年限（年）</label><input type="number" id="n" value="30" min="1" max="40" oninput="calc()"></div>
+    <div class="seg">
+      <button id="b1" class="on" onclick="mode(1)">等额本息</button>
+      <button id="b2" onclick="mode(2)">等额本金</button>
+    </div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Mortgage Calculator · 纯前端 · 支持 ?format=json</footer>
+<script>
+var M=1;
+function mode(m){M=m;document.getElementById('b1').className=M===1?'on':'';document.getElementById('b2').className=M===2?'on':'';calc();}
+function calc(){
+  var p=+document.getElementById('p').value||0;
+  var r=+document.getElementById('r').value||0;
+  var n=+document.getElementById('n').value||0;
+  p=p*10000; // to yuan
+  var mr=r/100/12, months=n*12;
+  var el=document.getElementById('res');
+  if(M===1&&mr>0){
+    var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
+    var total=mf*months, interest=total-p;
+    el.innerHTML='<div class="big">¥'+fmt(mf)+'/月</div><div class="sub">总还款 ¥'+fmt(total)+'<br>总利息 ¥'+fmt(interest)+'</div>';
+  } else if(M===2&&mr>0){
+    var first=p/months+p*mr, total=p, sum=0, rows='';
+    for(var i=1;i<=months;i++){var bal=p-p/months*(i-1);var int=bal*mr;var pay=p/months+int;total+=int;sum+=pay;if(i===1||i===months){rows+='<tr><td>'+i+'月</td><td>¥'+fmt(pay)+'</td><td>¥'+fmt(int)+'</td></tr>';}}
+    el.innerHTML='<div class="big">首月 ¥'+fmt(first)+'/月</div><div class="sub">总利息 ¥'+fmt(total-p)+'<br>总还款 ¥'+fmt(total)+'</div><table><tr><th>期数</th><th>月供</th><th>利息</th></tr>'+rows+'</table>';
+  } else {
+    var mf2=p/months;
+    el.innerHTML='<div class="big">¥'+fmt(mf2)+'/月</div><div class="sub">利率为 0，仅还本金</div>';
+  }
+}
+function fmt(x){return x.toLocaleString('zh-CN',{maximumFractionDigits:0});}
+calc();
+// Agent-compatible JSON interface: ?loan=100&rate=3.6&years=30&type=equal&format=json
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var loan=+q.get('loan')||100, rate=+q.get('rate')||3.6, years=+q.get('years')||30;
+    var t=q.get('type')==='principal'?2:1;
+    var mr=rate/100/12, months=years*12, p=loan*10000;
+    var out;
+    if(t===1&&mr>0){var mf=p*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);out={type:'equal_installment',monthly:Math.round(mf),total:Math.round(mf*months),interest:Math.round(mf*months-p)};}
+    else{var first=p/months+p*mr,total=p;for(var i=1;i<=months;i++){var bal=p-p/months*(i-1);total+=bal*mr;}out={type:'equal_principal',first_month:Math.round(first),total:Math.round(total),interest:Math.round(total-p)};}
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify(out,null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
