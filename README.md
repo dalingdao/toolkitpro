@@ -48,7 +48,7 @@ python cli.py task-planner --input-file input.json
 
 输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
 
-可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`。
+可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`。
 
 ```bash
 node cli.js        # 列出全部可用工具（cli.py 同理）
