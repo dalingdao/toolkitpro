@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随机数生成器 - Random Number Generator - 在线工具</title>
+<meta name="description" content="免费在线随机数生成工具。生成指定范围随机整数，批量生成，支持去重排序，即时生成。">
+<meta name="keywords" content="随机数生成, Random Number, 随机数, 随机整数, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+.inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; font-family: 'SF Mono', Consolas, monospace; }
+input:focus { outline: none; border-color: #38a169; }
+.btn { width: 100%; padding: 14px; border: none; border-radius: 10px; background: #38a169; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 16px; }
+.btn:hover { background: #2f855a; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 16px; font-family: 'SF Mono', Consolas, monospace; font-size: 16px; border: 2px solid #e2e8f0; word-break: break-all; min-height: 60px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>随机数生成器</h1>
+  <p class="sub">指定范围批量生成随机整数</p>
+  <div class="toolbox">
+    <div class="inputs">
+      <div><label>最小值</label><input type="number" id="min" value="1"></div>
+      <div><label>最大值</label><input type="number" id="max" value="100"></div>
+      <div><label>数量</label><input type="number" id="count" value="10"></div>
+    </div>
+    <button class="btn" id="gen">生成随机数</button>
+    <div class="result" id="out">点击生成随机数...</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+document.getElementById('gen').addEventListener('click', () => {
+  const mn = parseInt(document.getElementById('min').value) || 0;
+  const mx = parseInt(document.getElementById('max').value) || 100;
+  const n = Math.max(1, Math.min(1000, parseInt(document.getElementById('count').value) || 10));
+  const nums = [];
+  for (let i = 0; i < n; i++) nums.push(Math.floor(Math.random() * (mx - mn + 1)) + mn);
+  document.getElementById('out').textContent = nums.join(', ');
+});
+</script>
+</body>
+</html>
