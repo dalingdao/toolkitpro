@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广告法极限词审查器 Ad Compliance Checker</title>
+<meta name="description" content="广告法极限词审查器：检测文案中的极限词/绝对化用语（最、第一、国家级、顶级等），输出合规报告+替换建议。自媒体/电商/广告从业者合规必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:180px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.row>div{flex:1;min-width:140px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.violation{background:#1f2333;border-radius:8px;padding:12px;margin-bottom:10px}
+.violation .wk{font-size:14px;font-weight:700;color:#f87171}
+.violation .ctx{font-size:13px;margin-top:4px;color:#e5e7eb}
+.violation .fix{font-size:13px;margin-top:2px;color:#fbbf24}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700}
+.badge.ok{background:rgba(34,197,94,.2);color:#4ade80}
+.badge.bad{background:rgba(239,68,68,.2);color:#f87171}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/ad-compliance-checker/">广告法极限词审查器</a>
+    <a href="?tool=ad-compliance-checker&input={\"text\":\"本产品是全国最好的，国家级品质，销量第一\"}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>广告法极限词审查器</h1>
+  <p class="sub">检测文案中的极限词/绝对化用语（最、第一、国家级、顶级等），输出合规报告+替换建议。自媒体/电商/广告从业者合规必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>自媒体/电商写文案怕踩"广告法极限词"被罚——<b>不知道哪些词违规、违规在哪、怎么替换</b>。本工具检测极限词，定位上下文+给替换建议，输出合规报告。
+  </div>
+
+  <div class="card">
+    <h2>输入文案</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample()">示例</div>
+    </div>
+    <textarea id="text" placeholder="粘贴要审查的文案（标题/描述/直播话术）..."></textarea>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">审查极限词</button>
+      <button class="btn ghost" onclick="document.getElementById('text').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>电商详情页/直播话术/自媒体文案合规审查。<b>痛点：</b>踩广告法极限词（最/第一/国家级/顶级）被罚款。<b>用法：</b>粘贴文案 → 检测极限词 + 定位上下文 + 替换建议 + 合规报告。
+    </div>
+    <div class="scene">
+      <b>实例：</b>"全国最好"→检测出"最好"（极限词）→替换建议"口碑领先"；"销量第一"→"销量领先"；"国家级"→"行业标准"。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=ad-compliance-checker&input={"text":"..."}&format=json</code> 返回 JSON（违规清单+替换建议），Agent 可直接接入文案审核流。
+    </div>
+  </div>
+</div>
+
+<script>
+const textEl=document.getElementById('text');
+const out=document.getElementById('out');
+
+// 广告法极限词库（公开法规范畴：绝对化用语/极限词）
+const BAN=[
+  {w:'国家级',fix:'行业标准'},
+  {w:'世界级',fix:'国际领先'},
+  {w:'最高级',fix:'领先水平'},
+  {w:'顶级',fix:'优质'},
+  {w:'最佳',fix:'优秀'},
+  {w:'最优',fix:'领先'},
+  {w:'最好',fix:'口碑领先'},
+  {w:'最强',fix:'实力突出'},
+  {w:'最大',fix:'规模领先'},
+  {w:'最新',fix:'新款'},
+  {w:'第一',fix:'领先'},
+  {w:'首个',fix:'率先'},
+  {w:'独家',fix:'特色'},
+  {w:'唯一',fix:'特色'},
+  {w:'绝无仅有',fix:'稀缺'},
+  {w:'空前绝后',fix:'前所未有'},
+  {w:'史无前例',fix:'罕见'},
+  {w:'万能',fix:'多功能'},
+  {w:'100%',fix:'完全'},
+  {w:'国家级',fix:'行业标准'}
+];
+
+function check(text){
+  const found=[];
+  BAN.forEach(b=>{
+    let idx=0;
+    while((idx=text.indexOf(b.w,idx))!==-1){
+      found.push({word:b.w,fix:b.fix,ctx:text.slice(Math.max(0,idx-12),idx+b.w.length+12)});
+      idx+=b.w.length;
+    }
+  });
+  // 去重(按word+ctx)
+  const seen=new Set();const uniq=[];
+  found.forEach(f=>{const k=f.word+'|'+f.ctx;if(!seen.has(k)){seen.add(k);uniq.push(f);}});
+  return uniq;
+}
+
+function loadSample(){
+  textEl.value='本产品是全国最好的，国家级品质，销量第一，全网独家，效果100%显著，顶级工艺。';
+  run();
+}
+
+function run(){
+  const text=textEl.value.trim();
+  if(!text){out.style.display='block';out.textContent='请粘贴要审查的文案。';return;}
+  const v=check(text);
+  out.style.display='block';
+  if(v.length===0){
+    out.innerHTML='<span class="badge ok">✅ 通过</span> 未检测到极限词/绝对化用语。<div style="margin-top:8px;font-size:12px;color:#9ca3af">注：极限词审查≠完整法律意见，重大文案建议人工复核。</div>';
+  }else{
+    out.innerHTML='<span class="badge bad">⚠️ 发现 '+v.length+' 处疑似极限词</span><div style="margin-top:12px">'+
+      v.map((x,i)=>'<div class="violation"><div class="wk">'+(i+1)+'. 「'+x.word+'」 疑似极限词</div>'+
+        '<div class="ctx">上下文：…'+x.ctx+'…</div>'+
+        '<div class="fix">💡 替换建议：→「'+x.fix+'」</div></div>').join('')+
+      '<div style="margin-top:12px;font-size:12px;color:#9ca3af">注：极限词审查≠完整法律意见，重大文案建议人工复核。</div></div>';
+  }
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      if(!parsed.text||!parsed.text.trim())throw new Error('text required');
+      const v=check(parsed.text);
+      const replacements=v.map(x=>({from:x.word,to:x.fix}));
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,passed:v.length===0,count:v.length,violations:v,replacements},null,2)+'</pre>';
+      document.title='ad-compliance-checker JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
