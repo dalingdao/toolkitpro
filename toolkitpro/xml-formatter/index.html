@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML Formatter - 免费在线 XML 格式化/压缩工具</title>
+<meta name="description" content="免费在线 XML 格式化工具，格式化/压缩/校验 XML，缩进自定义，纯前端，无需注册。">
+<meta name="keywords" content="xml格式化,xml formatter,xml压缩,xml校验,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.tools{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.btn{background:#3b82f6;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#2563eb}
+.btn.gray{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+input[type=number]{width:80px;padding:9px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px}
+textarea{width:100%;min-height:300px;padding:14px;border-radius:10px;border:1px solid #cbd5e1;font-size:13px;font-family:monospace;resize:vertical;background:#0f172a;color:#22c55e}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📄 XML Formatter</h1>
+  <p>免费在线 XML 格式化工具—— 格式化/压缩/校验 XML，纯前端。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">格式化</span><span class="badge">压缩</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="tools">
+      <button class="btn" onclick="fmt()">✨ 格式化</button>
+      <button class="btn gray" onclick="min()">💨 压缩</button>
+      <button class="btn gray" onclick="validate()">✅ 校验</button>
+      <label style="font-size:13px;color:#475569">缩进：</label><input type="number" id="ind" value="2" min="1" max="8">
+    </div>
+    <textarea id="ta" spellcheck="false">&lt;note&gt;&lt;to&gt;Alice&lt;/to&gt;&lt;from&gt;Bob&lt;/from&gt;&lt;body&gt;Hello&lt;/body&gt;&lt;/note&gt;</textarea>
+  </div>
+</div>
+<footer>ToolkitPro · XML Formatter · 纯前端</footer>
+<script>
+function fmt(){
+  try{
+    const xml=document.getElementById('ta').value;
+    const ind=' '.repeat(+document.getElementById('ind').value||2);
+    const parser=new DOMParser();
+    const doc=parser.parseFromString(xml,'text/xml');
+    const err=doc.querySelector('parsererror');
+    if(err)throw new Error('XML 无效');
+    document.getElementById('ta').value=formatNode(doc.documentElement,ind,0);
+  }catch(e){alert('XML 无效: '+e.message)}
+}
+function formatNode(node,ind,depth){
+  const pad=ind.repeat(depth);
+  if(node.nodeType===3)return node.nodeValue.trim();
+  const children=[...node.childNodes].filter(n=>n.nodeType===1||(n.nodeType===3&&n.nodeValue.trim()));
+  if(!children.length)return pad+'<'+node.tagName+'/>';
+  let out=pad+'<'+node.tagName;
+  [...node.attributes].forEach(a=>out+=' '+a.name+'="'+a.value+'"');
+  out+='>\n';
+  children.forEach(c=>{out+=c.nodeType===1?formatNode(c,ind,depth+1)+'\n':pad+ind+c.nodeValue.trim()+'\n'});
+  out+=pad+'</'+node.tagName+'>';
+  return out;
+}
+function min(){
+  const xml=document.getElementById('ta').value;
+  document.getElementById('ta').value=xml.replace(/>\s+</g,'><').trim();
+}
+function validate(){
+  try{
+    const parser=new DOMParser();
+    const doc=parser.parseFromString(document.getElementById('ta').value,'text/xml');
+    if(doc.querySelector('parsererror'))alert('❌ XML 无效');
+    else alert('✅ XML 有效');
+  }catch(e){alert('❌ XML 无效')}
+}
+</script>
+</body>
+</html>
