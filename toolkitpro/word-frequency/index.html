@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Frequency Counter - 免费在线词频统计器</title>
+<meta name="description" content="免费在线词频统计器，统计文本中单词/字符出现频率，排序显示，纯前端，无需注册。">
+<meta name="keywords" content="词频统计,word frequency,词频,字符频率,文本分析,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:16px}
+textarea{width:100%;min-height:160px;padding:14px;border-radius:10px;border:1px solid #cbd5e1;font-size:15px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px;text-align:left;border-bottom:1px solid #e2e8f0}
+th{color:#64748b;font-weight:600}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📊 Word Frequency</h1>
+  <p>免费在线词频统计器—— 单词/字符频率，排序显示。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">词频</span><span class="badge">排序</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <textarea id="ta" oninput="calc()">the quick brown fox jumps over the lazy dog the fox</textarea>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>词</th><th>次数</th><th>占比</th></tr></thead><tbody id="list"></tbody></table>
+  </div>
+</div>
+<footer>ToolkitPro · Word Frequency · 纯前端</footer>
+<script>
+function calc(){
+  const t=document.getElementById('ta').value.toLowerCase();
+  const words=t.match(/[a-z\u4e00-\u9fa5]+/g)||[];
+  const freq={};
+  words.forEach(w=>freq[w]=(freq[w]||0)+1);
+  const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,30);
+  const total=words.length;
+  document.getElementById('list').innerHTML=sorted.map(([w,c])=>{
+    const pct=total?(c/total*100).toFixed(1):0;
+    const bar='<div style="background:#3b82f6;height:8px;border-radius:4px;width:'+Math.min(100,pct*3)+'px;margin-top:4px"></div>';
+    return '<tr><td>'+w+bar+'</td><td>'+c+'</td><td>'+pct+'%</td></tr>';
+  }).join('')||'<tr><td colspan="3" style="text-align:center;color:#94a3b8">暂无文本</td></tr>';
+}
+calc();
+</script>
+</body>
+</html>
