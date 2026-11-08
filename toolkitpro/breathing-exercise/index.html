@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breathing Exercise - 免费在线呼吸练习</title>
+<meta name="description" content="免费在线呼吸练习，4-7-8呼吸法引导动画，纯前端，无需注册。">
+<meta name="keywords" content="呼吸练习,breathing,478呼吸,冥想,放松,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#1e293b;color:#60a5fa}
+.circle{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;margin:30px auto;transition:transform 4s ease-in-out}
+.circle .ph{font-size:28px;font-weight:700}
+.ctrl{display:flex;gap:12px}
+.ctrl button{padding:12px 28px;border-radius:24px;border:none;cursor:pointer;font-size:16px;font-weight:600;background:#2563eb;color:#fff}
+.ctrl button.sec{background:#334155}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🫁 Breathing</h1>
+  <p>4-7-8 呼吸法—— 吸气4秒·屏息7秒·呼气8秒。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">4-7-8</span><span class="badge">放松</span></div>
+</div>
+<div class="circle" id="c"><div class="ph" id="ph">准备好</div></div>
+<div class="ctrl">
+  <button onclick="start()">开始</button>
+  <button class="sec" onclick="stop()">停止</button>
+</div>
+<script>
+var P=[[4,'吸气',1],[7,'屏息',1.4],[8,'呼气',0.6]],iv=null,i=0,left=0;
+function runStep(){
+  var s=P[i];left=s[0];
+  document.getElementById('ph').textContent=s[1];
+  document.getElementById('c').style.transform='scale('+s[2]+')';
+  document.getElementById('c').style.transition='transform '+s[0]+'s ease-in-out';
+  var tick=setInterval(function(){left--;if(left<=0){clearInterval(tick);i=(i+1)%P.length;runStep();}},1000);
+}
+function start(){stop();i=0;runStep();}
+function stop(){document.getElementById('ph').textContent='准备好';document.getElementById('c').style.transform='scale(1)';if(window._iv)clearInterval(window._iv);window._iv=null;}
+</script>
+</body>
+</html>
