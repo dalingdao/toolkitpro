@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caffeine Calculator - 免费在线咖啡因计算器</title>
+<meta name="description" content="免费在线咖啡因计算器，按咖啡/茶/可乐/能量饮料估算每日咖啡因摄入，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="咖啡因,caffeine,咖啡因摄入,咖啡,能量饮料,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:30px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>☕ Caffeine</h1>
+  <p>免费在线咖啡因计算器—— 每日咖啡因摄入。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">咖啡因</span><span class="badge">Agent可用</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>咖啡（杯，约95mg）</label><input type="number" id="coffee" value="2" min="0" oninput="calc()"></div>
+    <div class="field"><label>茶（杯，约47mg）</label><input type="number" id="tea" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>可乐（罐，约34mg）</label><input type="number" id="cola" value="0" min="0" oninput="calc()"></div>
+    <div class="field"><label>能量饮料（罐，约80mg）</label><input type="number" id="energy" value="0" min="0" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Caffeine · 纯前端 · Agent可用</footer>
+<script>
+function calc(){
+  var c=+document.getElementById('coffee').value||0,t=+document.getElementById('tea').value||0,cl=+document.getElementById('cola').value||0,e=+document.getElementById('energy').value||0;
+  var mg=c*95+t*47+cl*34+e*80;
+  var verdict=mg<=200?'✅ 适量':(mg<=400?'⚠️ 中等（≤400mg）':'❌ 偏高（&gt;400mg）');
+  document.getElementById('res').innerHTML='<div class="big">'+mg+' mg</div><div class="sub">'+verdict+'<br>健康成人建议 ≤400mg/天</div>';
+}
+calc();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var c=+q.get('coffee')||0,t=+q.get('tea')||0,cl=+q.get('cola')||0,e=+q.get('energy')||0;
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({caffeine_mg:c*95+t*47+cl*34+e*80},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
