@@ -451,6 +451,50 @@ function i18nChecker(input){
   return {score:res.score,grade:res.grade,locales:res.locales,missingCount:res.missingCount,extraCount:res.extraCount,keys:res.keyReport,placeholders:res.placeholderReport,lengths:res.lengthReport};
 }
 
+// ---- test-case-gen ----
+function tcgGen(def){
+  const cases=[];
+  def.fields.forEach(f=>{
+    const p=f.required?'high':'mid';
+    if(f.type==='number'){
+      const min=f.min!==undefined?f.min:0, max=f.max!==undefined?f.max:100;
+      if(f.required)cases.push({field:f.name,type:'required',input:'空',expected:'拒绝（必填）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+min,expected:'接受（最小值边界）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+max,expected:'接受（最大值边界）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+(min+1),expected:'接受（min+1）',priority:'mid'});
+      cases.push({field:f.name,type:'boundary',input:'='+(max-1),expected:'接受（max-1）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'='+(min-1),expected:'拒绝（<min）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'='+(max+1),expected:'拒绝（>max）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'=负数',expected:'拒绝（负数异常）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'=非数字abc',expected:'拒绝（类型错误）',priority:'mid'});
+    }else if(f.type==='email'){
+      if(f.required)cases.push({field:f.name,type:'required',input:'空',expected:'拒绝（必填）',priority:'high'});
+      cases.push({field:f.name,type:'valid',input:'user@example.com',expected:'接受（标准邮箱）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'user@',expected:'拒绝（缺域名）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'user@example',expected:'拒绝（缺顶级域）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'userexample.com',expected:'拒绝（缺@）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'user@@example.com',expected:'拒绝（双@）',priority:'mid'});
+    }else if(f.type==='string'){
+      const maxLen=f.maxLen||50;
+      if(f.required)cases.push({field:f.name,type:'required',input:'空',expected:'拒绝（必填）',priority:'high'});
+      cases.push({field:f.name,type:'valid',input:'正常字符串',expected:'接受',priority:'mid'});
+      cases.push({field:f.name,type:'boundary',input:'='+maxLen+'字符',expected:'接受（最大长度边界）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+(maxLen+1)+'字符',expected:'拒绝（超长）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'特殊字符<>"\';',expected:'拒绝或转义（注入防护）',priority:'mid'});
+    }else if(f.type==='bool'){
+      cases.push({field:f.name,type:'valid',input:'true',expected:'接受',priority:'mid'});
+      cases.push({field:f.name,type:'valid',input:'false',expected:'接受',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'1/0/yes',expected:'拒绝（非布尔）',priority:'low'});
+    }
+  });
+  return cases;
+}
+function testCaseGen(input){
+  if(!input.fields||!input.fields.length) throw new Error('fields required');
+  const cases=tcgGen(input);
+  return {name:input.name||'模块',count:cases.length,cases};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -465,7 +509,8 @@ const TOOLS={
   'quiz-generator':quizGenerator,
   'priority-matrix':priorityMatrix,
   'faq-generator':faqGenerator,
-  'i18n-checker':i18nChecker
+  'i18n-checker':i18nChecker,
+  'test-case-gen':testCaseGen
 };
 
 // ---- entry ----
