@@ -53,5 +53,10 @@ function cmp(){
 }
 (function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const text=d.text||'';if(!text){document.body.textContent=JSON.stringify({tool:'chunk-comparer',error:'text required'});return}const cs=+d.chunk||500,ov=+d.overlap||50,sem=+d.sem||3;const len=text.length,totTok=estTok(text);const charChunks=Math.max(1,Math.ceil((len-ov)/(cs-ov)));const paras=text.split(/\n+/).filter(x=>x.trim());let recChunks=0,cur=0;for(const p of paras){if(cur+p.length>cs&&cur>0){recChunks++;cur=0}cur+=p.length+1}if(cur>0)recChunks++;const sents=text.split(/[。！？.!?]+/).filter(x=>x.trim());const semChunks=Math.max(1,Math.ceil(sents.length/sem));const best=Math.min(charChunks,recChunks,semChunks);document.body.textContent=JSON.stringify({tool:'chunk-comparer',input:d,output:{char_chunks:charChunks,recursive_chunks:recChunks,semantic_chunks:semChunks,total_tokens:totTok,recommended:best===charChunks?'char':best===recChunks?'recursive':'semantic'}})}catch(e){document.body.textContent=JSON.stringify({tool:'chunk-comparer',error:'invalid input'})}}})();
 </script>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin:16px auto;max-width:720px;font-size:13px;line-height:1.7;color:#cbd5e1">
+<b style="color:#60a5fa">💡 实用场景：</b>RAG 开发者选分块策略：同一文本按字符/递归/语义分块，对比后选最优。<br>
+<b style="color:#60a5fa">示例：</b>输入 <code>{"text":"(粘贴文档正文)","chunk":500,"overlap":50,"sem":3}</code><br>→ <code>3种分块数+总token+推荐策略</code>
+</div>
 </body>
 </html>
