@@ -418,6 +418,39 @@ function faqGenerator(input){
   return {total:res.total_input,unique:res.unique,duplicates:res.duplicates,categories:res.groups};
 }
 
+// ---- i18n-checker ----
+function i18nPh(s){ const m=s.match(/\{[^}]+\}/g); return m?[...new Set(m)].sort():[]; }
+function i18nCheck(locales){
+  const langs=Object.keys(locales);
+  if(langs.length<2) throw new Error('需要至少2个语言文件');
+  const base=langs[0];
+  const baseKeys=Object.keys(locales[base]);
+  const report={locales:langs,base,keyReport:[],placeholderReport:[],lengthReport:[],missingCount:0,extraCount:0};
+  langs.forEach(lang=>{
+    if(lang===base)return;
+    const keys=Object.keys(locales[lang]);
+    const missing=baseKeys.filter(k=>!(k in locales[lang]));
+    const extra=keys.filter(k=>!(k in locales[base]));
+    report.missingCount+=missing.length;report.extraCount+=extra.length;
+    report.keyReport.push({lang,missing,extra});
+    baseKeys.forEach(k=>{
+      if(!(k in locales[lang]))return;
+      const b=i18nPh(locales[base][k]),o=i18nPh(locales[lang][k]);
+      if(JSON.stringify(b)!==JSON.stringify(o)) report.placeholderReport.push({key:k,lang,base:b,other:o,severity:'bad'});
+      const baseLen=String(locales[base][k]).length,otherLen=String(locales[lang][k]).length;
+      if(otherLen>baseLen*1.5) report.lengthReport.push({key:k,lang,baseLen,otherLen,severity:'warn'});
+    });
+  });
+  report.score=Math.max(0,100-report.missingCount*5-report.extraCount*3-report.placeholderReport.length*4-report.lengthReport.length*2);
+  report.grade=report.score>=90?'good':report.score>=70?'warn':'bad';
+  return report;
+}
+function i18nChecker(input){
+  if(!input.locales) throw new Error('locales required');
+  const res=i18nCheck(input.locales);
+  return {score:res.score,grade:res.grade,locales:res.locales,missingCount:res.missingCount,extraCount:res.extraCount,keys:res.keyReport,placeholders:res.placeholderReport,lengths:res.lengthReport};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -431,7 +464,8 @@ const TOOLS={
   'data-quality':dataQuality,
   'quiz-generator':quizGenerator,
   'priority-matrix':priorityMatrix,
-  'faq-generator':faqGenerator
+  'faq-generator':faqGenerator,
+  'i18n-checker':i18nChecker
 };
 
 // ---- entry ----
