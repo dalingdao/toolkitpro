@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Tools Pro - 免费在线文本处理工具（去重/排序/反转/统计）</title>
+<meta name="description" content="免费在线文本处理工具，去重行、排序（A-Z/Z-A/长度）、反转文本、字数统计、大小写转换，纯前端，无需注册。">
+<meta name="keywords" content="文本去重,text tools,行排序,反转文本,大小写转换,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:960px;margin:0 auto;padding:20px}
+textarea{width:100%;min-height:220px;padding:14px;border-radius:10px;border:1px solid #cbd5e1;font-size:14px;font-family:monospace;resize:vertical}
+.tools{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.tbtn{background:#f1f5f9;border:1px solid #cbd5e1;padding:9px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#334155}
+.tbtn:hover{background:#eff6ff;border-color:#3b82f6;color:#2563eb}
+.stats{background:#fff;border-radius:10px;padding:14px;font-size:13px;color:#475569;display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🔤 Text Tools Pro</h1>
+  <p>免费在线文本处理工具—— 去重/排序/反转/大小写/统计，纯前端，即时结果。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">8功能</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="stats" id="stats">字符：0 · 行：0 · 单词：0</div>
+  <textarea id="ta" placeholder="输入或粘贴文本..." oninput="upd()">香蕉
+苹果
+橙子
+香蕉
+苹果</textarea>
+  <div class="tools">
+    <button class="tbtn" onclick="apply('dedupe')">🔄 去重行</button>
+    <button class="tbtn" onclick="apply('sortAZ')">↕️ 排序 A-Z</button>
+    <button class="tbtn" onclick="apply('sortZA')">↕️ 排序 Z-A</button>
+    <button class="tbtn" onclick="apply('sortLen')">📏 按长度排序</button>
+    <button class="tbtn" onclick="apply('reverse')">🔃 反转文本</button>
+    <button class="tbtn" onclick="apply('reverseLines')">🔃 反转行序</button>
+    <button class="tbtn" onclick="apply('upper')">⬆️ 大写</button>
+    <button class="tbtn" onclick="apply('lower')">⬇️ 小写</button>
+    <button class="tbtn" onclick="apply('trim')">✂️ 去空行</button>
+    <button class="tbtn" onclick="apply('clear')">🗑️ 清空</button>
+  </div>
+</div>
+<footer>ToolkitPro · Text Tools Pro · 纯前端</footer>
+<script>
+function upd(){
+  const t=document.getElementById('ta').value;
+  const lines=t?t.split('\n').length:0;
+  const words=(t.match(/[a-zA-Z0-9\u4e00-\u9fff]+/g)||[]).length;
+  document.getElementById('stats').innerHTML='字符：'+t.length+' · 行：'+lines+' · 单词：'+words;
+}
+function apply(mode){
+  const ta=document.getElementById('ta');
+  let t=ta.value;
+  switch(mode){
+    case 'dedupe':t=[...new Set(t.split('\n'))].join('\n');break;
+    case 'sortAZ':t=t.split('\n').sort().join('\n');break;
+    case 'sortZA':t=t.split('\n').sort().reverse().join('\n');break;
+    case 'sortLen':t=t.split('\n').sort((a,b)=>a.length-b.length).join('\n');break;
+    case 'reverse':t=t.split('').reverse().join('');break;
+    case 'reverseLines':t=t.split('\n').reverse().join('\n');break;
+    case 'upper':t=t.toUpperCase();break;
+    case 'lower':t=t.toLowerCase();break;
+    case 'trim':t=t.split('\n').map(s=>s.trim()).filter(Boolean).join('\n');break;
+    case 'clear':t='';break;
+  }
+  ta.value=t;upd();
+}
+upd();
+</script>
+</body>
+</html>
