@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>思维结构化器 - 模糊想法变可执行框架</title>
+<meta name="description" content="输入模糊想法，自动生成结构化框架：目标/受众/核心模块/行动步骤/检验标准，为写作、学习、项目规划做准备。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:760px;margin:0 auto}h1{font-size:24px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:4px}textarea{width:100%;min-height:90px;padding:12px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px;resize:vertical}
+select{width:200px;padding:10px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px}
+button{width:100%;padding:12px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:14px;margin-top:12px;font-size:14px;white-space:pre-wrap;line-height:1.7}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}.ok{color:#34d399}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>思维结构化器 <span class="tag">原创 · 混乱→可执行</span></h1>
+<h2>模糊想法 → 目标/受众/核心模块/行动步骤/检验标准</h2>
+<div class="card">
+<label>你的模糊想法</label><textarea id="idea" placeholder="例如：我想做一个关于环保的网站，让人更容易参与"></textarea>
+<label>场景</label><select id="scene">
+<option value="creative">创意/项目</option><option value="learning">学习</option><option value="writing">写作</option><option value="decision">决策</option></select>
+<button onclick="org()">生成结构化框架</button>
+<div class="out" id="out">输入想法后生成框架。</div>
+</div>
+</div>
+<script>
+function org(){
+  const idea=document.getElementById('idea').value.trim();const sc=document.getElementById('scene').value;
+  if(!idea){document.getElementById('out').innerHTML='请先输入想法。';return}
+  const f=build(idea,sc);
+  document.getElementById('out').innerHTML=f;
+  window._last={tool:'thought-organizer',input:{idea,scene:sc},output:{framework:f}};
+}
+function build(idea,sc){
+  const goal=`把"${idea}"变成可执行的清晰目标，明确最终要交付什么、给谁、怎么判断成功。`;
+  const aud=sc==='learning'?'学习者本人（从零到掌握）':sc==='writing'?'目标读者':'目标用户/受众';
+  const mods=sc==='learning'?['核心概念（要掌握什么）','知识地图（前置知识/依赖）','练习路径（由易到难）','检验（能否应用/复述）']:
+    sc==='writing'?['核心论点（一句话说清）','论据链（事实/案例/数字）','结构（引言-展开-收尾）','受众共鸣点']:
+    ['核心功能/价值（解决什么）','用户路径（从看到用）','关键模块（最小可行）','增长点（如何扩散）'];
+  const steps=sc==='learning'?['诊断起点','拆解知识点','安排练习节奏','检验掌握']:
+    sc==='writing'?['定核心论点','列论据','搭结构','打磨']:
+    ['定义最小可行版本','搭核心模块','验证用户路径','迭代扩散'];
+  return `## 目标
+${goal}
+
+## 受众
+${aud}
+
+## 核心模块
+${mods.map((m,i)=>`${i+1}. ${m}`).join('\n')}
+
+## 行动步骤
+${steps.map((s,i)=>`${i+1}. ${s}`).join('\n')}
+
+## 检验标准
+- 是否清晰回答了"为什么值得做"？
+- 最小可行版本能否在较短时间内落地？
+- 用户/读者能否一眼理解价值？
+- 哪些部分最不确定、需先验证？`;
+}
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const idea=(d.idea||'').trim();if(!idea){document.body.textContent=JSON.stringify({tool:'thought-organizer',error:'idea required'});return}const sc=d.scene||'creative';document.body.textContent=JSON.stringify({tool:'thought-organizer',input:d,output:{scene:sc,framework:build(idea,sc)}})}catch(e){document.body.textContent=JSON.stringify({tool:'thought-organizer',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
