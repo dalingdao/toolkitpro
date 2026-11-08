@@ -40,6 +40,7 @@
 | **数据质量体检器** | 数据分析师难判断数据能否用 | 缺失/重复/异常/类型错误检测+评分+修复建议 |
 | **分层练习生成器** | 教师备课出题慢、难分层 | 知识点→基础/进阶/挑战三层题目+答案+解析 |
 | **需求优先级矩阵** | 产品经理排需求凭直觉 | 价值/成本/风险/依赖四维量化→优先级排序+P0-P3分级 |
+| **FAQ 智能整理器** | 客服问答零散难整理 | 自动归类+合并重复问题+可搜索FAQ文档 |
 
 每个支持：`?tool=xxx&input=yyy&format=json`（网页 JSON）+ `node cli.js` / `python cli.py`（命令行）。
 
@@ -74,7 +75,7 @@ python cli.py task-planner --input-file input.json
 
 输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
 
-可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`、`priority-matrix`。
+可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`、`priority-matrix`、`faq-generator`。
 
 ```bash
 node cli.js        # 列出全部可用工具（cli.py 同理）
