@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer - 免费在线倒计时器</title>
+<meta name="description" content="免费在线倒计时器，设置分/秒开始倒计时，到点提醒，纯前端，无需注册。">
+<meta name="keywords" content="倒计时,timer,计时器,分秒,提醒,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#1e293b;color:#60a5fa}
+.time{font-size:88px;font-weight:800;font-variant-numeric:tabular-nums}
+.inputs{display:flex;gap:10px;margin:20px 0}
+.inputs input{width:80px;padding:12px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:20px;text-align:center}
+.ctrl{display:flex;gap:12px}
+.ctrl button{padding:12px 28px;border-radius:24px;border:none;cursor:pointer;font-size:16px;font-weight:600;background:#2563eb;color:#fff}
+.ctrl button.sec{background:#334155}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>⏳ Timer</h1>
+  <p>免费在线倒计时器—— 到点提醒。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">倒计时</span><span class="badge">提醒</span></div>
+</div>
+<div class="time" id="t">00:00</div>
+<div class="inputs">
+  <input id="m" type="number" min="0" max="99" placeholder="分" value="5">
+  <input id="s" type="number" min="0" max="59" placeholder="秒" value="0">
+</div>
+<div class="ctrl">
+  <button id="b" onclick="start()">开始</button>
+  <button class="sec" onclick="reset()">重置</button>
+</div>
+<script>
+var left=0,running=false,iv=null;
+function draw(){var m=Math.floor(left/60),s=left%60;document.getElementById('t').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function start(){
+  if(running){running=false;clearInterval(iv);document.getElementById('b').textContent='开始';return;}
+  if(left<=0)left=(+document.getElementById('m').value||0)*60+(+document.getElementById('s').value||0);
+  if(left<=0)return;
+  running=true;document.getElementById('b').textContent='暂停';
+  iv=setInterval(function(){left--;draw();if(left<=0){running=false;clearInterval(iv);document.getElementById('b').textContent='开始';document.title='⏰ 时间到！';}} ,1000);
+}
+function reset(){running=false;clearInterval(iv);document.getElementById('b').textContent='开始';left=0;draw();}
+draw();
+</script>
+</body>
+</html>
