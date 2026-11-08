@@ -384,6 +384,40 @@ function priorityMatrix(input){
   return {count:res.length,ranked:res};
 }
 
+// ---- faq-generator ----
+const FAQ_CATS=[
+  {name:'退款',kw:['退款','退钱','退货','退换','七天','到账']},
+  {name:'支付',kw:['支付','付款','付钱','余额','花呗','银行卡','微信']},
+  {name:'配送',kw:['发货','物流','快递','配送','到货','运输']},
+  {name:'账号',kw:['账号','账户','密码','登录','注册','验证码','忘记']},
+  {name:'售后',kw:['售后','维修','保修','换货','质量','损坏']},
+  {name:'发票',kw:['发票','开票','税票','报销']},
+  {name:'其他',kw:[]}
+];
+function faqCat(q){
+  const t=q.toLowerCase();
+  for(const c of FAQ_CATS){ if(c.kw.length&&c.kw.some(k=>t.includes(k.toLowerCase())))return c.name; }
+  return '其他';
+}
+function faqNorm(q){ return q.replace(/[？?！!。.,，\s]/g,'').toLowerCase(); }
+function faqOrganize(qa){
+  const merged=[];const seen={};
+  qa.forEach(item=>{
+    const nq=faqNorm(item.q);
+    if(seen[nq]!==undefined){ merged[seen[nq]].count++; merged[seen[nq]].answers.push(item.a); }
+    else{ seen[nq]=merged.length; merged.push({q:item.q,answers:[item.a],count:1,cat:faqCat(item.q)}); }
+  });
+  const groups={};
+  merged.forEach(m=>{ if(!groups[m.cat])groups[m.cat]=[]; groups[m.cat].push(m); });
+  const cats=Object.keys(groups);
+  return {total_input:qa.length,unique:merged.length,duplicates:qa.length-merged.length,groups,catOrder:cats};
+}
+function faqGenerator(input){
+  if(!input.qa||!input.qa.length) throw new Error('qa required');
+  const res=faqOrganize(input.qa);
+  return {total:res.total_input,unique:res.unique,duplicates:res.duplicates,categories:res.groups};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -396,7 +430,8 @@ const TOOLS={
   'marketing-score':marketingScore,
   'data-quality':dataQuality,
   'quiz-generator':quizGenerator,
-  'priority-matrix':priorityMatrix
+  'priority-matrix':priorityMatrix,
+  'faq-generator':faqGenerator
 };
 
 // ---- entry ----
