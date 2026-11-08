@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI Calculator Pro - 免费在线投资回报率计算器</title>
+<meta name="description" content="免费在线投资回报率计算器，计算 ROI/总收益/年化收益率，纯前端，无需注册。">
+<meta name="keywords" content="roi计算,roi calculator,投资回报,收益率计算,年化收益率,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.box{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:19px;font-weight:800;color:#2563eb;margin-top:4px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📈 ROI Calculator Pro</h1>
+  <p>免费在线投资回报率计算器—— ROI/总收益/年化收益率。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">ROI</span><span class="badge">年化</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>投入本金（¥）</label><input type="number" id="inv" value="10000" oninput="calc()"></div>
+    <div class="field"><label>最终价值（¥）</label><input type="number" id="final" value="15000" oninput="calc()"></div>
+    <div class="field"><label>持有年限</label><input type="number" id="years" value="3" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · ROI Calculator Pro · 纯前端</footer>
+<script>
+function calc(){
+  const inv=+document.getElementById('inv').value||0,final=+document.getElementById('final').value||0,y=+document.getElementById('years').value||1;
+  if(!inv){document.getElementById('res').innerHTML='<div class="box"><div class="label">输入本金</div></div>';return}
+  const roi=(final-inv)/inv*100;
+  const annual=(Math.pow(final/inv,1/y)-1)*100;
+  document.getElementById('res').innerHTML='<div class="box"><div class="label">总收益</div><div class="value">¥'+fmt(final-inv)+'</div></div><div class="box"><div class="label">ROI</div><div class="value">'+roi.toFixed(1)+'%</div></div><div class="box"><div class="label">年化</div><div class="value">'+annual.toFixed(1)+'%</div></div>';
+}
+function fmt(n){return Math.round(n).toLocaleString()}
+calc();
+</script>
+</body>
+</html>
