@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary Calculator Pro - 免费在线工资计算器（年薪/月薪/时薪）</title>
+<meta name="description" content="免费在线工资计算器，年薪/月薪/时薪互转，支持每周工时/每年周数，纯前端，无需注册。">
+<meta name="keywords" content="工资计算,salary calculator,年薪换算,时薪计算,月薪换算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.box{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:17px;font-weight:800;color:#2563eb;margin-top:4px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>💼 Salary Calculator Pro</h1>
+  <p>免费在线工资计算器—— 年薪/月薪/时薪互转，即时计算。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">年薪</span><span class="badge">时薪</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>年薪（¥/年）</label><input type="number" id="year" value="200000" oninput="calc()"></div>
+    <div class="field"><label>每周工时</label><input type="number" id="hours" value="40" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Salary Calculator Pro · 纯前端</footer>
+<script>
+function calc(){
+  const y=+document.getElementById('year').value||0,h=+document.getElementById('hours').value||40;
+  const monthly=y/12,weekly=y/52,hourly=y/(52*h);
+  document.getElementById('res').innerHTML='<div class="box"><div class="label">月薪</div><div class="value">¥'+fmt(monthly)+'</div></div><div class="box"><div class="label">周薪</div><div class="value">¥'+fmt(weekly)+'</div></div><div class="box"><div class="label">时薪</div><div class="value">¥'+fmt(hourly)+'</div></div>';
+}
+function fmt(n){return Math.round(n).toLocaleString()}
+calc();
+</script>
+</body>
+</html>
