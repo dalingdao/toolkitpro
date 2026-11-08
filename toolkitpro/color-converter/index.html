@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颜色转换器 - HEX/RGB/HSL - 在线工具</title>
+<meta name="description" content="免费在线颜色转换工具。HEX、RGB、HSL 颜色格式互转，实时预览颜色，支持透明度，即时转换。">
+<meta name="keywords" content="颜色转换, HEX转RGB, RGB转HSL, 颜色代码, color converter, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; font-family: 'SF Mono', Consolas, monospace; }
+input:focus { outline: none; border-color: #ed64a6; }
+.preview { height: 120px; border-radius: 10px; margin: 16px 0; border: 2px solid #e2e8f0; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 8px; font-size: 15px; font-family: 'SF Mono', Consolas, monospace; border: 2px solid #e2e8f0; }
+.controls { display: flex; gap: 10px; margin-top: 12px; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #ed64a6; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #d53f8c; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>颜色转换器</h1>
+  <p class="sub">HEX / RGB / HSL 颜色格式互转 - 实时预览</p>
+  <div class="toolbox">
+    <label>输入颜色（HEX 如 #ff0000，RGB 如 rgb(255,0,0)，HSL 如 hsl(0,100%,50%)）</label>
+    <input id="color" placeholder="#ff0000" value="#ff0000">
+    <div class="preview" id="preview"></div>
+    <label>HEX</label>
+    <div class="result" id="hex">#ff0000</div>
+    <label>RGB</label>
+    <div class="result" id="rgb">rgb(255, 0, 0)</div>
+    <label>HSL</label>
+    <div class="result" id="hsl">hsl(0, 100%, 50%)</div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function hexToRgb(hex) {
+  let h = hex.replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  const n = parseInt(h, 16);
+  if (isNaN(n)) return null;
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+function rgbToHex(r, g, b) { return '#' + [r, g, b].map(v => ('0' + v.toString(16)).slice(-2)).join(''); }
+function rgbToHsl(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h /= 6;
+  }
+  return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+function hslToRgb(h, s, l) {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const hue2rgb = (p, q, t) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q - p) * 6 * t; if (t < 1/2) return q; if (t < 2/3) return p + (q - p) * (2/3 - t) * 6; return p; };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1/3);
+  }
+  return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+}
+function update() {
+  const val = document.getElementById('color').value.trim().toLowerCase();
+  let rgb = null;
+  if (val.startsWith('#')) rgb = hexToRgb(val);
+  else if (val.startsWith('rgb')) { const m = val.match(/rgba?\(([^)]+)\)/); if (m) { const p = m[1].split(',').map(x => parseInt(x.trim())); if (p.length >= 3) rgb = { r: p[0], g: p[1], b: p[2] }; } }
+  else if (val.startsWith('hsl')) { const m = val.match(/hsla?\(([^)]+)\)/); if (m) { const p = m[1].split(',').map(x => parseFloat(x.trim())); if (p.length >= 3) rgb = hslToRgb(p[0], p[1], p[2]); } }
+  if (!rgb) { document.getElementById('hex').textContent = '无效颜色'; return; }
+  document.getElementById('hex').textContent = rgbToHex(rgb.r, rgb.g, rgb.b);
+  document.getElementById('rgb').textContent = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  document.getElementById('hsl').textContent = 'hsl(' + hsl.h + ', ' + hsl.s + '%, ' + hsl.l + '%)';
+  document.getElementById('preview').style.background = rgbToHex(rgb.r, rgb.g, rgb.b);
+}
+document.getElementById('color').addEventListener('input', update);
+update();
+</script>
+</body>
+</html>
