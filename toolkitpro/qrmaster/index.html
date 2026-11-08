@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Master - 多功能二维码生成器</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#a78bfa;--acc2:#38bdf8;--text:#e2e8f0;--muted:#94a3b8;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+header{text-align:center;margin-bottom:20px}
+header h1{font-size:24px;background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header p{color:var(--muted);font-size:13px;margin-top:4px}
+.container{max-width:800px;margin:0 auto;display:grid;grid-template-columns:1fr 320px;gap:20px}
+@media(max-width:700px){.container{grid-template-columns:1fr}}
+.left{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.right{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+select,textarea,input[type=text],input[type=color],input[type=range]{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 10px;font-size:14px}
+textarea{min-height:80px;resize:vertical;font-family:monospace}
+input[type=color]{width:60px;height:34px;padding:2px;cursor:pointer}
+input[type=range]{padding:0}
+.row{display:flex;gap:12px;align-items:center}
+.row label{margin:0;white-space:nowrap}
+.btn{background:var(--acc);border:none;color:#fff;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;margin-top:12px;width:100%}
+.btn:hover{filter:brightness(1.15)}
+.btn.sec{background:var(--border)}
+#qrCanvas{display:block;margin:0 auto;image-rendering:pixelated}
+.preview-box{background:#fff;border-radius:8px;padding:16px;display:inline-block;margin-top:12px}
+.size-val{color:var(--acc);font-weight:bold}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header><h1>🔲 QR Master</h1><p>多功能二维码生成器 · 纯前端 · 数据不出浏览器</p></header>
+<div class="container">
+  <div class="left">
+    <label>二维码类型</label>
+    <select id="type" onchange="onTypeChange()">
+      <option value="text">纯文本</option>
+      <option value="url">网址 (URL)</option>
+      <option value="email">邮箱</option>
+      <option value="phone">电话</option>
+      <option value="sms">短信 (SMS)</option>
+      <option value="wifi">WiFi</option>
+      <option value="vcard">名片 (vCard)</option>
+    </select>
+    <div id="fields"></div>
+    <label>前景色 <input type="color" id="fg" value="#000000" oninput="generate()"></label>
+    <label>背景色 <input type="color" id="bg" value="#ffffff" oninput="generate()"></label>
+    <label>尺寸 <input type="range" id="size" min="128" max="512" value="256" step="32" oninput="document.getElementById('sizeVal').textContent=this.value;generate()"></label>
+    <span class="size-val" id="sizeVal">256</span>px
+    <label>纠错级别</label>
+    <select id="ecl" onchange="generate()">
+      <option value="L">L (7%)</option>
+      <option value="M" selected>M (15%)</option>
+      <option value="Q">Q (25%)</option>
+      <option value="H">H (30%)</option>
+    </select>
+    <button class="btn" onclick="generate()">生成二维码</button>
+    <button class="btn sec" onclick="download()">下载 PNG</button>
+  </div>
+  <div class="right">
+    <label>预览</label>
+    <div class="preview-box"><canvas id="qrCanvas" width="256" height="256"></canvas></div>
+    <p style="color:var(--muted);font-size:12px;margin-top:8px" id="info">输入内容后自动生成</p>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script>
+function onTypeChange(){const t=document.getElementById('type').value;const f=document.getElementById('fields');const field=(id,ph,label)=>`<label>${label}</label><textarea id="${id}" placeholder="${ph}" oninput="generate()"></textarea>`;const input=(id,ph,label)=>`<label>${label}</label><input type="text" id="${id}" placeholder="${ph}" oninput="generate()">`;switch(t){case'text':f.innerHTML=field('d_text','输入任意文本','文本内容');break;case'url':f.innerHTML=input('d_url','https://example.com','网址');break;case'email':f.innerHTML=input('d_email','user@example.com','邮箱地址')+`<label>主题(可选)</label><input type="text" id="d_subject" oninput="generate()">`+`<label>正文(可选)</label><textarea id="d_body" oninput="generate()"></textarea>`;break;case'phone':f.innerHTML=input('d_phone','+8613800138000','电话号码');break;case'sms':f.innerHTML=input('d_phone','+8613800138000','电话号码')+`<label>短信内容</label><textarea id="d_msg" oninput="generate()"></textarea>`;break;case'wifi':f.innerHTML=input('d_ssid','MyWiFi','网络名称(SSID)')+`<label>密码</label><input type="text" id="d_wpwd" oninput="generate()">`+`<label>加密类型</label><select id="d_wtype" onchange="generate()"><option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">无密码</option></select>`;break;case'vcard':f.innerHTML=input('d_name','张三','姓名')+input('d_phone','+8613800138000','电话')+input('d_email','user@example.com','邮箱')+input('d_org','公司名','组织')+input('d_url','https://example.com','网址');break;}}
+function buildData(){const t=document.getElementById('type').value;const v=id=>{const e=document.getElementById(id);return e?e.value:''};switch(t){case'text':return v('d_text');case'url':return v('d_url');case'email':{let s='mailto:'+v('d_email');const sub=v('d_subject'),body=v('d_body');if(sub||body){s+='?';if(sub)s+='subject='+encodeURIComponent(sub);if(sub&&body)s+='&';if(body)s+='body='+encodeURIComponent(body);}return s;}case'phone':return'tel:'+v('d_phone');case'sms':{const m=v('d_msg');return m?'SMSTO:'+v('d_phone')+':'+m:'sms:'+v('d_phone');}case'wifi':{const t=v('d_wtype'),s=v('d_ssid'),p=v('d_wpwd');return'WIFI:T:'+t+';S:'+s+';P:'+p+';;';}case'vcard':{return'BEGIN:VCARD\nVERSION:3.0\nFN:'+v('d_name')+'\nTEL:'+v('d_phone')+'\nEMAIL:'+v('d_email')+'\nORG:'+v('d_org')+'\nURL:'+v('d_url')+'\nEND:VCARD';}}return'';}
+function generate(){const data=buildData();const info=document.getElementById('info');const canvas=document.getElementById('qrCanvas');if(!data||data.length===0){info.textContent='输入内容后自动生成';const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);return;}try{const ecl=document.getElementById('ecl').value;const qr=qrcode(0,ecl);qr.addData(data);qr.make();const size=parseInt(document.getElementById('size').value);canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');const count=qr.getModuleCount();const cellSize=size/count;const fg=document.getElementById('fg').value;const bg=document.getElementById('bg').value;ctx.fillStyle=bg;ctx.fillRect(0,0,size,size);ctx.fillStyle=fg;for(let r=0;r<count;r++){for(let c=0;c<count;c++){if(qr.isDark(r,c)){ctx.fillRect(Math.floor(c*cellSize),Math.floor(r*cellSize),Math.ceil(cellSize),Math.ceil(cellSize));}}}info.textContent=count+'×'+count+' 模块 · '+data.length+' 字符';}catch(e){info.textContent='❌ 内容过长：'+e.message;}}
+function download(){const canvas=document.getElementById('qrCanvas');const link=document.createElement('a');link.href=canvas.toDataURL('image/png');link.download='qrcode.png';link.click();}
+onTypeChange();generate();
+</script>
+</body>
+</html>
