@@ -590,6 +590,34 @@ function novelToVideo(input){
   return {title:input.title||'未命名',count:segs.length,totalSeconds:segs.reduce((a,s)=>a+s.seconds,0),style:ntvStyle(input.text),segments:segs};
 }
 
+// ---- ad-compliance-checker ----
+const ACC_BAN=[
+  {w:'国家级',fix:'行业标准'},{w:'世界级',fix:'国际领先'},{w:'最高级',fix:'领先水平'},
+  {w:'顶级',fix:'优质'},{w:'最佳',fix:'优秀'},{w:'最优',fix:'领先'},{w:'最好',fix:'口碑领先'},
+  {w:'最强',fix:'实力突出'},{w:'最大',fix:'规模领先'},{w:'最新',fix:'新款'},{w:'第一',fix:'领先'},
+  {w:'首个',fix:'率先'},{w:'独家',fix:'特色'},{w:'唯一',fix:'特色'},{w:'绝无仅有',fix:'稀缺'},
+  {w:'空前绝后',fix:'前所未有'},{w:'史无前例',fix:'罕见'},{w:'万能',fix:'多功能'},
+  {w:'100%',fix:'完全'}
+];
+function accCheck(text){
+  const found=[];
+  ACC_BAN.forEach(b=>{
+    let idx=0;
+    while((idx=text.indexOf(b.w,idx))!==-1){
+      found.push({word:b.w,fix:b.fix,ctx:text.slice(Math.max(0,idx-12),idx+b.w.length+12)});
+      idx+=b.w.length;
+    }
+  });
+  const seen=new Set();const uniq=[];
+  found.forEach(f=>{const k=f.word+'|'+f.ctx;if(!seen.has(k)){seen.add(k);uniq.push(f);}});
+  return uniq;
+}
+function adCompliance(input){
+  if(!input.text||!input.text.trim()) throw new Error('text required');
+  const v=accCheck(input.text);
+  return {passed:v.length===0,count:v.length,violations:v,replacements:v.map(x=>({from:x.word,to:x.fix}))};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -607,7 +635,8 @@ const TOOLS={
   'i18n-checker':i18nChecker,
   'test-case-gen':testCaseGen,
   'content-idea-miner':contentIdeaMiner,
-  'novel-to-video':novelToVideo
+  'novel-to-video':novelToVideo,
+  'ad-compliance-checker':adCompliance
 };
 
 // ---- entry ----
