@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API 契约生成器 - 示例→JSON Schema 草案</title>
+<meta name="description" content="从请求/响应示例自动生成 JSON Schema 契约草案 + 类型推断 + 必填检测，为 AI 生成 API 时代设计。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:760px;margin:0 auto}h1{font-size:24px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:4px}textarea{width:100%;min-height:80px;padding:12px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:13px;resize:vertical}
+button{width:100%;padding:12px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:14px;margin-top:12px;font-size:13px;white-space:pre-wrap;line-height:1.6}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>API 契约生成器 <span class="tag">原创 · 示例→契约</span></h1>
+<h2>请求/响应示例 → JSON Schema 草案 + 类型推断 + 必填检测</h2>
+<div class="card">
+<label>请求示例（JSON）</label><textarea id="req" placeholder='{"user_id":123,"tags":["a","b"]}'></textarea>
+<label>响应示例（JSON）</label><textarea id="res" placeholder='{"id":456,"name":"产品","price":19.9,"ok":true}'></textarea>
+<button onclick="gen()">生成契约草案</button>
+<div class="out" id="out">输入请求/响应示例后生成契约。</div>
+</div>
+</div>
+<script>
+function infer(v){
+  if(v===null)return{type:'null'};
+  if(Array.isArray(v))return{type:'array',items:v.length?infer(v[0]):{type:'string'}};
+  if(typeof v==='boolean')return{type:'boolean'};
+  if(typeof v==='number')return{type:'number'};
+  if(typeof v==='string')return{type:'string'};
+  return{type:'object',properties:Object.fromEntries(Object.keys(v).map(k=>[k,infer(v[k])])),required:Object.keys(v)};
+}
+function gen(){
+  const rt=document.getElementById('req').value.trim(),rs=document.getElementById('res').value.trim();
+  let rq,rs2,err='';
+  try{rq=rt?JSON.parse(rt):null}catch(e){err='请求示例 JSON 无效'}
+  try{rs2=rs?JSON.parse(rs):null}catch(e){err='响应示例 JSON 无效'}
+  if(err){document.getElementById('out').innerHTML=err;return}
+  if(!rq&&!rs2){document.getElementById('out').innerHTML='请至少输入一个示例。';return}
+  const out={};
+  if(rq!==null)out.request={contract:JSON.stringify(infer(rq),null,2)};
+  if(rs2!==null)out.response={contract:JSON.stringify(infer(rs2),null,2)};
+  out.summary={req_fields:rq?Object.keys(rq).length:0,res_fields:rs2?Object.keys(rs2).length:0,req_required:rq?Object.keys(rq):[],res_required:rs2?Object.keys(rs2):[]};
+  document.getElementById('out').innerHTML=JSON.stringify(out,null,2);
+  window._last={tool:'api-contract',input:{req:rq,res:rs2},output:out};
+}
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');let rq=null,rs2=null;if(d.req)rq=JSON.parse(d.req);if(d.res)rs2=JSON.parse(d.res);if(!rq&&!rs2){document.body.textContent=JSON.stringify({tool:'api-contract',error:'req or res required'});return}const out={};if(rq!==null)out.request={contract:JSON.stringify(infer(rq),null,2)};if(rs2!==null)out.response={contract:JSON.stringify(infer(rs2),null,2)};document.body.textContent=JSON.stringify({tool:'api-contract',input:d,output:out})}catch(e){document.body.textContent=JSON.stringify({tool:'api-contract',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
