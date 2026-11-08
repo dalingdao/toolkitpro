@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维码解码器 - QR Decoder - 在线工具</title>
+<meta name="description" content="免费在线二维码解码工具。上传或截图粘贴二维码图片，本地解码识别二维码内容，数据不出浏览器。">
+<meta name="keywords" content="二维码解码, QR解码, 二维码识别, QR Decoder, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input[type=file] { padding: 10px; border: 2px dashed #e2e8f0; border-radius: 10px; width: 100%; }
+#preview { margin-top: 16px; text-align: center; }
+#preview img { max-width: 250px; max-height: 250px; border-radius: 8px; border: 2px solid #e2e8f0; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; margin-top: 16px; font-size: 15px; border: 2px solid #e2e8f0; word-break: break-all; }
+.result .lbl { font-size: 12px; color: #718096; font-weight: 600; margin-bottom: 6px; }
+#err { color: #e53e3e; font-size: 13px; margin-top: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>二维码解码器</h1>
+  <p class="sub">QR Decoder - 本地解码二维码内容（数据不出浏览器）</p>
+  <div class="toolbox">
+    <label>选择二维码图片</label>
+    <input type="file" id="qr" accept="image/*">
+    <div id="preview"></div>
+    <div class="result" id="out"><div class="lbl">解码结果</div>选择二维码图片后自动识别...</div>
+    <div id="err"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.1/dist/jsQR.min.js"></script>
+<script>
+document.getElementById('qr').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const img = new Image();
+  img.onload = () => {
+    document.getElementById('preview').innerHTML = '';
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    c.getContext('2d').drawImage(img, 0, 0);
+    const data = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+    const code = jsQR(data.data, data.width, data.height);
+    document.getElementById('err').textContent = '';
+    if (code) document.getElementById('out').innerHTML = '<div class="lbl">解码结果</div><div style="white-space:pre-wrap">' + code.data + '</div>';
+    else document.getElementById('out').innerHTML = '<div class="lbl">解码结果</div>未能识别二维码，请尝试更清晰的图片';
+  };
+  img.src = URL.createObjectURL(f);
+});
+</script>
+</body>
+</html>
