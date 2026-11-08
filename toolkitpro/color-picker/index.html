@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Picker Pro - 免费在线颜色拾取器/调色板</title>
+<meta name="description" content="免费在线颜色拾取器，屏幕取色/HEX/RGB/HSL 转换，颜色选择器，复制代码，纯前端，无需注册。">
+<meta name="keywords" content="颜色拾取,color picker,取色器,调色板,hex转rgb,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:600px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.preview{width:100%;height:140px;border-radius:12px;margin-bottom:18px;border:1px solid #e2e8f0}
+input[type=color]{width:100%;height:60px;border:none;border-radius:10px;cursor:pointer;margin-bottom:14px}
+.values{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.val{background:#f8fafc;border-radius:10px;padding:12px;text-align:center}
+.val .label{font-size:11px;color:#64748b}
+.val .code{font-size:15px;font-weight:700;color:#0f172a;margin-top:4px;font-family:monospace;cursor:pointer}
+.val .code:hover{color:#3b82f6}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🎨 Color Picker Pro</h1>
+  <p>免费在线颜色拾取器—— 拾取颜色即时显示 HEX/RGB/HSL，一键复制。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">3格式</span><span class="badge">复制</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <input type="color" id="c" value="#3b82f6" oninput="upd()">
+    <div class="preview" id="pv"></div>
+    <div class="values">
+      <div class="val"><div class="label">HEX</div><div class="code" id="hex" onclick="cp('hex')">#3b82f6</div></div>
+      <div class="val"><div class="label">RGB</div><div class="code" id="rgb" onclick="cp('rgb')">rgb(59,130,246)</div></div>
+      <div class="val"><div class="label">HSL</div><div class="code" id="hsl" onclick="cp('hsl')">hsl(217,91%,60%)</div></div>
+    </div>
+  </div>
+</div>
+<footer>ToolkitPro · Color Picker Pro · 纯前端</footer>
+<script>
+function hex2rgb(h){
+  h=h.replace('#','');if(h.length===3)h=h.split('').map(x=>x+x).join('');
+  return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];
+}
+function rgb2hsl(r,g,b){
+  r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b);let h=0,s=0,l=(max+min)/2;
+  if(max!==min){const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);if(max===r)h=(g-b)/d+(g<b?6:0);else if(max===g)h=(b-r)/d+2;else h=(r-g)/d+4;h/=6}
+  return [Math.round(h*360),Math.round(s*100),Math.round(l*100)];
+}
+function upd(){
+  const hex=document.getElementById('c').value;
+  const [r,g,b]=hex2rgb(hex),[h,s,l]=rgb2hsl(r,g,b);
+  document.getElementById('pv').style.background=hex;
+  document.getElementById('hex').textContent=hex;
+  document.getElementById('rgb').textContent='rgb('+r+','+g+','+b+')';
+  document.getElementById('hsl').textContent='hsl('+h+','+s+'%,'+l+'%)';
+}
+function cp(id){
+  const t=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(t).then(()=>alert('已复制: '+t)).catch(()=>{});
+}
+upd();
+</script>
+</body>
+</html>
