@@ -407,10 +407,51 @@ def priority_matrix(i):
     res=pm_compute(items)
     return {'count':len(res),'ranked':res}
 
+FAQ_CATS=[
+    {'name':'退款','kw':['退款','退钱','退货','退换','七天','到账']},
+    {'name':'支付','kw':['支付','付款','付钱','余额','花呗','银行卡','微信']},
+    {'name':'配送','kw':['发货','物流','快递','配送','到货','运输']},
+    {'name':'账号','kw':['账号','账户','密码','登录','注册','验证码','忘记']},
+    {'name':'售后','kw':['售后','维修','保修','换货','质量','损坏']},
+    {'name':'发票','kw':['发票','开票','税票','报销']},
+    {'name':'其他','kw':[]}
+]
+
+def faq_cat(q):
+    t=q.lower()
+    for c in FAQ_CATS:
+        if c['kw'] and any(k in t for k in c['kw']): return c['name']
+    return '其他'
+
+def faq_norm(q):
+    return re.sub(r'[？?！!。.,，\s]','',q).lower()
+
+def faq_organize(qa):
+    merged=[]; seen={}
+    for item in qa:
+        nq=faq_norm(item.get('q',''))
+        if nq in seen:
+            merged[seen[nq]]['count']+=1
+            merged[seen[nq]]['answers'].append(item.get('a',''))
+        else:
+            seen[nq]=len(merged)
+            merged.append({'q':item.get('q',''),'answers':[item.get('a','')],'count':1,'cat':faq_cat(item.get('q',''))})
+    groups={}
+    for m in merged:
+        groups.setdefault(m['cat'],[]).append(m)
+    return {'total_input':len(qa),'unique':len(merged),'duplicates':len(qa)-len(merged),'groups':groups,'catOrder':list(groups.keys())}
+
+def faq_generator(i):
+    qa=i.get('qa')
+    if not qa or not len(qa): raise ValueError('qa required')
+    res=faq_organize(qa)
+    return {'total':res['total_input'],'unique':res['unique'],'duplicates':res['duplicates'],'categories':res['groups']}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
-         'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix}
+         'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix,
+         'faq-generator':faq_generator}
 
 # ---- entry ----
 def main():
