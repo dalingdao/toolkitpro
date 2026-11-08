@@ -156,6 +156,26 @@ function thoughtOrganizer(input){
   return {scene:sc,framework:thoughtBuild(idea,sc)};
 }
 
+// ---- api-contract ----
+function apiInfer(v){
+  if(v===null)return{type:'null'};
+  if(Array.isArray(v))return{type:'array',items:v.length?apiInfer(v[0]):{type:'string'}};
+  if(typeof v==='boolean')return{type:'boolean'};
+  if(typeof v==='number')return{type:'number'};
+  if(typeof v==='string')return{type:'string'};
+  return{type:'object',properties:Object.fromEntries(Object.keys(v).map(k=>[k,apiInfer(v[k])])),required:Object.keys(v)};
+}
+function apiContract(input){
+  let rq=null,rs=null;
+  if(input.req)rq=JSON.parse(input.req);
+  if(input.res)rs=JSON.parse(input.res);
+  if(!rq&&!rs) throw new Error('req or res required');
+  const out={};
+  if(rq!==null)out.request={contract:JSON.stringify(apiInfer(rq),null,2)};
+  if(rs!==null)out.response={contract:JSON.stringify(apiInfer(rs),null,2)};
+  return out;
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -163,7 +183,8 @@ const TOOLS={
   'llm-schema-checker':schemaCheck,
   'token-budget-planner':tokenBudget,
   'ai-output-health':aiHealth,
-  'thought-organizer':thoughtOrganizer
+  'thought-organizer':thoughtOrganizer,
+  'api-contract':apiContract
 };
 
 // ---- entry ----
