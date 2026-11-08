@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 图像转换器 - 在线工具</title>
+<meta name="description" content="免费在线 Base64 图像转换工具。图片转 Base64 编码或 Base64 解码为图片，实时预览，一键复制。">
+<meta name="keywords" content="Base64图片, 图片转Base64, Base64解码, 图像编码, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+input[type=file] { padding: 10px; border: 2px dashed #e2e8f0; border-radius: 10px; width: 100%; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 100px; margin-top: 12px; }
+textarea:focus { outline: none; border-color: #3182ce; }
+.preview { margin-top: 16px; text-align: center; }
+.preview img { max-width: 100%; max-height: 200px; border-radius: 8px; border: 2px solid #e2e8f0; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #3182ce; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+.btn:hover { background: #2b6cb0; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Base64 图像转换器</h1>
+  <p class="sub">图片 ↔ Base64 互转 - 实时预览</p>
+  <div class="toolbox">
+    <label>选择图片（转 Base64）</label>
+    <input type="file" id="file" accept="image/*">
+    <div class="preview" id="pv"></div>
+    <label>Base64 结果</label>
+    <textarea id="b64" placeholder="选择图片后自动生成 Base64..."></textarea>
+    <button class="btn" id="copy">复制 Base64</button>
+    <label style="margin-top:20px">或粘贴 Base64（解码为图片）</label>
+    <textarea id="in64" placeholder="data:image/png;base64,..."></textarea>
+    <button class="btn" id="decode">解码预览</button>
+    <div class="preview" id="pv2"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+document.getElementById('file').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { document.getElementById('b64').value = r.result; document.getElementById('pv').innerHTML = '<img src="' + r.result + '">'; };
+  r.readAsDataURL(f);
+});
+document.getElementById('copy').addEventListener('click', () => { navigator.clipboard.writeText(document.getElementById('b64').value); document.getElementById('copy').textContent = '已复制!'; setTimeout(() => document.getElementById('copy').textContent = '复制 Base64', 1500); });
+document.getElementById('decode').addEventListener('click', () => { const v = document.getElementById('in64').value.trim(); document.getElementById('pv2').innerHTML = v ? '<img src="' + v + '">' : ''; });
+</script>
+</body>
+</html>
