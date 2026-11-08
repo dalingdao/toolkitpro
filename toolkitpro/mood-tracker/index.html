@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mood Tracker - 免费在线心情记录</title>
+<meta name="description" content="免费在线心情记录器，按日记录心情/能量/压力，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="心情记录,mood tracker,心情,情绪,心理健康,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.moods{display:flex;gap:10px;margin-bottom:16px}
+.moods button{flex:1;padding:14px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;font-size:22px;cursor:pointer}
+.moods button.on{border-color:#2563eb;background:#eff6ff}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input[type=range]{width:100%}
+.rec{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eef2f7;font-size:14px}
+.rec .e{color:#64748b}
+.rec .v{font-weight:600}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🎭 Mood Tracker</h1>
+  <p>免费在线心情记录—— 本地保存。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">心情</span><span class="badge">本地存储</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="moods">
+      <button data-m="😞" onclick="pick(this)">😞</button>
+      <button data-m="😐" onclick="pick(this)">😐</button>
+      <button data-m="🙂" class="on" onclick="pick(this)">🙂</button>
+      <button data-m="😄" onclick="pick(this)">😄</button>
+      <button data-m="🤩" onclick="pick(this)">🤩</button>
+    </div>
+    <div class="field"><label>能量（1-10）</label><input type="range" id="e" min="1" max="10" value="6" oninput="save()"></div>
+    <div class="field"><label>压力（1-10）</label><input type="range" id="s" min="1" max="10" value="4" oninput="save()"></div>
+    <div id="rec"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Mood Tracker · 纯前端 · 本地存储</footer>
+<script>
+var mood='🙂',recs=JSON.parse(localStorage.getItem('mt_recs')||'[]');
+function pick(b){mood=b.dataset.m;document.querySelectorAll('.moods button').forEach(function(x){x.className=x===b?'on':'';});save();}
+function today(){return new Date().toISOString().slice(0,10);}
+function save(){var t=today();var i=recs.findIndex(function(r){return r.d===t;});if(i<0)recs.push({d:t});i=recs.findIndex(function(r){return r.d===t;});recs[i].m=mood;recs[i].e=+document.getElementById('e').value;recs[i].s=+document.getElementById('s').value;localStorage.setItem('mt_recs',JSON.stringify(recs));render();}
+function render(){document.getElementById('rec').innerHTML=recs.slice().reverse().slice(0,14).map(function(r){return '<div class="rec"><span class="e">'+r.d+'</span><span class="v">'+r.m+' · 能量'+r.e+' · 压力'+r.s+'</span></div>';}).join('')||'<div class="rec"><span class="e">暂无记录</span></div>';}
+render();
+</script>
+</body>
+</html>
