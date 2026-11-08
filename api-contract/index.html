@@ -51,5 +51,10 @@ function gen(){
 }
 (function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');let rq=null,rs2=null;if(d.req)rq=JSON.parse(d.req);if(d.res)rs2=JSON.parse(d.res);if(!rq&&!rs2){document.body.textContent=JSON.stringify({tool:'api-contract',error:'req or res required'});return}const out={};if(rq!==null)out.request={contract:JSON.stringify(infer(rq),null,2)};if(rs2!==null)out.response={contract:JSON.stringify(infer(rs2),null,2)};document.body.textContent=JSON.stringify({tool:'api-contract',input:d,output:out})}catch(e){document.body.textContent=JSON.stringify({tool:'api-contract',error:'invalid input'})}}})();
 </script>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin:16px auto;max-width:720px;font-size:13px;line-height:1.7;color:#cbd5e1">
+<b style="color:#60a5fa">💡 实用场景：</b>API 开发者定义契约：从请求/响应示例一键生成 JSON Schema 草案。<br>
+<b style="color:#60a5fa">示例：</b>输入 <code>{"req":"{\"user_id\":123}","res":"{\"id\":456,\"name\":\"产品\",\"ok\":true}"}</code><br>→ <code>请求/响应 JSON Schema(类型+必填)草案</code>
+</div>
 </body>
 </html>
