@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Quote - 免费在线每日名言</title>
+<meta name="description" content="免费在线每日名言，随机激励语录，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="每日名言,daily quote,名言,语录,激励,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{color:#94a3b8;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#1e293b;color:#60a5fa}
+.quote{max-width:560px;margin:20px;padding:30px;border-left:4px solid #3b82f6;text-align:left;font-size:20px;line-height:1.9;font-style:italic}
+.quote .by{font-size:14px;color:#94a3b8;margin-top:14px;font-style:normal;text-align:right}
+.ctrl button{padding:12px 28px;border-radius:24px;border:none;cursor:pointer;font-size:16px;font-weight:600;background:#3b82f6;color:#fff}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📜 Daily Quote</h1>
+  <p>每日名言—— 一句激励，开始一天。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">名言</span><span class="badge">Agent可用</span></div>
+</div>
+<div class="quote" id="q"></div>
+<div class="ctrl"><button onclick="pick()">换一句</button></div>
+<script>
+var Q=[
+['行动是改变的开始。','佚名'],['你不需要完美，只需要开始。','佚名'],['千里之行始于足下。','老子'],['不积跬步无以至千里。','荀子'],['成功是习惯的积累。','佚名'],['越努力越幸运。','佚名'],['今天的事今天做。','佚名'],['坚持就是胜利。','佚名'],['种一棵树最好的时间是现在。','佚名'],['心之所向素履以往。','七堇年']];
+function pick(){var x=Q[Math.floor(Math.random()*Q.length)];document.getElementById('q').innerHTML='“'+x[0]+'”<div class="by">—— '+x[1]+'</div>';}
+pick();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){var x=Q[Math.floor(Math.random()*Q.length)];document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({quote:x[0],author:x[1]},null,2)+'</pre>';}
+})();
+</script>
+</body>
+</html>
