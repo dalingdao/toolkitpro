@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 编码解码器 - 在线工具</title>
+<meta name="description" content="免费在线 Base64 编码解码工具。将文本转换为 Base64 编码，或解码 Base64 为可读文本。支持 UTF-8，即时转换。">
+<meta name="keywords" content="Base64编码, Base64解码, Base64 encoder, Base64 decoder, 在线工具">
+<meta property="og:title" content="Base64 编码解码器 - 在线工具">
+<meta property="og:description" content="免费在线 Base64 编码解码工具，即时转换，支持 UTF-8。">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.tab { padding: 10px 20px; border: none; background: #edf2f7; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: #4a5568; }
+.tab.active { background: #805ad5; color: #fff; }
+.input-area { margin-bottom: 16px; }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 130px; }
+textarea:focus { outline: none; border-color: #805ad5; }
+.controls { display: flex; gap: 10px; margin-bottom: 16px; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #805ad5; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #6b46c1; }
+.btn.secondary { background: #718096; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; min-height: 90px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; word-break: break-all; border: 2px solid #e2e8f0; margin-top: 8px; }
+.info { margin-top: 30px; background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+.info h2 { font-size: 18px; margin-bottom: 12px; color: #1a202c; }
+.info p { font-size: 14px; color: #4a5568; line-height: 1.8; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Base64 编码解码器</h1>
+  <p class="sub">在线 Base64 编码解码工具 - 即时转换，支持 UTF-8</p>
+  <div class="toolbox">
+    <div class="tabs">
+      <button class="tab active" data-mode="encode">编码 (Encode)</button>
+      <button class="tab" data-mode="decode">解码 (Decode)</button>
+    </div>
+    <div class="input-area">
+      <label>输入文本</label>
+      <textarea id="input" placeholder="输入要编码/解码的文本..."></textarea>
+    </div>
+    <div class="controls">
+      <button class="btn" id="convert">转换</button>
+      <button class="btn secondary" id="clear">清空</button>
+    </div>
+    <label>结果</label>
+    <div class="result" id="output">等待输入...</div>
+  </div>
+  <div class="info">
+    <h2>什么是 Base64 编码？</h2>
+    <p>Base64 是一种将二进制数据转换为 64 个可打印字符（A-Z, a-z, 0-9, +, /）的编码方式，常用于在文本协议中安全传输数据（如电子邮件、JSON、URL 参数）。此工具支持 UTF-8 编码，可将任何文本安全转换为 Base64 格式。</p>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+let mode = 'encode';
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active'); mode = tab.dataset.mode; convert();
+  });
+});
+function convert() {
+  const input = document.getElementById('input').value;
+  const output = document.getElementById('output');
+  if (!input) { output.textContent = '等待输入...'; return; }
+  try {
+    if (mode === 'encode') output.textContent = btoa(unescape(encodeURIComponent(input)));
+    else output.textContent = decodeURIComponent(escape(atob(input.trim())));
+  } catch (e) { output.textContent = '错误: 无效的输入格式'; }
+}
+document.getElementById('convert').addEventListener('click', convert);
+document.getElementById('input').addEventListener('input', convert);
+document.getElementById('clear').addEventListener('click', () => { document.getElementById('input').value=''; document.getElementById('output').textContent='等待输入...'; });
+convert();
+</script>
+</body>
+</html>
