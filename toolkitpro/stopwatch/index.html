@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch Pro - 免费在线秒表计时器</title>
+<meta name="description" content="免费在线秒表，精确到毫秒，开始/暂停/重置/计次，纯前端，无需注册。">
+<meta name="keywords" content="秒表,stopwatch,计时器,毫秒计时,在线秒表,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.back{position:absolute;top:16px;left:20px;font-size:13px;color:#64748b;text-decoration:none}
+h1{font-size:24px;margin-bottom:8px}
+.sub{color:#64748b;font-size:13px;margin-bottom:24px}
+.display{font-size:96px;font-weight:800;font-variant-numeric:tabular-nums;color:#22c55e;line-height:1;margin-bottom:30px}
+.controls{display:flex;gap:12px}
+.btn{padding:14px 32px;border-radius:10px;border:none;font-size:16px;font-weight:600;cursor:pointer}
+.btn.start{background:#22c55e;color:#0f172a}
+.btn.reset{background:#334155;color:#fff}
+.laps{margin-top:24px;width:280px;max-height:200px;overflow-y:auto;color:#94a3b8;font-size:14px;text-align:center}
+footer{position:absolute;bottom:16px;color:#475569;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<h1>⏱️ Stopwatch Pro</h1>
+<div class="sub">免费在线秒表 —— 精确到毫秒</div>
+<div class="display" id="disp">00:00.00</div>
+<div class="controls">
+  <button class="btn start" id="btn" onclick="toggle()">▶ 开始</button>
+  <button class="btn reset" onclick="reset()">↺ 重置</button>
+</div>
+<div class="laps" id="laps"></div>
+<footer>ToolkitPro · Stopwatch Pro · 纯前端</footer>
+<script>
+let t0=0,elapsed=0,timer=null,running=false;
+function toggle(){
+  if(running){clearInterval(timer);running=false;document.getElementById('btn').textContent='▶ 开始';return}
+  t0=Date.now()-elapsed;running=true;document.getElementById('btn').textContent='⏸ 暂停';
+  timer=setInterval(()=>{elapsed=Date.now()-t0;render()},10);
+}
+function reset(){clearInterval(timer);running=false;elapsed=0;document.getElementById('btn').textContent='▶ 开始';document.getElementById('laps').innerHTML='';render()}
+function render(){
+  const ms=Math.floor(elapsed%1000/10),s=Math.floor(elapsed/1000)%60,m=Math.floor(elapsed/60000);
+  document.getElementById('disp').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+'.'+String(ms).padStart(2,'0');
+}
+render();
+</script>
+</body>
+</html>
