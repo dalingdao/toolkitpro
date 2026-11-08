@@ -383,10 +383,34 @@ def quiz_generator(i):
     for q in items: tiered[q['tier']]=tiered.get(q['tier'],0)+1
     return {'topic':topic,'count':count,'tiered':tiered,'questions':items}
 
+def pm_compute(items):
+    res=[]
+    def norm(x):
+        f=float(x or 0)
+        return int(f) if f==int(f) else f
+    for it in items:
+        v=norm(it.get('value')); c=norm(it.get('cost')); r=norm(it.get('risk')); d=norm(it.get('dep'))
+        score=v*2-c-r-d*0.5
+        s=round(score,1)
+        if s==int(s): s=int(s)  # 与JS Math.round/10 一致：整数不显示.0
+        if score>=13: prio='P0'
+        elif score>=9: prio='P1'
+        elif score>=5: prio='P2'
+        else: prio='P3'
+        res.append({'name':it.get('name'),'value':v,'cost':c,'risk':r,'dep':d,'score':s,'priority':prio})
+    res.sort(key=lambda x:-x['score'])
+    return res
+
+def priority_matrix(i):
+    items=i.get('items')
+    if not items or not len(items): raise ValueError('items required')
+    res=pm_compute(items)
+    return {'count':len(res),'ranked':res}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
-         'data-quality':data_quality,'quiz-generator':quiz_generator}
+         'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix}
 
 # ---- entry ----
 def main():
