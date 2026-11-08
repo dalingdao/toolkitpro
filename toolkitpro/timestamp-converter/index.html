@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unix Timestamp Converter - Epoch to Date Online</title>
+<meta name="description" content="Free Unix timestamp converter. Convert epoch timestamps to human-readable dates and back. Supports seconds, milliseconds, UTC, and local time zones.">
+<meta name="keywords" content="unix timestamp, epoch converter, timestamp to date, date to timestamp, epoch time, unix time converter">
+<link rel="canonical" href="https://dalingdao.github.io/toolkitpro/timestamp-converter/">
+<style>
+:root { --bg:#0f1117; --card:#1a1d29; --accent:#6c5ce7; --text:#e8eaf0; --muted:#8b90a5; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+.container { max-width:820px; margin:0 auto; padding:30px 20px; }
+h1 { font-size:2.1rem; margin-bottom:8px; color:#fff; }
+.subtitle { color:var(--muted); margin-bottom:28px; }
+.card { background:var(--card); border-radius:12px; padding:24px; margin-bottom:20px; border:1px solid #2a2f42; }
+label { display:block; color:var(--muted); font-size:0.9rem; margin-bottom:8px; }
+input { width:100%; background:#0d0f17; border:1px solid #2a2f42; border-radius:8px; color:var(--text); padding:12px; font-family:monospace; font-size:15px; }
+.btn { display:inline-block; background:var(--accent); border:none; color:#fff; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:0.95rem; margin:8px 8px 0 0; }
+.btn:hover { opacity:0.9; }
+.btn.sec { background:#2a2f42; }
+.result { background:#0d0f17; border:1px solid #2a2f42; border-radius:8px; padding:14px; margin-top:12px; font-family:monospace; font-size:14px; white-space:pre-wrap; }
+h2 { font-size:1.4rem; margin:28px 0 12px; color:#fff; }
+p, li { color:var(--muted); }
+ul { padding-left:20px; margin-top:8px; }
+code { background:#2a2f42; padding:2px 6px; border-radius:4px; font-family:monospace; }
+a { color:var(--accent); }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+<h1>🕐 Unix Timestamp Converter</h1>
+<p class="subtitle">Convert Unix timestamps to human-readable dates and back. Supports seconds and milliseconds.</p>
+
+<div class="card">
+  <label>Unix Timestamp (seconds or milliseconds)</label>
+  <input type="text" id="ts" placeholder="e.g. 1700000000" oninput="tsToDate()">
+  <div class="result" id="ts-out">Enter a timestamp to convert...</div>
+</div>
+
+<div class="card">
+  <label>Date/Time → Timestamp</label>
+  <input type="datetime-local" id="dt" oninput="dateToTs()">
+  <div class="result" id="dt-out">Select a date to convert...</div>
+</div>
+
+<h2>What is a Unix Timestamp?</h2>
+<p>A Unix timestamp is the number of seconds (or milliseconds) that have elapsed since January 1, 1970 at 00:00:00 UTC (the Unix epoch). It is a universal, timezone-independent way to represent time — used by databases, APIs, and programming languages.</p>
+
+<h2>Common Timestamp Examples</h2>
+<ul>
+<li><code>0</code> → January 1, 1970 00:00:00 UTC (the epoch)</li>
+<li><code>1000000000</code> → September 9, 2001 01:46:40 UTC</li>
+<li><code>1700000000</code> → November 14, 2023 22:13:20 UTC</li>
+<li><code>1800000000000</code> (ms) → January 15, 2027 08:40:00 UTC</li>
+</ul>
+
+<h2>Why Use Timestamps?</h2>
+<ul>
+<li><strong>Universal:</strong> Same value everywhere, no timezone confusion</li>
+<li><strong>Sortable:</strong> Larger = later, so sorting is trivial</li>
+<li><strong>Compact:</strong> 10-13 digits vs a full date string</li>
+<li><strong>Standard:</strong> Used by JavaScript, Python, MySQL, APIs</li>
+</ul>
+
+<footer style="margin-top:40px;color:var(--muted);font-size:0.85rem;">
+  <a href="../">← Back to Toolkit Pro</a> | Free online tools
+</footer>
+</div>
+
+<script>
+function tsToDate() {
+  const v = document.getElementById('ts').value.trim();
+  const out = document.getElementById('ts-out');
+  if (!v) { out.textContent = 'Enter a timestamp to convert...'; return; }
+  const n = Number(v);
+  if (isNaN(n)) { out.textContent = '⚠️ Invalid timestamp'; return; }
+  // Auto-detect ms (13 digits) vs seconds (10 digits)
+  const ms = Math.abs(n) >= 1e12 ? n : n * 1000;
+  const d = new Date(ms);
+  if (isNaN(d.getTime())) { out.textContent = '⚠️ Invalid timestamp'; return; }
+  out.textContent =
+    'UTC:  ' + d.toISOString().replace('T', ' ').slice(0, 19) + '\n' +
+    'Local: ' + d.toString().slice(0, 24) + '\n' +
+    'ISO:  ' + d.toISOString() + '\n' +
+    'Unit: ' + (Math.abs(n) >= 1e12 ? 'milliseconds' : 'seconds');
+}
+function dateToTs() {
+  const v = document.getElementById('dt').value;
+  const out = document.getElementById('dt-out');
+  if (!v) { out.textContent = 'Select a date to convert...'; return; }
+  const d = new Date(v);
+  out.textContent = 'Seconds:     ' + Math.floor(d.getTime() / 1000) + '\n' +
+    'Milliseconds: ' + d.getTime() + '\n' +
+    'UTC:        ' + d.toISOString().replace('T', ' ').slice(0, 19);
+}
+// Fill current timestamp
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('ts').value = Math.floor(Date.now() / 1000);
+  tsToDate();
+});
+</script>
+</body>
+</html>
