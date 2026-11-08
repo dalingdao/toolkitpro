@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pace Calculator - 免费在线跑步配速计算器</title>
+<meta name="description" content="免费在线跑步配速计算器，距离/时间算配速与速度，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="配速,pace calculator,跑步配速,马拉松,速度,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:30px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🏃 Pace Calculator</h1>
+  <p>免费在线跑步配速计算器—— 距离与时间算配速。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">配速</span><span class="badge">Agent可用</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>距离（公里）</label><input type="number" id="d" value="10" min="0.1" step="0.1" oninput="calc()"></div>
+    <div class="field"><label>用时（分钟）</label><input type="number" id="t" value="55" min="1" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Pace Calculator · 纯前端 · Agent可用</footer>
+<script>
+function fmt(min){var m=Math.floor(min),s=Math.round((min-m)*60);if(s===60){m++;s=0;}return m+"'"+String(s).padStart(2,'0')+'"';}
+function calc(){
+  var d=+document.getElementById('d').value||0,t=+document.getElementById('t').value||0;
+  var el=document.getElementById('res');
+  if(d<=0){el.innerHTML='<div class="big">—</div>';return;}
+  var pace=t/d,spd=d/(t/60);
+  var mar=fmt(pace*42.195);
+  el.innerHTML='<div class="big">'+fmt(pace)+' /km</div><div class="sub">配速<br>速度 '+spd.toFixed(2)+' km/h<br>全马完赛约 '+mar+'</div>';
+}
+calc();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var d=+q.get('distance')||0,t=+q.get('time')||0,pace=t/d;
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify({pace_min_per_km:pace,speed_kmh:d/(t/60),marathon_hours:pace*42.195/60},null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
