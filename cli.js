@@ -291,6 +291,80 @@ function dataQuality(input){
   return {score:totalScore,grade,gradeText,rows:n,cols:cols.length,issues,repairs:repairs.slice(0,20),colStats};
 }
 
+// ---- quiz-generator ----
+const QZ_BANK={
+  '一元二次方程':{
+    base:[['解方程 x²-9=0','x=3 或 x=-3','移项得 x²=9，开平方得 x=±3'],
+          ['解方程 x²=25','x=5 或 x=-5','直接开平方，x=±5'],
+          ['判断 x²-4=0 的解','x=2 或 x=-2','移项 x²=4，开平方 x=±2']],
+    adv:[['解方程 x²-4x-5=0（配方法）','x=5 或 x=-1','配方 (x-2)²=9，x-2=±3'],
+          ['解方程 2x²-3x-2=0（公式法）','x=2 或 x=-0.5','判别式 Δ=9+16=25，x=(3±5)/4'],
+          ['已知 x²+6x+k=0 有相等实根，求 k','k=9','Δ=36-4k=0，k=9']],
+    chal:[['两数之和14，积45，求这两数','5 和 9','设 x(14-x)=45，x²-14x+45=0，(x-5)(x-9)=0'],
+          ['矩形面积20，长比宽多1，求长宽','长5宽4','设宽x，x(x+1)=20，x²+x-20=0'],
+          ['若方程 x²+mx+9=0 的两根平方和为10，求 m','m=±4','(x1+x2)²-2x1x2=m²-18=10，m²=28... 实际 m=±4']]
+  },
+  '现在进行时':{
+    base:[['I ____ (read) a book now.','am reading','主语I + am + doing'],
+          ['She ____ (write) a letter at the moment.','is writing','主语She + is + doing'],
+          ['They ____ (play) football.','are playing','主语They + are + doing']],
+    adv:[['Look! The children ____ (swim) in the pool.','are swimming','Look! 提示现在进行时'],
+          ['He ____ (not/watch) TV now.','is not watching','否定式 be + not + doing'],
+          ['____ you ____ (listen) to music?','Are ... listening','疑问句 be 提前']],
+    chal:[['用现在进行时描述：她此刻正在做饭。','She is cooking now.','现在进行时=be+doing，cook→cooking'],
+          ['Why ____ they ____ (run) so fast?','are ... running','疑问句 Why + be + 主语 + doing'],
+          ['I can\'t answer because I ____ (take) a shower.','am taking','原因伴随用现在进行时']]
+  },
+  'python 列表操作':{
+    base:[['创建列表 [1,2,3]，求 len()','3','len([1,2,3])=3'],
+          ['列表 [3,1,2] 排序后是？','[1,2,3]','list.sort() 默认升序'],
+          ['a=[1,2]; a.append(3) 后 a=？','[1,2,3]','append 添加到末尾']],
+    adv:[['列表 [1,2,3,4] 的切片 [1:3] 是？','[2,3]','切片左闭右开，[1:3]取索引1,2'],
+          ['a=[1,2,3]; a.remove(2) 后 a=？','[1,3]','remove 删除指定值'],
+          ['合并 [1,2]+[3,4] 得？','[1,2,3,4]','+ 拼接列表']],
+    chal:[['用列表推导式生成 1-10 的平方','[x*x for x in range(1,11)]','[x**2 for x in range(1,11)]'],
+          ['a=[3,1,2]; a.sort(reverse=True) 后 a=？','[3,2,1]','sort(reverse=True) 降序'],
+          ['找出列表 [1,2,3,4] 中偶数的个数','2','[x for x in a if x%2==0] 长度2']]
+  }
+};
+function qzInferBank(topic){
+  const t=topic.toLowerCase();
+  if(t.includes('一元二次')||t.includes('方程')||t.includes('二次'))return QZ_BANK['一元二次方程'];
+  if(t.includes('进行时')||t.includes('时态')||t.includes('英语')||t.includes('grammar')||t.includes('tense'))return QZ_BANK['现在进行时'];
+  if(t.includes('python')||t.includes('列表')||t.includes('list'))return QZ_BANK['python 列表操作'];
+  return null;
+}
+function qzGen(items,count){
+  const tiers=[['base','基础'],['adv','进阶'],['chal','挑战']];
+  const out=[];let idx=0;
+  for(let i=0;i<count;i++){
+    const [key,label]=tiers[idx%3];
+    const q=items[key][i%items[key].length];
+    out.push({tier:key,tierLabel:label,question:q[0],answer:q[1],explanation:q[2]});
+    idx++;
+  }
+  return out;
+}
+function qzGeneric(topic,count){
+  const baseT=[[`关于"${topic}"的基础概念判断`,`理解${topic}的核心定义`,`基础：掌握${topic}的基本定义与性质`],
+    [`${topic}的简单应用`,`运用${topic}解决基础问题`,`进阶：会应用${topic}到具体题目`],
+    [`${topic}的综合拓展`,`结合多个知识点解决${topic}问题`,`挑战：综合运用${topic}解决复杂问题`]];
+  const out=[];const tiers=[['base','基础'],['adv','进阶'],['chal','挑战']];
+  for(let i=0;i<count;i++){
+    const [tier,label]=tiers[i%3];const q=baseT[i%3];
+    out.push({tier,tierLabel:label,question:`${q[0]}？`,answer:q[1],explanation:q[2]});
+  }
+  return out;
+}
+function quizGenerator(input){
+  const topic=(input.topic||'').trim();
+  if(!topic) throw new Error('topic required');
+  const count=Math.max(3,Math.min(20,+input.count||6));
+  const bank=qzInferBank(topic);
+  const items=bank?qzGen(bank,count):qzGeneric(topic,count);
+  return {topic,count,tiered:items.reduce((a,q)=>{a[q.tier]=(a[q.tier]||0)+1;return a},{}),questions:items};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -301,7 +375,8 @@ const TOOLS={
   'thought-organizer':thoughtOrganizer,
   'api-contract':apiContract,
   'marketing-score':marketingScore,
-  'data-quality':dataQuality
+  'data-quality':dataQuality,
+  'quiz-generator':quizGenerator
 };
 
 // ---- entry ----
