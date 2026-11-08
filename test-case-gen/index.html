@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试用例生成器 Test Case Generator</title>
+<meta name="description" content="测试用例生成器：输入字段定义/业务规则，自动生成等价类+边界值+异常场景测试用例，标注优先级与覆盖类型。QA测试用例编写必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:220px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.tbl th,.tbl td{border:1px solid #2a2e3d;padding:6px 8px;text-align:left;vertical-align:top}
+.tbl th{background:#1f2333;color:#9ca3af}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600}
+.badge.high{background:rgba(239,68,68,.2);color:#f87171}
+.badge.mid{background:rgba(245,158,11,.2);color:#fbbf24}
+.badge.low{background:rgba(59,130,246,.2);color:#60a5fa}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/test-case-gen/">测试用例生成器</a>
+    <a href="?tool=test-case-gen&input={\"name\":\"注册\",\"fields\":[{\"name\":\"age\",\"type\":\"number\",\"min\":18,\"max\":60}]}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>测试用例生成器</h1>
+  <p class="sub">输入字段定义/业务规则 → 自动生成等价类+边界值+异常场景测试用例，标注优先级与覆盖类型。QA 测试用例编写必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>QA 给"注册表单"写测试用例——<b>要覆盖有效等价类、边界值（18/60 岁）、异常输入（负数/超长/空）</b>。手动写要半小时，本工具按字段定义自动生成全场景用例 + 优先级标注，直接进测试平台。
+  </div>
+
+  <div class="card">
+    <h2>输入字段定义（JSON）</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample()">示例</div>
+    </div>
+    <textarea id="input" placeholder='格式：{"name":"模块名","fields":[{"name":"字段","type":"number|string|email|bool","min":..,"max":..,"maxLen":..,"required":true},...]}&#10;例如：&#10;{"name":"注册","fields":[{"name":"age","type":"number","min":18,"max":60,"required":true},{"name":"email","type":"email","required":true},{"name":"name","type":"string","maxLen":20,"required":true}]}'></textarea>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">生成测试用例</button>
+      <button class="btn ghost" onclick="document.getElementById('input').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>QA 编写测试用例；开发自测；测试平台导入用例。<b>痛点：</b>等价类/边界值/异常场景漏测，手动写慢。<b>用法：</b>输入字段定义 → 生成等价类+边界值+异常用例，标注优先级与覆盖类型。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入 {"name":"注册","fields":[{"name":"age","type":"number","min":18,"max":60,"required":true}]}：生成 age=18（边界）、60（边界）、19（有效）、17（无效）、61（无效）、空（必填）、负数（异常）等用例，标注高/中优先级。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=test-case-gen&input={"name":"注册","fields":[{"name":"age","type":"number","min":18,"max":60}]}&format=json</code> 返回 JSON（用例数组），Agent 可直接读入测试框架。
+    </div>
+  </div>
+</div>
+
+<script>
+const input=document.getElementById('input');
+const out=document.getElementById('out');
+
+function loadSample(){
+  input.value='{"name":"注册","fields":[{"name":"age","type":"number","min":18,"max":60,"required":true},{"name":"email","type":"email","required":true},{"name":"username","type":"string","maxLen":20,"required":true}]}';
+  run();
+}
+
+function genCases(def){
+  const cases=[];
+  const mod=def.name||'模块';
+  def.fields.forEach(f=>{
+    const p=f.required?'high':'mid';
+    if(f.type==='number'){
+      const min=f.min!==undefined?f.min:0, max=f.max!==undefined?f.max:100;
+      if(f.required)cases.push({field:f.name,type:'required',input:'空',expected:'拒绝（必填）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+min,expected:'接受（最小值边界）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+max,expected:'接受（最大值边界）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+(min+1),expected:'接受（min+1）',priority:'mid'});
+      cases.push({field:f.name,type:'boundary',input:'='+(max-1),expected:'接受（max-1）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'='+(min-1),expected:'拒绝（<min）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'='+(max+1),expected:'拒绝（>max）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'=负数',expected:'拒绝（负数异常）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'=非数字abc',expected:'拒绝（类型错误）',priority:'mid'});
+    }else if(f.type==='email'){
+      if(f.required)cases.push({field:f.name,type:'required',input:'空',expected:'拒绝（必填）',priority:'high'});
+      cases.push({field:f.name,type:'valid',input:'user@example.com',expected:'接受（标准邮箱）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'user@',expected:'拒绝（缺域名）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'user@example',expected:'拒绝（缺顶级域）',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'userexample.com',expected:'拒绝（缺@）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'user@@example.com',expected:'拒绝（双@）',priority:'mid'});
+    }else if(f.type==='string'){
+      const maxLen=f.maxLen||50;
+      if(f.required)cases.push({field:f.name,type:'required',input:'空',expected:'拒绝（必填）',priority:'high'});
+      cases.push({field:f.name,type:'valid',input:'正常字符串',expected:'接受',priority:'mid'});
+      cases.push({field:f.name,type:'boundary',input:'='+maxLen+'字符',expected:'接受（最大长度边界）',priority:'high'});
+      cases.push({field:f.name,type:'boundary',input:'='+(maxLen+1)+'字符',expected:'拒绝（超长）',priority:'high'});
+      cases.push({field:f.name,type:'invalid',input:'特殊字符<>"\';',expected:'拒绝或转义（注入防护）',priority:'mid'});
+    }else if(f.type==='bool'){
+      cases.push({field:f.name,type:'valid',input:'true',expected:'接受',priority:'mid'});
+      cases.push({field:f.name,type:'valid',input:'false',expected:'接受',priority:'mid'});
+      cases.push({field:f.name,type:'invalid',input:'1/0/yes',expected:'拒绝（非布尔）',priority:'low'});
+    }
+  });
+  return cases;
+}
+
+function run(){
+  const text=input.value.trim();
+  if(!text){out.style.display='block';out.textContent='请先输入字段定义 JSON。';return;}
+  let def;
+  try{def=JSON.parse(text);}catch(e){out.style.display='block';out.textContent='JSON解析失败：'+e.message;return;}
+  if(!def.fields||!def.fields.length){out.style.display='block';out.textContent='需要 fields 数组（至少一个字段）。';return;}
+  const cases=genCases(def);
+  out.style.display='block';
+  const pcls={'high':'high','mid':'mid','low':'low'};
+  out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">🧪 测试用例：'+def.name+'（'+cases.length+'个）</div>'+
+    '<table class="tbl"><tr><th>#</th><th>字段</th><th>覆盖类型</th><th>输入</th><th>预期</th><th>优先级</th></tr>'+
+    cases.map((c,i)=>'<tr><td>'+(i+1)+'</td><td>'+c.field+'</td><td>'+c.type+'</td><td>'+c.input+'</td><td>'+c.expected+'</td><td><span class="badge '+pcls[c.priority]+'">'+c.priority+'</span></td></tr>').join('')+'</table>'+
+    '<div style="margin-top:12px"><button class="btn ghost" onclick="copyOut()">复制用例</button></div>';
+}
+
+function copyOut(){
+  const ta=document.createElement('textarea');ta.value=out.innerText;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('已复制');
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      if(!parsed.fields||!parsed.fields.length)throw new Error('fields required');
+      const cases=genCases(parsed);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,name:parsed.name,count:cases.length,cases},null,2)+'</pre>';
+      document.title='test-case-gen JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
