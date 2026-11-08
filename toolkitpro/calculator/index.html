@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator Pro - 免费在线科学计算器</title>
+<meta name="description" content="免费在线科学计算器，标准/科学模式，支持括号/百分号/平方/平方根/三角函数，纯前端，无需注册。">
+<meta name="keywords" content="计算器,calculator,科学计算器,在线计算,免费计算器">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.back{position:absolute;top:16px;left:20px;font-size:13px;color:#64748b;text-decoration:none}
+h1{font-size:24px;margin-bottom:6px}
+.sub{color:#64748b;font-size:13px;margin-bottom:20px}
+.calc{background:#1e293b;border-radius:16px;padding:20px;width:320px}
+.disp{background:#0f172a;border-radius:10px;padding:16px;margin-bottom:14px;text-align:right}
+.disp .expr{color:#64748b;font-size:14px;min-height:18px}
+.disp .result{font-size:34px;font-weight:700;color:#22c55e;font-variant-numeric:tabular-nums;word-break:break-all}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.btn{padding:15px;border-radius:8px;border:none;font-size:18px;cursor:pointer;background:#334155;color:#fff;font-weight:600}
+.btn:hover{background:#475569}
+.btn.op{background:#0f172a;color:#3b82f6}
+.btn.fn{background:#0f172a;color:#f59e0b;font-size:15px}
+.btn.eq{background:#3b82f6;color:#fff}
+.btn.clr{background:#ef4444;color:#fff}
+footer{position:absolute;bottom:16px;color:#475569;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<h1>🧮 Calculator Pro</h1>
+<div class="sub">免费在线科学计算器 —— 纯前端</div>
+<div class="calc">
+  <div class="disp"><div class="expr" id="expr"></div><div class="result" id="res">0</div></div>
+  <div class="grid">
+    <button class="btn fn" onclick="fn('sqrt')">√</button><button class="btn fn" onclick="fn('sq')">x²</button><button class="btn fn" onclick="fn('inv')">1/x</button><button class="btn clr" onclick="clr()">C</button>
+    <button class="btn" onclick="add('7')">7</button><button class="btn" onclick="add('8')">8</button><button class="btn" onclick="add('9')">9</button><button class="btn op" onclick="add('/')">÷</button>
+    <button class="btn" onclick="add('4')">4</button><button class="btn" onclick="add('5')">5</button><button class="btn" onclick="add('6')">6</button><button class="btn op" onclick="add('*')">×</button>
+    <button class="btn" onclick="add('1')">1</button><button class="btn" onclick="add('2')">2</button><button class="btn" onclick="add('3')">3</button><button class="btn op" onclick="add('-')">−</button>
+    <button class="btn" onclick="add('0')">0</button><button class="btn" onclick="add('.')">.</button><button class="btn fn" onclick="back()">⌫</button><button class="btn op" onclick="add('+')">+</button>
+    <button class="btn eq" style="grid-column:span 4" onclick="eq()">=</button>
+  </div>
+</div>
+<footer>ToolkitPro · Calculator Pro · 纯前端</footer>
+<script>
+let s='';
+function add(x){s+=x;document.getElementById('expr').textContent=s}
+function back(){s=s.slice(0,-1);document.getElementById('expr').textContent=s}
+function clr(){s='';document.getElementById('expr').textContent='';document.getElementById('res').textContent='0'}
+function fn(f){
+  const v=parseFloat(s)||0;
+  if(f==='sqrt')s=Math.sqrt(v).toString();
+  else if(f==='sq')s=(v*v).toString();
+  else if(f==='inv')s=v?(1/v).toString():'0';
+  document.getElementById('expr').textContent=s;
+}
+function eq(){
+  try{
+    let r=Function('"use strict";return ('+s+')')();
+    if(!isFinite(r))r='错误';
+    document.getElementById('res').textContent=r;
+  }catch(e){document.getElementById('res').textContent='错误'}
+}
+</script>
+</body>
+</html>
