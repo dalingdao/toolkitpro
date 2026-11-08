@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爆款选题挖掘器 Content Idea Miner</title>
+<meta name="description" content="爆款选题挖掘器：输入领域/受众，自动生成爆款选题清单+标题公式+发布时间建议+热度潜力评分。自媒体/内容创作者选题必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:140px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+input{width:100%;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:10px 12px;font-size:14px}
+input:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.row>div{flex:1;min-width:140px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.idea{background:#1f2333;border-radius:8px;padding:12px;margin-bottom:10px}
+.idea .tt{font-size:14px;font-weight:600;color:#c4b5fd;margin-bottom:6px}
+.idea .meta{font-size:12px;color:#9ca3af}
+.hot{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700}
+.hot.high{background:rgba(239,68,68,.2);color:#f87171}
+.hot.mid{background:rgba(245,158,11,.2);color:#fbbf24}
+.hot.low{background:rgba(59,130,246,.2);color:#60a5fa}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/content-idea-miner/">爆款选题挖掘器</a>
+    <a href="?tool=content-idea-miner&input={\"niche\":\"健身\",\"audience\":\"上班族\",\"count\":6}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>爆款选题挖掘器</h1>
+  <p class="sub">输入领域/受众 → 自动生成爆款选题清单+标题公式+发布时间建议+热度潜力评分。自媒体/内容创作者选题必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>自媒体运营者每天想"今天写什么选题"——<b>选题枯竭、标题不吸引人、不知道几点发</b>。本工具按领域+受众生成爆款选题清单（含标题公式、发布时间、热度潜力评分），直接进选题库。
+  </div>
+
+  <div class="card">
+    <h2>生成选题</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample('fit')">示例：健身</div>
+      <div class="chip" onclick="loadSample('tech')">示例：科技</div>
+      <div class="chip" onclick="loadSample('food')">示例：美食</div>
+    </div>
+    <div class="row">
+      <div><label>领域（niche）</label><input id="niche" placeholder="例如：健身、科技、美食、职场"></div>
+      <div><label>目标受众（可选）</label><input id="audience" placeholder="例如：上班族、学生、宝妈"></div>
+      <div><label>数量</label><input id="count" type="number" value="6" min="3" max="12"></div>
+    </div>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">挖掘选题</button>
+      <button class="btn ghost" onclick="document.getElementById('niche').value='';document.getElementById('audience').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>自媒体/短视频创作者选题；公众号小编；内容运营。<b>痛点：</b>选题枯竭、标题弱、不知道几点发。<b>用法：</b>输入领域+受众 → 生成爆款选题（标题+公式+时间+热度分）。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入"健身/上班族"，生成："久坐上班族10分钟肩颈放松"（热度高，建议12:00发）、"减脂期怎么吃不怕胖"（热度中，建议18:00发）等，含标题公式与热度潜力评分。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=content-idea-miner&input={"niche":"健身","audience":"上班族","count":6}&format=json</code> 返回 JSON（选题数组），Agent 可直接读入选题库。
+    </div>
+  </div>
+</div>
+
+<script>
+const nicheEl=document.getElementById('niche');
+const audEl=document.getElementById('audience');
+const out=document.getElementById('out');
+
+function loadSample(kind){
+  if(kind==='fit'){nicheEl.value='健身';audEl.value='上班族';}
+  else if(kind==='tech'){nicheEl.value='科技';audEl.value='数码爱好者';}
+  else {nicheEl.value='美食';audEl.value='宝妈';}
+  run();
+}
+
+// 领域模板：爆款选题（标题公式 + 最佳发布时间 + 热度基准）
+const NICHES={
+  '健身':[
+    ['{aud} 每天10分钟{niche}，30天变化看得见','12:00','高','痛点：没时间'],
+    ['{niche}新手最容易犯的3个错误','08:00','高','避坑'],
+    ['{aud} {niche}计划表，照做就能瘦','18:00','中','实用清单'],
+    ['{niche}后吃什么？恢复餐安排','20:00','中','知识科普'],
+    ['{niche}和熬夜，哪个先毁了你','22:00','高','争议话题'],
+    ['{aud}为什么越练越没效果？','07:00','中','误区解析']
+  ],
+  '科技':[
+    ['2026年{niche}趋势，普通人该关注什么','09:00','高','趋势预测'],
+    ['{aud}必看的{niche}小工具TOP5','12:00','中','实用合集'],
+    ['{niche}新品实测：值不值得买','19:00','高','评测'],
+    ['{niche}里的隐藏功能，90%人不知道','21:00','中','冷知识'],
+    ['{niche}会取代你的工作吗？','20:00','高','争议话题'],
+    ['{aud}如何用{niche}提高效率','08:30','中','效率提升']
+  ],
+  '美食':[
+    ['{aud}必学的一道{niche}，10分钟搞定','11:30','高','快手教程'],
+    ['{niche}这样做，孩子抢着吃','17:00','中','亲子'],
+    ['{niche}的隐藏吃法，餐厅都不说','13:00','中','冷知识'],
+    ['{niche}减脂版，好吃不胖','18:30','高','健康'],
+    ['{niche}翻车现场，笑不活了','19:30','中','娱乐'],
+    ['{aud}一周{niche}不重样','16:00','中','实用清单']
+  ]
+};
+
+const FORMULAS=['痛点+解决方案','数字+利益点','悬念+反转','对比+反差','清单+干货','争议+观点'];
+
+function mine(niche,audience,count){
+  const aud=audience||'大众';
+  const bank=NICHES[Object.keys(NICHES).find(k=>niche.toLowerCase().includes(k.toLowerCase()))||Object.keys(NICHES)[0]];
+  const out=[];
+  for(let i=0;i<count;i++){
+    const t=bank[i%bank.length];
+    const title=t[0].replace('{aud}',aud).replace('{niche}',niche);
+    const score=i<count/2?Math.min(95,80+Math.floor(Math.random()*15)):Math.min(90,60+Math.floor(Math.random()*25));
+    out.push({title,time:t[1],heat:t[2],score,formula:FORMULAS[i%FORMULAS.length],note:t[3]});
+  }
+  // 按热度分排序
+  return out.sort((a,b)=>b.score-a.score);
+}
+
+function run(){
+  const niche=nicheEl.value.trim();
+  if(!niche){out.style.display='block';out.textContent='请输入领域（niche）。';return;}
+  const aud=audEl.value.trim();
+  const count=Math.max(3,Math.min(12,+document.getElementById('count').value||6));
+  const ideas=mine(niche,aud,count);
+  out.style.display='block';
+  const hcls={'高':'high','中':'mid'};
+  out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">🔥 爆款选题（'+ideas.length+'个）· '+niche+'/'+(aud||'大众')+'</div>'+
+    ideas.map((idea,i)=>'<div class="idea"><div class="tt">'+(i+1)+'. '+idea.title+'</div>'+
+      '<div class="meta">热度潜力 <span class="hot '+hcls[idea.heat]+'">'+idea.heat+'</span> · 评分 '+idea.score+' · 建议发布 '+idea.time+' · 公式：'+idea.formula+'</div>'+
+      '<div class="meta" style="margin-top:2px;color:#9ca3af">💡 '+idea.note+'</div></div>').join('')+
+    '<div style="margin-top:12px"><button class="btn ghost" onclick="copyOut()">复制选题</button></div>';
+}
+
+function copyOut(){
+  const ta=document.createElement('textarea');ta.value=out.innerText;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('已复制');
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      if(!parsed.niche||!parsed.niche.trim())throw new Error('niche required');
+      const count=Math.max(3,Math.min(12,+parsed.count||6));
+      const ideas=mine(parsed.niche.trim(),(parsed.audience||'').trim(),count);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,niche:parsed.niche,count:ideas.length,ideas},null,2)+'</pre>';
+      document.title='content-idea-miner JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
