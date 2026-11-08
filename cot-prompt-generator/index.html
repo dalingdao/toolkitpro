@@ -103,5 +103,10 @@ function cp(){const o=document.getElementById('out').innerText;if(o&&o!=='输入
 // Agent接口
 (function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const task=(d.task||'').trim();const sc=d.scenario||'general';const dep=d.depth||'detail';if(!task){document.body.textContent=JSON.stringify({tool:'cot-prompt-generator',error:'task required'});return}document.body.textContent=JSON.stringify({tool:'cot-prompt-generator',input:d,output:{scenario:sc,prompt:build(task,sc,dep),steps:6}})}catch(e){document.body.textContent=JSON.stringify({tool:'cot-prompt-generator',error:'invalid input'})}}})();
 </script>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin:16px auto;max-width:720px;font-size:13px;line-height:1.7;color:#cbd5e1">
+<b style="color:#60a5fa">💡 实用场景：</b>自媒体运营写产品文案：输入主题与场景，一键生成思维链提示词，复制给 AI 得到更可靠输出。<br>
+<b style="color:#60a5fa">示例：</b>输入 <code>{"task":"为新品蓝牙耳机写朋友圈推广文案","scenario":"writing"}</code><br>→ <code>生成带6步思维链的提示词，复制给 AI</code>
+</div>
 </body>
 </html>
