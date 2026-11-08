@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Length Converter - 免费在线长度换算</title>
+<meta name="description" content="免费在线长度换算器，米/厘米/毫米/千米/英寸/英尺互转，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="长度换算,length converter,米,厘米,英寸,英尺,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:left}
+.result .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e2e8f0;font-size:14px}
+.result .row b{color:#2563eb}
+.result .row span:first-child{color:#64748b}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📏 Length Converter</h1>
+  <p>免费在线长度换算—— m/cm/mm/km/inch/ft。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">米</span><span class="badge">英寸</span><span class="badge">英尺</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>数值</label><input type="number" id="v" value="1" min="0" oninput="calc()"></div>
+    <div class="field"><label>单位</label><select id="u" onchange="calc()">
+      <option value="m" selected>米 m</option><option value="cm">厘米 cm</option><option value="mm">毫米 mm</option><option value="km">千米 km</option><option value="in">英寸 in</option><option value="ft">英尺 ft</option>
+    </select></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Length Converter · 纯前端</footer>
+<script>
+var R={m:1,cm:100,mm:1000,km:0.001,in:39.3701,ft:3.28084};
+function calc(){
+  var v=+document.getElementById('v').value||0,u=document.getElementById('u').value;
+  var m=v/R[u];
+  var rows=Object.keys(R).map(function(k){return '<div class="row"><span>'+k+'</span><b>'+(m*R[k]).toLocaleString('en-US',{maximumFractionDigits:6})+'</b></div>';}).join('');
+  document.getElementById('res').innerHTML=rows;
+}
+calc();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var v=+q.get('value')||0,u=q.get('unit')||'m',m=v/R[u],out={m:m};
+    Object.keys(R).forEach(function(k){out[k]=m*R[k];});
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify(out,null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
