@@ -447,11 +447,44 @@ def faq_generator(i):
     res=faq_organize(qa)
     return {'total':res['total_input'],'unique':res['unique'],'duplicates':res['duplicates'],'categories':res['groups']}
 
+def i18n_ph(s):
+    m=re.findall(r'\{[^}]+\}',s)
+    return sorted(set(m)) if m else []
+
+def i18n_check(locales):
+    langs=list(locales.keys())
+    if len(langs)<2: raise ValueError('需要至少2个语言文件')
+    base=langs[0]
+    base_keys=list(locales[base].keys())
+    report={'locales':langs,'base':base,'keyReport':[],'placeholderReport':[],'lengthReport':[],'missingCount':0,'extraCount':0}
+    for lang in langs:
+        if lang==base: continue
+        keys=list(locales[lang].keys())
+        missing=[k for k in base_keys if k not in locales[lang]]
+        extra=[k for k in keys if k not in locales[base]]
+        report['missingCount']+=len(missing); report['extraCount']+=len(extra)
+        report['keyReport'].append({'lang':lang,'missing':missing,'extra':extra})
+        for k in base_keys:
+            if k not in locales[lang]: continue
+            b=i18n_ph(str(locales[base][k])); o=i18n_ph(str(locales[lang][k]))
+            if b!=o: report['placeholderReport'].append({'key':k,'lang':lang,'base':b,'other':o,'severity':'bad'})
+            base_len=len(str(locales[base][k])); other_len=len(str(locales[lang][k]))
+            if other_len>base_len*1.5: report['lengthReport'].append({'key':k,'lang':lang,'baseLen':base_len,'otherLen':other_len,'severity':'warn'})
+    report['score']=max(0,100-report['missingCount']*5-report['extraCount']*3-len(report['placeholderReport'])*4-len(report['lengthReport'])*2)
+    report['grade']='good' if report['score']>=90 else 'warn' if report['score']>=70 else 'bad'
+    return report
+
+def i18n_checker(i):
+    locales=i.get('locales')
+    if not locales: raise ValueError('locales required')
+    res=i18n_check(locales)
+    return {'score':res['score'],'grade':res['grade'],'locales':res['locales'],'missingCount':res['missingCount'],'extraCount':res['extraCount'],'keys':res['keyReport'],'placeholders':res['placeholderReport'],'lengths':res['lengthReport']}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
          'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix,
-         'faq-generator':faq_generator}
+         'faq-generator':faq_generator,'i18n-checker':i18n_checker}
 
 # ---- entry ----
 def main():
