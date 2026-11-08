@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LLM Schema 校验器 - 校验 AI 输出防幻觉</title>
+<meta name="description" content="用 JSON Schema 校验 LLM 输出，定位缺失/类型错误字段并给修复建议，让 AI 输出可信，防幻觉破坏生产环境。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:780px;margin:0 auto}h1{font-size:24px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:4px}textarea{width:100%;min-height:90px;padding:12px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:13px;resize:vertical;font-family:monospace}
+button{width:100%;padding:12px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:14px;margin-top:12px;font-size:14px;white-space:pre-wrap;line-height:1.7}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}.ok{color:#34d399}.bad{color:#f87171}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>LLM Schema 校验器 <span class="tag">原创 · AI 输出可信</span></h1>
+<h2>用 JSON Schema 校验 LLM 输出 · 定位缺失/类型错误 · 防幻觉</h2>
+<div class="card">
+<label>LLM 输出（JSON）</label><textarea id="data" placeholder='{"name":"产品A","price":99}'></textarea>
+<label>期望 Schema（JSON，定义必填字段与类型）</label><textarea id="schema" placeholder='{"type":"object","required":["name","price"],"properties":{"name":{"type":"string"},"price":{"type":"number"}}}'></textarea>
+<button onclick="chk()">校验输出</button>
+<div class="out" id="out">粘贴 LLM 输出与 Schema 后校验。</div>
+</div>
+</div>
+<script>
+function chk(){
+  let d,s;try{d=JSON.parse(document.getElementById('data').value)}catch(e){document.getElementById('out').innerHTML='<span class="bad">错误：输出不是合法 JSON。</span>';return}
+  try{s=JSON.parse(document.getElementById('schema').value)}catch(e){document.getElementById('out').innerHTML='<span class="bad">错误：Schema 不是合法 JSON。</span>';return}
+  const errors=[];const req=s.required||[];const props=s.properties||{};
+  for(const k of req){if(!(k in d)){errors.push(`缺失必填字段: ${k}（期望 ${props[k]?.type||'any'}）`)}else if(props[k]&&props[k].type){const t=typeOf(d[k]);if(t!==props[k].type){errors.push(`类型错误: ${k} 期望 ${props[k].type}，实际 ${t}`)}}}
+  const extra=Object.keys(d).filter(k=>!(k in props));
+  let h=errors.length===0?'<span class="ok">✅ 通过：输出符合 Schema</span>':`<span class="bad">❌ ${errors.length} 个问题：</span>\n${errors.map(e=>'• '+e).join('\n')}`;
+  if(extra.length)h+=`\n\n未在 Schema 的额外字段：${extra.join(', ')}（若可忽略可删除）`;
+  if(errors.length)h+=`\n\n<b>修复建议：</b>${errors[0].includes('缺失')?'让 LLM 重新生成并明确要求返回所有必填字段，或用默认值补全。':'检查 LLM 输出类型，用类型转换/校验库兜底。'}`;
+  document.getElementById('out').innerHTML=h;
+  window._last={tool:'llm-schema-checker',input:{},output:{valid:errors.length===0,errors:errors}};
+}
+function typeOf(v){if(v===null)return'null';if(Array.isArray(v))return'array';return typeof v}
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const data=JSON.parse(d.data||'{}'),s=JSON.parse(d.schema||'{}');const req=s.required||[],props=s.properties||{};const errors=[];for(const k of req){if(!(k in data)){errors.push({field:k,error:'missing',expect:props[k]?.type})}else if(props[k]&&props[k].type&&typeOf(data[k])!==props[k].type){errors.push({field:k,error:'type',expect:props[k].type,got:typeOf(data[k])})}}document.body.textContent=JSON.stringify({tool:'llm-schema-checker',input:d,output:{valid:errors.length===0,errors}})}catch(e){document.body.textContent=JSON.stringify({tool:'llm-schema-checker',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
