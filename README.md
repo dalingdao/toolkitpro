@@ -45,6 +45,7 @@
 | **测试用例生成器** | QA 用例覆盖不全/漏边界 | 等价类+边界值+异常场景用例+优先级 |
 | **爆款选题挖掘器** | 自媒体选题枯竭/标题弱 | 领域+受众→爆款选题+标题公式+发布时间+热度评分 |
 | **小说转短视频生成器** | 长文难切短视频 | 长文→短视频分段+标题+字幕+分镜+配乐建议 |
+| **广告法极限词审查器** | 文案踩极限词被罚 | 检测极限词+定位上下文+替换建议+合规报告 |
 
 每个支持：`?tool=xxx&input=yyy&format=json`（网页 JSON）+ `node cli.js` / `python cli.py`（命令行）。
 
@@ -79,7 +80,7 @@ python cli.py task-planner --input-file input.json
 
 输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
 
-可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`、`priority-matrix`、`faq-generator`、`i18n-checker`、`test-case-gen`、`content-idea-miner`、`novel-to-video`。
+可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`、`priority-matrix`、`faq-generator`、`i18n-checker`、`test-case-gen`、`content-idea-miner`、`novel-to-video`、`ad-compliance-checker`。
 
 ```bash
 node cli.js        # 列出全部可用工具（cli.py 同理）
