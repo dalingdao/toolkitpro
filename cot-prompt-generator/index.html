@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CoT Prompt 生成器 - 自动生成思维链推理 Prompt</title>
+<meta name="description" content="输入你想做的事，自动生成结构化的思维链(CoT)推理 Prompt：角色+推理步骤+约束+输出格式。普通人也能用好AI，无需学prompt工程。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:780px;margin:0 auto}h1{font-size:26px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin:10px 0 4px}textarea{width:100%;min-height:90px;padding:12px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px;resize:vertical}
+select{width:200px;padding:10px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px}
+button{width:100%;padding:13px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+button:hover{background:#1d4ed8}.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:16px;margin-top:12px;font-size:14px;white-space:pre-wrap;line-height:1.6;max-height:420px;overflow:auto}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}.copy{background:#334155;width:auto;padding:8px 16px;font-size:13px;margin-top:8px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>CoT Prompt 生成器 <span class="tag">原创 · 让普通人用好 AI</span></h1>
+<h2>输入你想做的事 → 自动生成思维链(CoT)推理 Prompt · 无需学 prompt 工程</h2>
+<div class="card">
+<label>你想做什么？</label><textarea id="task" placeholder="例如：帮我分析这份销售数据并给出下季度策略"></textarea>
+<div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+<div><label>场景</label><select id="scenario">
+<option value="general">通用推理</option><option value="writing">写作/内容</option><option value="analysis">分析/决策</option><option value="coding">编程/技术</option><option value="learning">学习/教学</option></select></div>
+<div><label>输出深度</label><select id="depth"><option value="brief">简明</option><option value="detail" selected>详细(推荐)</option></select></div>
+</div>
+<button onclick="gen()">生成 CoT Prompt</button>
+<button class="copy" onclick="cp()">复制生成的 Prompt</button>
+<div class="out" id="out">输入任务后点击生成。</div>
+</div>
+</div>
+<script>
+const ROLE={general:'一位严谨的通用推理专家',writing:'一位资深内容创作者',analysis:'一位资深分析师',coding:'一位资深软件工程师',learning:'一位耐心的高效教学专家'};
+function gen(){
+  const task=document.getElementById('task').value.trim();const sc=document.getElementById('scenario').value;const dep=document.getElementById('depth').value;
+  if(!task){document.getElementById('out').innerHTML='请先输入你想做的事。';return}
+  const p=build(task,sc,dep);
+  document.getElementById('out').innerHTML=p;
+  window._last={tool:'cot-prompt-generator',input:{task,scenario:sc,depth:dep},output:{prompt:p}};
+}
+function build(task,sc,dep){
+  const role=ROLE[sc];
+  const steps=sc==='writing'?[
+'1. 理解目标：明确这篇内容要传达的核心信息与受众。',
+'2. 拆解结构：想清楚引言-论点-论据-收尾的骨架。',
+'3. 找亮点：列出能打动受众的具体事实/故事/数字。',
+'4. 起草：按骨架逐段成文，用具体代替抽象。',
+'5. 打磨：删掉空话，检查逻辑连贯与节奏。',
+'6. 质量检查：是否达成了目标？是否够具体？能否更有冲击力？']:
+sc==='analysis'?[
+'1. 明确问题：要回答的核心问题是什么？',
+'2. 收集证据：有哪些关键数据/事实/假设？',
+'3. 多角度推理：从正反/成本/风险多角度分析。',
+'4. 权衡：列出各方案的利弊与适用条件。',
+'5. 结论与依据：给出明确结论，并说明依据与不确定性。',
+'6. 质量检查：结论是否有数据支撑？是否忽略关键反例？']:
+sc==='coding'?[
+'1. 明确需求：要实现的输入/输出/边界条件。',
+'2. 选方案：权衡简单/性能/可维护，选最合适的。',
+'3. 逐步实现：先骨架后细节，每步保持可运行。',
+'4. 边界处理：空值/异常/极端输入。',
+'5. 自测：用典型与边界用例验证。',
+'6. 质量检查：代码是否简洁？有无隐患？是否可维护？']:
+sc==='learning'?[
+'1. 诊断：学习者已掌握什么，卡在哪。',
+'2. 拆解：把知识点拆成可理解的小步。',
+'3. 类比：用熟悉事物解释新概念。',
+'4. 循序渐进：先概念后应用，先易后难。',
+'5. 检验：出小练习确认理解。',
+'6. 质量检查：学习者能否用自己的话复述？能否应用？']:
+[
+'1. 明确目标：最终要得到什么结果。',
+'2. 拆解：把问题分成可处理的子问题。',
+'3. 信息需求：需要哪些信息/假设？',
+'4. 推理：逐层推理，每一步基于上一步。',
+'5. 结论：给出明确结论与依据。',
+'6. 质量检查：结论是否合理？有无逻辑漏洞？'];
+  const brief=dep==='brief';
+  const stepsTxt=brief?steps.slice(0,3).join('\n'):steps.join('\n');
+  return `你是一名${role}。
+
+## 任务
+${task}
+
+## 请按以下思维链逐步推理（每一步都写出来，再进入下一步）：
+${stepsTxt}
+
+## 约束
+- 不要凭空臆测；信息不足时明确说明并给出所需假设。
+- 每个结论必须说明依据。
+- 语言清晰、具体、可执行，避免空话。
+- 若任务有歧义，先列出你的理解并确认。
+
+## 输出格式
+- 先给结论要点，再给详细分析。
+- 分点输出，关键处加粗。
+- 最后给"质量自检"：我的推理是否有漏洞？哪些地方最不确定？`;
+}
+function cp(){const o=document.getElementById('out').innerText;if(o&&o!=='输入任务后点击生成。'){navigator.clipboard.writeText(o).then(()=>{const b=document.querySelector('.copy');b.textContent='已复制 ✓';setTimeout(()=>b.textContent='复制生成的 Prompt',1500)})}}
+// Agent接口
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const task=(d.task||'').trim();const sc=d.scenario||'general';const dep=d.depth||'detail';if(!task){document.body.textContent=JSON.stringify({tool:'cot-prompt-generator',error:'task required'});return}document.body.textContent=JSON.stringify({tool:'cot-prompt-generator',input:d,output:{scenario:sc,prompt:build(task,sc,dep),steps:6}})}catch(e){document.body.textContent=JSON.stringify({tool:'cot-prompt-generator',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
