@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FPS 游戏设计草图 · 城市寻女</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,'Segoe UI',Roboto,sans-serif;background:#0b0e18;color:#e5e7eb;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:20px}
+h1{font-size:26px;color:#c4b5fd;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:13px;margin-bottom:18px}
+.sheet{background:#f5f2e8;border:1px solid #d5d0bf;border-radius:6px;padding:18px;margin-bottom:20px;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+.sheet h2{font-size:16px;color:#4a4a3a;margin-bottom:4px;font-family:'Courier New',monospace}
+.sheet .meta{font-size:11px;color:#8a8575;margin-bottom:10px;font-family:'Courier New',monospace}
+canvas{width:100%;display:block;background:#f5f2e8}
+.tag{display:inline-block;background:#8b5cf6;color:#fff;font-size:10px;padding:2px 7px;border-radius:4px;margin-right:6px;vertical-align:middle}
+.notes{background:#12141f;border:1px solid #2a2d3d;border-radius:10px;padding:14px;margin-bottom:20px;font-size:13px;color:#9ca3af}
+.notes b{color:#fbbf24}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>📐 FPS 游戏设计草图 · 城市寻女</h1>
+<div class="sub">先做草图 → 确认设计 → 再做游戏。6 张设计稿（玩法流程/场景布局/角色/武器/UI/敌人）</div>
+
+<div class="notes">
+<b>设计要点：</b> 玩家持突击步枪在入侵城市中寻找失散的女儿。核心循环：<b>移动→射击入侵者→拾取道具→找女儿→营救</b>。目标：靠近女儿(3m)营救获胜；被入侵者击倒失败。
+</div>
+
+<div class="sheet"><h2><span class="tag">草图 1</span>玩法流程</h2><div class="meta">GAME FLOW · 核心循环</div><canvas id="c1" width="1000" height="260"></canvas></div>
+<div class="sheet"><h2><span class="tag">草图 2</span>场景布局（俯视平面）</h2><div class="meta">CITY MAP · 建筑/敌人/道具/女儿/出生点</div><canvas id="c2" width="1000" height="520"></canvas></div>
+<div class="sheet"><h2><span class="tag">草图 3</span>玩家角色设计</h2><div class="meta">PLAYER · 猎犬战士（正面/侧面）</div><canvas id="c3" width="1000" height="360"></canvas></div>
+<div class="sheet"><h2><span class="tag">草图 4</span>突击步枪结构</h2><div class="meta">ASSAULT RIFLE · 部件标注</div><canvas id="c4" width="1000" height="240"></canvas></div>
+<div class="sheet"><h2><span class="tag">草图 5</span>UI 布局（HUD）</h2><div class="meta">HUD · 血条/目标/得分/按钮</div><canvas id="c5" width="1000" height="300"></canvas></div>
+<div class="sheet"><h2><span class="tag">草图 6</span>入侵者设计</h2><div class="meta">ENEMIES · 4 种入侵者</div><canvas id="c6" width="1000" height="280"></canvas></div>
+</div>
+
+<script>
+// ===== 草图工具（Canvas 2D，铅笔线稿+网格纸风格）=====
+function paper(ctx,w,h){ ctx.clearRect(0,0,w,h); ctx.fillStyle='#f5f2e8'; ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(140,150,180,.15)'; ctx.lineWidth=1;
+  for(let x=0;x<=w;x+=20){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<=h;y+=20){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  ctx.strokeStyle='rgba(90,100,140,.3)';
+  for(let x=0;x<=w;x+=100){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<=h;y+=100){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+}
+function line(ctx,x1,y1,x2,y2,c){ctx.strokeStyle=c||'#3a3a30';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+function rect(ctx,x,y,w,h,c){ctx.strokeStyle=c||'#3a3a30';ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);}
+function circ(ctx,x,y,r,c){ctx.strokeStyle=c||'#3a3a30';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke();}
+function text(ctx,s,x,y,size,c,align){ctx.fillStyle=c||'#4a4a3a';ctx.font=(size||14)+'px Courier New,monospace';ctx.textAlign=align||'left';ctx.fillText(s,x,y);}
+function dash(ctx,x1,y1,x2,y2){ctx.strokeStyle='#8a8575';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function label(ctx,s,x,y,c){ctx.fillStyle=c||'#c0392b';ctx.font='bold 12px Courier New,monospace';ctx.textAlign='center';ctx.fillText(s,x,y);}
+
+// ==== 草图1：玩法流程 ====
+(function(){const c=document.getElementById('c1'),x=c.getContext('2d');paper(x,1000,260);
+  const nodes=[['开始营救',90],['移动探索',230],['射击入侵者',390],['拾取道具',550],['靠近女儿',710],['营救成功',880]];
+  nodes.forEach((n,i)=>{rect(x,n[1]-45,95,90,50);text(x,n[0],n[1]+30,13,'#4a4a3a','center');
+    if(i<nodes.length-1){const ax=n[1]+48;line(x,ax,125,nodes[i+1][1]-48,125);x.fillStyle='#8a8575';x.beginPath();x.moveTo(nodes[i+1][1]-48,125);x.lineTo(nodes[i+1][1]-56,120);x.lineTo(nodes[i+1][1]-56,130);x.fill();}});
+  text(x,'被击倒 → 失败',500,60,13,'#c0392b','center');dash(x,500,75,500,95);text(x,'循环',500,240,11,'#8a8575','center');
+})();
+
+// ==== 草图2：场景俯视 ====
+(function(){const c=document.getElementById('c2'),x=c.getContext('2d');paper(x,1000,520);
+  // 城市边界
+  rect(x,80,60,840,400);text(x,'城市边界 60×60m',500,48,14,'#4a4a3a','center');
+  // 建筑（方块）
+  const builds=[[180,150],[560,150],[180,370],[560,370],[360,260],[180,260,100,60],[560,260,100,60],[80,260,60,120],[720,260,60,120]];
+  builds.forEach(b=>{rect(x,b[0],b[1],b[2]||90,b[3]||90,'#5a5a48');x.fillStyle='#c9c4b0';x.fillRect(b[0]+4,b[1]+4,(b[2]||90)-8,(b[3]||90)-8);});
+  // 街道网格
+  dash(x,80,260,920,260);dash(x,360,60,360,460);dash(x,600,60,600,460);
+  text(x,'街道',380,275,11,'#8a8575','center');
+  // 出生点
+  circ(x,180,220,12,'#c0392b');label(x,'出生点',180,200,'#c0392b');
+  // 女儿
+  circ(x,160,420,14,'#2e8b57');x.fillStyle='#2e8b57';x.beginPath();x.arc(160,420,6,0,7);x.fill();label(x,'女儿·小霓',160,445,'#2e8b57');
+  dash(x,180,220,160,420);text(x,'营救路线 ~30m',200,330,12,'#2e8b57');
+  // 敌人
+  [[300,120,'E1'],[540,150,'E2'],[160,150,'E3'],[620,300,'E4']].forEach(e=>{circ(x,e[0],e[1],11,'#c0392b');label(x,e[2],e[0],e[1]-17,'#c0392b');});
+  // 道具
+  [[300,300,'医疗包'],[300,220,'弹药'],[120,260,'水晶'],[560,370,'医疗包'],[180,370,'弹药']].forEach(p=>{rect(x,p[0],p[1],14,14,'#2b5aa0');label(x,p[2],p[0]+8,p[1]+28,'#2b5aa0');});
+  text(x,'图例： ■建筑  ●敌人  ▲出生点  ●女儿  □道具',500,500,12,'#4a4a3a','center');
+})();
+
+// ==== 草图3：玩家角色 ====
+(function(){const c=document.getElementById('c3'),x=c.getContext('2d');paper(x,1000,360);
+  // 正面士兵
+  const cx=300,top=60;
+  circ(x,cx,top+18,20); // 头
+  rect(x,cx-26,top+36,52,10); // 头盔
+  rect(x,cx-30,top+58,16,8);rect(x,cx+14,top+58,16,8); // 护目镜
+  rect(x,cx-34,top+70,68,55); // 胸甲
+  rect(x,cx-24,top+78,20,18,'#2b5aa0'); // 弹匣袋
+  rect(x,cx-40,top+125,20,45);rect(x,cx+20,top+125,20,45); // 手臂
+  rect(x,cx-30,top+125,24,55);rect(x,cx+6,top+125,24,55); // 腿
+  rect(x,cx-32,top+180,28,14);rect(x,cx+4,top+180,28,14); // 靴
+  text(x,'正面',cx,top+215,13,'#4a4a3a','center');
+  // 侧面（持枪）
+  const sx=620;
+  circ(x,sx,top+18,20); rect(x,sx-14,top+36,30,10);
+  rect(x,sx-12,top+70,34,55); rect(x,sx+2,top+125,16,45);
+  rect(x,sx-18,top+125,18,55);
+  rect(x,sx+20,top+85,70,8); rect(x,sx+20,top+96,8,22); rect(x,sx+56,top+100,26,6); // 步枪
+  rect(x,sx-20,top+125,22,14);
+  text(x,'侧面（持突击步枪）',sx,top+215,13,'#4a4a3a','center');
+  // 标注
+  label(x,'头盔',cx,top+30);label(x,'胸甲',cx-70,top+100);label(x,'护腿',cx+50,top+160);
+  label(x,'突击步枪',sx+40,top+80);
+  text(x,'士兵 25 部件 · 高 1.8m',500,320,12,'#8a8575','center');
+})();
+
+// ==== 草图4：突击步枪 ====
+(function(){const c=document.getElementById('c4'),x=c.getContext('2d');paper(x,1000,240);
+  const y=120,x0=120;
+  rect(x,x0,y-10,760,22); // 主体
+  rect(x,x0,y-14,120,8); // 护木
+  rect(x,x0+120,y-18,16,10); // 导气
+  rect(x,x0+760,y-14,30,10); // 消焰器
+  rect(x,x0+300,y-42,90,16); rect(x,x0+320,y-42,20,4,'#2b5aa0'); // 瞄准镜
+  rect(x,x0+200,y+12,50,40); // 弹匣
+  rect(x,x0+140,y+12,26,36); // 握把
+  rect(x,x0+600,y-16,10,8); // 准星
+  rect(x,x0+30,y+8,70,30); // 枪托
+  rect(x,x0+240,y+8,10,10); // 扳机
+  // 标注
+  label(x,'枪口',x0+790,y-24);label(x,'护木',x0+70,y-24);label(x,'瞄准镜',x0+345,y-50);label(x,'机匣',x0+420,y-24);
+  label(x,'弹匣',x0+225,y+68);label(x,'握把',x0+150,y+62);label(x,'枪托',x0+60,y+48);
+  text(x,'突击步枪 · 20 部件 · 全长 ~1.0m',500,220,12,'#8a8575','center');
+})();
+
+// ==== 草图5：UI ====
+(function(){const c=document.getElementById('c5'),x=c.getContext('2d');paper(x,1000,300);
+  rect(x,40,30,920,40); // 顶部 HUD 条
+  // 玩家血条
+  rect(x,60,44,180,16);x.fillStyle='#e74c3c';x.fillRect(62,46,160,12);text(x,'猎犬(你) 200/200',60,80,11,'#4a4a3a');
+  // 敌人血条
+  rect(x,260,44,90,16);x.fillStyle='#e67e22';x.fillRect(262,46,70,12);text(x,'E1',268,80,10,'#4a4a3a');
+  rect(x,360,44,90,16);x.fillStyle='#3498db';x.fillRect(362,46,70,12);text(x,'E2',368,80,10,'#4a4a3a');
+  // 目标
+  text(x,'🔍 女儿距离 23m · 击杀 0 · 入侵者 4/4 · 得分 0',500,60,13,'#4a4a3a','center');
+  // 准星
+  line(x,500,150,500,140);line(x,500,160,500,150);line(x,490,155,500,155);line(x,510,155,500,155);line(x,500,155,500,155);
+  text(x,'准星',500,180,11,'#8a8575','center');
+  // 击杀提示
+  rect(x,320,180,260,34);text(x,'击倒 入侵者-先锋 +100',450,200,12,'#2e8b57','center');
+  // 开火/摇杆
+  circ(x,860,250,40);text(x,'开火',860,254,13,'#c0392b','center');
+  circ(x,120,250,50);text(x,'摇杆',120,254,12,'#4a4a3a','center');
+  text(x,'HUD 布局：顶部血条+目标 · 中心准星 · 右下开火 · 左下摇杆',500,290,12,'#8a8575','center');
+})();
+
+// ==== 草图6：入侵者 ====
+(function(){const c=document.getElementById('c6'),x=c.getContext('2d');paper(x,1000,280);
+  const es=[['E1 先锋',120,'#c0392b','逼近压制'],['E2 狙击',380,'#2b5aa0','卡位点射'],['E3 游魂',620,'#8e44ad','慢速乱瞄'],['E4 猎手',860,'#c2185b','快速突进']];
+  es.forEach(e=>{const cx=e[1],top=60;
+    circ(x,cx,top+16,17); rect(x,cx-22,top+32,44,8); rect(x,cx-28,top+58,56,44);
+    rect(x,cx-32,top+100,16,34); rect(x,cx+16,top+100,16,34);
+    rect(x,cx-24,top+100,20,40); rect(x,cx+4,top+100,20,40);
+    rect(x,cx+24,top+70,50,7,'#555'); // 枪
+    text(x,e[0],cx,top+162,13,'#4a4a3a','center');text(x,e[3],cx,top+180,11,'#8a8575','center');});
+  text(x,'4 种入侵者 · 不同 AI · 血量 80~120',500,255,12,'#8a8575','center');
+})();
+</script>
+</body>
+</html>
