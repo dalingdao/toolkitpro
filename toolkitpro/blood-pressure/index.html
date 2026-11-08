@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Pressure Calculator - 免费在线血压分类器</title>
+<meta name="description" content="免费在线血压分类器，输入收缩压/舒张压，按指南分类，显示脉压差，纯前端，无需注册。">
+<meta name="keywords" content="血压分类,blood pressure,血压计算,收缩压,舒张压,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:32px;font-weight:800;color:#2563eb}
+.result .sub{font-size:15px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🩺 Blood Pressure</h1>
+  <p>免费在线血压分类器—— 按指南分类，显示脉压差。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">分类</span><span class="badge">脉压差</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>收缩压（mmHg）</label><input type="number" id="sys" value="120" oninput="calc()"></div>
+    <div class="field"><label>舒张压（mmHg）</label><input type="number" id="dia" value="80" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Blood Pressure · 纯前端</footer>
+<script>
+function calc(){
+  const sys=+document.getElementById('sys').value||0,dia=+document.getElementById('dia').value||0;
+  let cat,color;
+  if(sys<90||dia<60){cat='低血压';color='#3b82f6'}
+  else if(sys<120&&dia<80){cat='正常';color='#22c55e'}
+  else if(sys<130&&dia<80){cat='正常高值';color='#84cc16'}
+  else if(sys<140&&dia<90){cat='1级高血压';color='#f59e0b'}
+  else if(sys<160&&dia<100){cat='2级高血压';color='#f97316'}
+  else{cat='3级高血压';color='#ef4444'}
+  const pulse=sys-dia;
+  document.getElementById('res').innerHTML='<div class="big" style="color:'+color+'">'+cat+'</div><div class="sub">'+sys+'/'+dia+' mmHg<br>脉压差：'+pulse+' mmHg</div>';
+}
+calc();
+</script>
+</body>
+</html>
