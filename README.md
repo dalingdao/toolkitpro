@@ -29,14 +29,21 @@ https://dalingdao.github.io/toolkitpro/{tool}/?tool={tool}&input={input}&format=
 
 ## CLI 用法
 
-每个原创工具也可**命令行调用**（计算逻辑与页面完全一致，返回 JSON）：
+每个原创工具也可**命令行调用**（计算逻辑与页面完全一致，返回 JSON）。支持 **JS 与 Python** 双实现：
 
 ```bash
-# 内联输入（Linux/macOS/bash）
+# Node.js
 node cli.js cot-prompt-generator --input '{"task":"帮我写一篇产品介绍","scenario":"writing"}'
 
-# 从文件读输入（跨平台稳定，适合 Windows/CI）
+# Python
+python cli.py cot-prompt-generator --input '{"task":"帮我写一篇产品介绍","scenario":"writing"}'
+```
+
+跨平台稳定（Windows/CI）用文件输入：
+
+```bash
 node cli.js task-planner --input-file input.json
+python cli.py task-planner --input-file input.json
 ```
 
 输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
@@ -44,8 +51,7 @@ node cli.js task-planner --input-file input.json
 可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`。
 
 ```bash
-# 列出全部可用工具
-node cli.js
+node cli.js        # 列出全部可用工具（cli.py 同理）
 ```
 
 ## 工具分类
