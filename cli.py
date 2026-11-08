@@ -142,8 +142,32 @@ def ai_health(i):
     return {'score':total,'coverage':coverage,'factual':factual,'consist':consist,'clarity':clarity,
             'grade':'A' if total>=85 else 'B' if total>=70 else 'C' if total>=50 else 'D'}
 
+# ---- thought-organizer ----
+def thought_build(idea, sc):
+    goal = f'把"{idea}"变成可执行的清晰目标，明确最终要交付什么、给谁、怎么判断成功。'
+    aud = '学习者本人（从零到掌握）' if sc=='learning' else '目标读者' if sc=='writing' else '目标用户/受众'
+    if sc=='learning':
+        mods = ['核心概念（要掌握什么）','知识地图（前置知识/依赖）','练习路径（由易到难）','检验（能否应用/复述）']
+        steps = ['诊断起点','拆解知识点','安排练习节奏','检验掌握']
+    elif sc=='writing':
+        mods = ['核心论点（一句话说清）','论据链（事实/案例/数字）','结构（引言-展开-收尾）','受众共鸣点']
+        steps = ['定核心论点','列论据','搭结构','打磨']
+    else:
+        mods = ['核心功能/价值（解决什么）','用户路径（从看到用）','关键模块（最小可行）','增长点（如何扩散）']
+        steps = ['定义最小可行版本','搭核心模块','验证用户路径','迭代扩散']
+    return (f'## 目标\n{goal}\n\n## 受众\n{aud}\n\n## 核心模块\n'
+            + '\n'.join(f'{i+1}. {m}' for i,m in enumerate(mods))
+            + '\n\n## 行动步骤\n' + '\n'.join(f'{i+1}. {s}' for i,s in enumerate(steps))
+            + '\n\n## 检验标准\n- 是否清晰回答了"为什么值得做"？\n- 最小可行版本能否在较短时间内落地？\n- 用户/读者能否一眼理解价值？\n- 哪些部分最不确定、需先验证？')
+
+def thought_organizer(i):
+    idea = (i.get('idea') or '').strip()
+    if not idea: raise ValueError('idea required')
+    return {'scene': i.get('scene','creative'), 'framework': thought_build(idea, i.get('scene','creative'))}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
-         'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health}
+         'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
+         'thought-organizer':thought_organizer}
 
 # ---- entry ----
 def main():
