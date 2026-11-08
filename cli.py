@@ -165,9 +165,26 @@ def thought_organizer(i):
     if not idea: raise ValueError('idea required')
     return {'scene': i.get('scene','creative'), 'framework': thought_build(idea, i.get('scene','creative'))}
 
+# ---- api-contract ----
+def api_infer(v):
+    if v is None: return {'type':'null'}
+    if isinstance(v, list): return {'type':'array','items': api_infer(v[0]) if v else {'type':'string'}}
+    if isinstance(v, bool): return {'type':'boolean'}
+    if isinstance(v, (int,float)): return {'type':'number'}
+    if isinstance(v, str): return {'type':'string'}
+    return {'type':'object','properties':{k:api_infer(v[k]) for k in v},'required':list(v.keys())}
+def api_contract(i):
+    rq = json.loads(i['req']) if i.get('req') else None
+    rs = json.loads(i['res']) if i.get('res') else None
+    if rq is None and rs is None: raise ValueError('req or res required')
+    out = {}
+    if rq is not None: out['request'] = {'contract': json.dumps(api_infer(rq), ensure_ascii=False, indent=2)}
+    if rs is not None: out['response'] = {'contract': json.dumps(api_infer(rs), ensure_ascii=False, indent=2)}
+    return out
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
-         'thought-organizer':thought_organizer}
+         'thought-organizer':thought_organizer,'api-contract':api_contract}
 
 # ---- entry ----
 def main():
