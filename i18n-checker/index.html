@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多语言一致性检查器 i18n Checker</title>
+<meta name="description" content="多语言一致性检查器：对比多语言文案文件，检测缺失键/多余键/占位符不一致/长度异常，输出一致性报告。i18n国际化文案同步检查必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:180px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge.ok{background:rgba(34,197,94,.15);color:#4ade80}
+.badge.warn{background:rgba(245,158,11,.15);color:#fbbf24}
+.badge.bad{background:rgba(239,68,68,.15);color:#f87171}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.tbl th,.tbl td{border:1px solid #2a2e3d;padding:6px 8px;text-align:left}
+.tbl th{background:#1f2333;color:#9ca3af}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/i18n-checker/">多语言一致性检查器</a>
+    <a href="?tool=i18n-checker&input={\"locales\":{\"en\":{\"greet\":\"Hello {name}\"},\"zh\":{\"greet\":\"你好{name}\"}}}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>多语言一致性检查器</h1>
+  <p class="sub">对比多语言文案文件 → 检测缺失键/多余键/占位符不一致/长度异常 → 一致性报告。i18n 国际化文案同步检查必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>前端团队做多语言（i18n），改了 en.json 加了个键但忘了改 zh.json——<b>界面出现未翻译、占位符 {name} 漏了、文案超长</b>。本工具一键对比多语言文件，报出缺失键/多余键/占位符不一致/长度异常，上线前质检。
+  </div>
+
+  <div class="card">
+    <h2>输入多语言文件（JSON，格式：{"en":{...},"zh":{...}}）</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample()">示例</div>
+    </div>
+    <textarea id="input" placeholder='格式：{"语言":{键:值,...},...}&#10;例如：&#10;{"en":{"greet":"Hello {name}","save":"Save","submit":"Submit"},"zh":{"greet":"你好{name}","save":"保存"}}'></textarea>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">检查一致性</button>
+      <button class="btn ghost" onclick="document.getElementById('input').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>前端多语言发布前检查；本地化团队同步翻译。<b>痛点：</b>键不同步、占位符漏翻、文案超长。<b>用法：</b>粘贴多语言 JSON → 检查缺失/多余/占位符/长度 → 一致性报告。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入 {"en":{"greet":"Hello {name}","save":"Save"},"zh":{"greet":"你好{name}"}}：报告 zh 缺 "save" 键、greet 占位符一致（{name}）、无多余。提示补翻译 save。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=i18n-checker&input={"locales":{"en":{"greet":"Hello {name}"},"zh":{"greet":"你好{name}"}}}&format=json</code> 返回 JSON（缺失/多余/占位符/长度报告），Agent 可直接读入质检。
+    </div>
+  </div>
+</div>
+
+<script>
+const input=document.getElementById('input');
+const out=document.getElementById('out');
+
+function loadSample(){
+  input.value='{"en":{"greet":"Hello {name}","save":"Save","submit":"Submit now","welcome":"Welcome to our platform"},"zh":{"greet":"你好{name}","save":"保存"},"fr":{"greet":"Bonjour {name}","save":"Enregistrer","submit":"Soumettre maintenant"}}';
+  run();
+}
+
+// 提取占位符 {xxx}
+function placeholders(s){
+  const m=s.match(/\{[^}]+\}/g);
+  return m?[...new Set(m)].sort():[];
+}
+
+function checkI18n(locales){
+  const langs=Object.keys(locales);
+  if(langs.length<2)throw new Error('需要至少2个语言文件');
+  // 以第一个为基准
+  const base=langs[0];
+  const baseKeys=Object.keys(locales[base]);
+  const report={locales:langs,base,keyReport:[],placeholderReport:[],lengthReport:[],missingCount:0,extraCount:0};
+  langs.forEach(lang=>{
+    if(lang===base)return;
+    const keys=Object.keys(locales[lang]);
+    // 缺失键
+    const missing=baseKeys.filter(k=>!(k in locales[lang]));
+    // 多余键
+    const extra=keys.filter(k=>!(k in locales[base]));
+    report.missingCount+=missing.length;report.extraCount+=extra.length;
+    report.keyReport.push({lang,missing,extra});
+    // 占位符/长度
+    baseKeys.forEach(k=>{
+      if(!(k in locales[lang]))return;
+      const b=placeholders(locales[base][k]),o=placeholders(locales[lang][k]);
+      if(JSON.stringify(b)!==JSON.stringify(o)){
+        report.placeholderReport.push({key:k,lang,base:b,other:o,severity:'bad'});
+      }
+      const baseLen=String(locales[base][k]).length,otherLen=String(locales[lang][k]).length;
+      if(otherLen>baseLen*1.5){
+        report.lengthReport.push({key:k,lang,baseLen,otherLen,severity:'warn'});
+      }
+    });
+  });
+  report.score=Math.max(0,100-report.missingCount*5-report.extraCount*3-report.placeholderReport.length*4-report.lengthReport.length*2);
+  report.grade=report.score>=90?'good':report.score>=70?'warn':'bad';
+  return report;
+}
+
+function run(){
+  const text=input.value.trim();
+  if(!text){out.style.display='block';out.textContent='请先输入多语言 JSON。';return;}
+  let locales;
+  try{locales=JSON.parse(text);}catch(e){out.style.display='block';out.textContent='JSON解析失败：'+e.message;return;}
+  try{
+    const res=checkI18n(locales);
+    out.style.display='block';
+    const cls=res.grade==='good'?'ok':res.grade==='warn'?'warn':'bad';
+    const gt=res.grade==='good'?'优秀':res.grade==='warn'?'需改进':'较差';
+    out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">🌐 一致性报告（'+res.locales.join(' / ')+'）</div>'+
+      '<div style="margin:8px 0"><span class="badge '+cls+'">'+gt+'</span> 得分 '+res.score+'/100 · 缺失键 '+res.missingCount+' · 多余键 '+res.extraCount+' · 占位符不一致 '+res.placeholderReport.length+'</div>'+
+      res.keyReport.map(kr=>'<div style="margin:10px 0;font-size:13px"><b>'+kr.lang+'</b> 缺失：'+(kr.missing.length?kr.missing.join(', '):'无')+' · 多余：'+(kr.extra.length?kr.extra.join(', '):'无')+'</div>').join('')+
+      (res.placeholderReport.length?'<div class="note" style="margin-top:8px">占位符不一致</div><table class="tbl"><tr><th>键</th><th>语言</th><th>基准</th><th>当前</th></tr>'+res.placeholderReport.map(p=>'<tr><td>'+p.key+'</td><td>'+p.lang+'</td><td>'+p.base.join(',')+'</td><td>'+p.other.join(',')+'</td></tr>').join('')+'</table>':'')+
+      (res.lengthReport.length?'<div class="note" style="margin-top:8px">文案超长（>1.5倍基准）</div><table class="tbl"><tr><th>键</th><th>语言</th><th>基准长度</th><th>当前长度</th></tr>'+res.lengthReport.map(p=>'<tr><td>'+p.key+'</td><td>'+p.lang+'</td><td>'+p.baseLen+'</td><td>'+p.otherLen+'</td></tr>').join('')+'</table>':'')+
+      '<div style="margin-top:12px"><button class="btn ghost" onclick="copyOut()">复制报告</button></div>';
+  }catch(e){out.style.display='block';out.textContent='错误：'+e.message;}
+}
+
+function copyOut(){
+  const ta=document.createElement('textarea');ta.value=out.innerText;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('已复制');
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      const res=checkI18n(parsed.locales);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,score:res.score,grade:res.grade,locales:res.locales,missingCount:res.missingCount,extraCount:res.extraCount,keys:res.keyReport,placeholders:res.placeholderReport,lengths:res.lengthReport},null,2)+'</pre>';
+      document.title='i18n-checker JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
