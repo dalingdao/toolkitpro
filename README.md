@@ -41,6 +41,7 @@
 | **分层练习生成器** | 教师备课出题慢、难分层 | 知识点→基础/进阶/挑战三层题目+答案+解析 |
 | **需求优先级矩阵** | 产品经理排需求凭直觉 | 价值/成本/风险/依赖四维量化→优先级排序+P0-P3分级 |
 | **FAQ 智能整理器** | 客服问答零散难整理 | 自动归类+合并重复问题+可搜索FAQ文档 |
+| **多语言一致性检查器** | i18n 键不同步/占位符漏翻 | 缺失/多余/占位符/长度异常→一致性报告 |
 
 每个支持：`?tool=xxx&input=yyy&format=json`（网页 JSON）+ `node cli.js` / `python cli.py`（命令行）。
 
@@ -75,7 +76,7 @@ python cli.py task-planner --input-file input.json
 
 输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
 
-可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`、`priority-matrix`、`faq-generator`。
+可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`、`priority-matrix`、`faq-generator`、`i18n-checker`。
 
 ```bash
 node cli.js        # 列出全部可用工具（cli.py 同理）
