@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Token 预算分配器 - 多步骤 Agent 预算控制</title>
+<meta name="description" content="为多步骤 Agent 工作流分配 token 预算：按步骤权重分配、总量控制、余量预警，防止多步调用超预算跑飞。">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1117;color:#e5e7eb;min-height:100vh;padding:24px}
+.wrap{max-width:740px;margin:0 auto}h1{font-size:24px;margin-bottom:6px}h2{font-size:15px;color:#9ca3af;font-weight:400;margin-bottom:20px}
+.card{background:#171a23;border:1px solid #2a2e3a;border-radius:12px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:4px}input{width:100%;padding:10px;border-radius:8px;border:1px solid #2a2e3a;background:#0f1117;color:#e5e7eb;font-size:14px}
+button{width:100%;padding:12px;background:#2563eb;border:none;color:#fff;border-radius:8px;font-size:15px;cursor:pointer;margin-top:14px}
+.out{background:#0b0d12;border:1px solid #2a2e3a;border-radius:8px;padding:14px;margin-top:12px;font-size:14px;white-space:pre-wrap;line-height:1.7}
+.tag{display:inline-block;background:#1e293b;color:#60a5fa;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}.warn{color:#fbbf24}.ok{color:#34d399}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Token 预算分配器 <span class="tag">原创 · Agent 预算控制</span></h1>
+<h2>多步骤 Agent 按权重分配 token 预算 · 总量控制 · 余量预警</h2>
+<div class="card">
+<label>总 token 预算</label><input id="budget" type="number" value="200000" min="1000">
+<label>各步骤权重（逗号分隔，如 规划,检索,推理,生成 = 2,3,3,4）</label><input id="w" value="2,3,3,4">
+<label>各步骤名称（逗号分隔，可选）</label><input id="names" value="规划,检索,推理,生成">
+<button onclick="alloc()">分配预算</button>
+<div class="out" id="out">输入预算与权重后分配。</div>
+</div>
+</div>
+<script>
+function alloc(){
+  const bud=+document.getElementById('budget').value||0;const ws=document.getElementById('w').value.split(',').map(x=>+x.trim()).filter(x=>x>0);
+  const ns=document.getElementById('names').value.split(',').map(x=>x.trim()).filter(Boolean);
+  if(!bud||!ws.length){document.getElementById('out').innerHTML='请输入预算与权重。';return}
+  const tot=ws.reduce((a,b)=>a+b,0);let h=`<b>总预算：</b>${bud.toLocaleString()} tokens\n\n<b>步骤分配：</b>\n`;
+  ws.forEach((w,i)=>{const al=Math.round(bud*w/tot);h+=`${ns[i]||'步骤'+(i+1)}：${al.toLocaleString()} tokens（${Math.round(w/tot*100)}%）\n`});
+  const remain=bud-Math.round(bud);
+  h+=`\n<b>余量：</b>0（按权重全部分配）\n<b>预警：</b>若任一步骤实际超分配 20%，触发告警，需提前截断或降级。`;
+  document.getElementById('out').innerHTML=h;
+  window._last={tool:'token-budget-planner',input:{budget:bud,weights:ws},output:{alloc:ws.map((w,i)=>({step:ns[i]||i+1,budget:Math.round(bud*w/tot)}))}};
+}
+(function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const bud=+d.budget||200000;const ws=(d.weights||[2,3,3,4]).map(x=>+x).filter(x=>x>0);const ns=d.names||[];const tot=ws.reduce((a,b)=>a+b,0);const alloc=ws.map((w,i)=>({step:ns[i]||i+1,budget:Math.round(bud*w/tot),pct:Math.round(w/tot*100)}));document.body.textContent=JSON.stringify({tool:'token-budget-planner',input:d,output:{total:bud,alloc,remain:0}})}catch(e){document.body.textContent=JSON.stringify({tool:'token-budget-planner',error:'invalid input'})}}})();
+</script>
+</body>
+</html>
