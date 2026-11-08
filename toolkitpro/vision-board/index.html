@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vision Board - 免费在线愿景板</title>
+<meta name="description" content="免费在线愿景板，用emoji+文字拼出梦想愿景板，localStorage本地存储，纯前端，无需注册。">
+<meta name="keywords" content="愿景板,vision board,梦想,目标,愿景,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.add{display:flex;gap:8px;margin-bottom:16px}
+.add input{flex:1;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.add button{padding:11px 18px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.cell{background:linear-gradient(135deg,#e0e7ff,#d1fae5);border-radius:12px;padding:20px;text-align:center;position:relative}
+.cell .em{font-size:32px}
+.cell .tx{font-size:13px;margin-top:8px;font-weight:600}
+.cell .del{position:absolute;top:6px;right:8px;color:#ef4444;cursor:pointer;background:none;border:none;font-size:14px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🎯 Vision Board</h1>
+  <p>免费在线愿景板—— 用emoji拼出梦想。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">愿景</span><span class="badge">本地存储</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="add">
+      <input id="em" placeholder="emoji（如 🏠）" maxlength="4">
+      <input id="tx" placeholder="愿景描述…" onkeydown="if(event.key==='Enter')add()">
+      <button onclick="add()">添加</button>
+    </div>
+    <div class="board" id="board"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Vision Board · 纯前端 · 本地存储</footer>
+<script>
+var items=JSON.parse(localStorage.getItem('vb_items')||'[]');
+function save(){localStorage.setItem('vb_items',JSON.stringify(items));render();}
+function add(){var em=document.getElementById('em').value.trim()||'⭐',tx=document.getElementById('tx').value.trim();if(!tx)return;items.push({em:em,tx:tx});document.getElementById('em').value='';document.getElementById('tx').value='';save();}
+function del(i){items.splice(i,1);save();}
+function render(){document.getElementById('board').innerHTML=items.map(function(x,i){return '<div class="cell"><button class="del" onclick="del('+i+')">✕</button><div class="em">'+x.em+'</div><div class="tx">'+x.tx+'</div></div>';}).join('')||'<div class="cell" style="grid-column:span 3;background:#f8fafc"><div class="tx">添加你的第一个愿景</div></div>';}
+render();
+</script>
+</body>
+</html>
