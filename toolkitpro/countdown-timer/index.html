@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer Pro - 免费在线倒计时器</title>
+<meta name="description" content="免费在线倒计时器，设置时/分/秒倒计时，全屏显示，声音提醒，纯前端，无需注册。">
+<meta name="keywords" content="倒计时器,countdown timer,计时器,秒表,在线计时,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.back{position:absolute;top:16px;left:20px;font-size:13px;color:#64748b;text-decoration:none}
+h1{font-size:24px;margin-bottom:8px}
+.sub{color:#64748b;font-size:13px;margin-bottom:24px}
+.display{font-size:120px;font-weight:800;font-variant-numeric:tabular-nums;color:#3b82f6;line-height:1;margin-bottom:30px}
+.display.done{color:#22c55e}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+input[type=number]{width:76px;padding:12px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:22px;text-align:center}
+.btn{padding:14px 28px;border-radius:10px;border:none;font-size:16px;font-weight:600;cursor:pointer}
+.btn.start{background:#3b82f6;color:#fff}
+.btn.reset{background:#334155;color:#fff}
+.sep{font-size:24px;color:#64748b}
+footer{position:absolute;bottom:16px;color:#475569;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<h1>⏱️ Countdown Timer Pro</h1>
+<div class="sub">免费在线倒计时器 —— 设置时/分/秒，声音提醒</div>
+<div class="display" id="disp">00:00:00</div>
+<div class="controls">
+  <input type="number" id="h" value="0" min="0" max="99"><span class="sep">:</span>
+  <input type="number" id="m" value="5" min="0" max="59"><span class="sep">:</span>
+  <input type="number" id="s" value="0" min="0" max="59">
+  <button class="btn start" id="startBtn" onclick="toggle()">▶ 开始</button>
+  <button class="btn reset" onclick="reset()">↺ 重置</button>
+</div>
+<footer>ToolkitPro · Countdown Timer Pro · 纯前端</footer>
+<script>
+let total=0,left=0,timer=null,running=false;
+function toggle(){
+  if(running){clearInterval(timer);running=false;document.getElementById('startBtn').textContent='▶ 开始';return}
+  if(left<=0){total=(+document.getElementById('h').value||0)*3600+(+document.getElementById('m').value||0)*60+(+document.getElementById('s').value||0);left=total}
+  if(left<=0)return;
+  running=true;document.getElementById('startBtn').textContent='⏸ 暂停';
+  timer=setInterval(()=>{
+    left--;
+    if(left<=0){clearInterval(timer);running=false;left=0;document.getElementById('disp').classList.add('done');document.getElementById('startBtn').textContent='▶ 开始';try{new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAgICAAQABAAA=').play()}catch(e){}}
+    render();
+  },1000);
+}
+function reset(){clearInterval(timer);running=false;left=0;total=0;document.getElementById('disp').classList.remove('done');document.getElementById('startBtn').textContent='▶ 开始';render()}
+function render(){
+  const h=Math.floor(left/3600),m=Math.floor(left%3600/60),s=left%60;
+  document.getElementById('disp').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+render();
+</script>
+</body>
+</html>
