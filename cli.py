@@ -480,11 +480,54 @@ def i18n_checker(i):
     res=i18n_check(locales)
     return {'score':res['score'],'grade':res['grade'],'locales':res['locales'],'missingCount':res['missingCount'],'extraCount':res['extraCount'],'keys':res['keyReport'],'placeholders':res['placeholderReport'],'lengths':res['lengthReport']}
 
+def tcg_gen(defn):
+    cases=[]
+    for f in defn.get('fields',[]):
+        p='high' if f.get('required') else 'mid'
+        ftype=f.get('type')
+        if ftype=='number':
+            mn=f.get('min') if f.get('min') is not None else 0
+            mx=f.get('max') if f.get('max') is not None else 100
+            if f.get('required'): cases.append({'field':f.get('name'),'type':'required','input':'空','expected':'拒绝（必填）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'boundary','input':'='+str(mn),'expected':'接受（最小值边界）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'boundary','input':'='+str(mx),'expected':'接受（最大值边界）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'boundary','input':'='+str(mn+1),'expected':'接受（min+1）','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'boundary','input':'='+str(mx-1),'expected':'接受（max-1）','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'='+str(mn-1),'expected':'拒绝（<min）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'='+str(mx+1),'expected':'拒绝（>max）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'=负数','expected':'拒绝（负数异常）','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'=非数字abc','expected':'拒绝（类型错误）','priority':'mid'})
+        elif ftype=='email':
+            if f.get('required'): cases.append({'field':f.get('name'),'type':'required','input':'空','expected':'拒绝（必填）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'valid','input':'user@example.com','expected':'接受（标准邮箱）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'user@','expected':'拒绝（缺域名）','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'user@example','expected':'拒绝（缺顶级域）','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'userexample.com','expected':'拒绝（缺@）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'user@@example.com','expected':'拒绝（双@）','priority':'mid'})
+        elif ftype=='string':
+            max_len=f.get('maxLen') or 50
+            if f.get('required'): cases.append({'field':f.get('name'),'type':'required','input':'空','expected':'拒绝（必填）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'valid','input':'正常字符串','expected':'接受','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'boundary','input':'='+str(max_len)+'字符','expected':'接受（最大长度边界）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'boundary','input':'='+str(max_len+1)+'字符','expected':'拒绝（超长）','priority':'high'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'特殊字符<>"\';','expected':'拒绝或转义（注入防护）','priority':'mid'})
+        elif ftype=='bool':
+            cases.append({'field':f.get('name'),'type':'valid','input':'true','expected':'接受','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'valid','input':'false','expected':'接受','priority':'mid'})
+            cases.append({'field':f.get('name'),'type':'invalid','input':'1/0/yes','expected':'拒绝（非布尔）','priority':'low'})
+    return cases
+
+def test_case_gen(i):
+    fields=i.get('fields')
+    if not fields or not len(fields): raise ValueError('fields required')
+    cases=tcg_gen(i)
+    return {'name':i.get('name') or '模块','count':len(cases),'cases':cases}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
          'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix,
-         'faq-generator':faq_generator,'i18n-checker':i18n_checker}
+         'faq-generator':faq_generator,'i18n-checker':i18n_checker,'test-case-gen':test_case_gen}
 
 # ---- entry ----
 def main():
