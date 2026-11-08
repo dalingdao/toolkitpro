@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rent vs Buy - 免费在线租房买房对比计算器</title>
+<meta name="description" content="免费在线租房vs买房对比计算器，比较N年后租房总成本与买房总成本，纯前端，无需注册。">
+<meta name="keywords" content="租房买房,rent vs buy,买房还是租房,购房,租房成本,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:600px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:26px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🏠 Rent vs Buy</h1>
+  <p>免费在线租房vs买房对比—— N年后总成本。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">租房</span><span class="badge">买房</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>房价（万元）</label><input type="number" id="h" value="100" oninput="calc()"></div>
+    <div class="field"><label>首付比例（%）</label><input type="number" id="d" value="30" oninput="calc()"></div>
+    <div class="field"><label>年利率（%）</label><input type="number" id="r" value="3.6" step="0.01" oninput="calc()"></div>
+    <div class="field"><label>月租（元）</label><input type="number" id="rent" value="3000" oninput="calc()"></div>
+    <div class="field"><label>年数</label><input type="number" id="y" value="10" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Rent vs Buy · 纯前端</footer>
+<script>
+function calc(){
+  var h=+document.getElementById('h').value||0,d=+document.getElementById('d').value||0,r=+document.getElementById('r').value||0,rent=+document.getElementById('rent').value||0,y=+document.getElementById('y').value||1;
+  var el=document.getElementById('res');
+  var loan=h*10000*(1-d/100),mr=r/100/12,months=y*12,down=h*10000*d/100;
+  var mf=loan*mr*Math.pow(1+mr,months)/(Math.pow(1+mr,months)-1);
+  var buyTotal=down+mf*months;
+  var rentTotal=rent*months;
+  var diff=buyTotal-rentTotal;
+  var win=diff<0?'买房更省 ¥'+Math.abs(diff).toLocaleString('zh-CN',{maximumFractionDigits:0}):'租房更省 ¥'+diff.toLocaleString('zh-CN',{maximumFractionDigits:0});
+  el.innerHTML='<div class="big">'+win+'</div><div class="sub">'+y+' 年买房总成本 ¥'+buyTotal.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>'+y+' 年租房总成本 ¥'+rentTotal.toLocaleString('zh-CN',{maximumFractionDigits:0})+'<br>（不含房价增值/机会成本，仅供参考）</div>';
+}
+calc();
+</script>
+</body>
+</html>
