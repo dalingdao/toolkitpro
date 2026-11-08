@@ -42,5 +42,10 @@ function chk(){
 function typeOf(v){if(v===null)return'null';if(Array.isArray(v))return'array';return typeof v}
 (function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const data=JSON.parse(d.data||'{}'),s=JSON.parse(d.schema||'{}');const req=s.required||[],props=s.properties||{};const errors=[];for(const k of req){if(!(k in data)){errors.push({field:k,error:'missing',expect:props[k]?.type})}else if(props[k]&&props[k].type&&typeOf(data[k])!==props[k].type){errors.push({field:k,error:'type',expect:props[k].type,got:typeOf(data[k])})}}document.body.textContent=JSON.stringify({tool:'llm-schema-checker',input:d,output:{valid:errors.length===0,errors}})}catch(e){document.body.textContent=JSON.stringify({tool:'llm-schema-checker',error:'invalid input'})}}})();
 </script>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin:16px auto;max-width:720px;font-size:13px;line-height:1.7;color:#cbd5e1">
+<b style="color:#60a5fa">💡 实用场景：</b>AI 应用校验输出：防止 AI 返回缺字段/错类型数据进入生产。<br>
+<b style="color:#60a5fa">示例：</b>输入 <code>{"data":"{\"name\":\"A\",\"price\":9}","schema":"{\"required\":[\"name\",\"price\"],\"properties\":{\"name\":{\"type\":\"string\"},\"price\":{\"type\":\"number\"}}}"}</code><br>→ <code>valid:true/false + 具体错误(字段/类型)</code>
+</div>
 </body>
 </html>
