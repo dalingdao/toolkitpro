@@ -7,7 +7,7 @@ Usage:
 Output: JSON {"tool":..., "input":..., "output":...}
 Logic mirrors cli.js (and each tool page JS) exactly.
 """
-import json, re, sys, math
+import json, re, sys, math, random
 
 # ---- cot-prompt-generator ----
 ROLE = {'general':'严谨的通用推理专家','writing':'资深内容创作者','analysis':'资深分析师',
@@ -523,11 +523,61 @@ def test_case_gen(i):
     cases=tcg_gen(i)
     return {'name':i.get('name') or '模块','count':len(cases),'cases':cases}
 
+CIM_NICHES={
+    '健身':[
+        ['{aud} 每天10分钟{niche}，30天变化看得见','12:00','高','痛点：没时间'],
+        ['{niche}新手最容易犯的3个错误','08:00','高','避坑'],
+        ['{aud} {niche}计划表，照做就能瘦','18:00','中','实用清单'],
+        ['{niche}后吃什么？恢复餐安排','20:00','中','知识科普'],
+        ['{niche}和熬夜，哪个先毁了你','22:00','高','争议话题'],
+        ['{aud}为什么越练越没效果？','07:00','中','误区解析']
+    ],
+    '科技':[
+        ['2026年{niche}趋势，普通人该关注什么','09:00','高','趋势预测'],
+        ['{aud}必看的{niche}小工具TOP5','12:00','中','实用合集'],
+        ['{niche}新品实测：值不值得买','19:00','高','评测'],
+        ['{niche}里的隐藏功能，90%人不知道','21:00','中','冷知识'],
+        ['{niche}会取代你的工作吗？','20:00','高','争议话题'],
+        ['{aud}如何用{niche}提高效率','08:30','中','效率提升']
+    ],
+    '美食':[
+        ['{aud}必学的一道{niche}，10分钟搞定','11:30','高','快手教程'],
+        ['{niche}这样做，孩子抢着吃','17:00','中','亲子'],
+        ['{niche}的隐藏吃法，餐厅都不说','13:00','中','冷知识'],
+        ['{niche}减脂版，好吃不胖','18:30','高','健康'],
+        ['{niche}翻车现场，笑不活了','19:30','中','娱乐'],
+        ['{aud}一周{niche}不重样','16:00','中','实用清单']
+    ]
+}
+CIM_FORMULAS=['痛点+解决方案','数字+利益点','悬念+反转','对比+反差','清单+干货','争议+观点']
+
+def cim_mine(niche,audience,count):
+    aud=audience or '大众'
+    keys=list(CIM_NICHES.keys())
+    k=next((x for x in keys if x in niche.lower()),keys[0])
+    bank=CIM_NICHES[k]
+    out=[]
+    for i in range(count):
+        t=bank[i%len(bank)]
+        title=t[0].replace('{aud}',aud).replace('{niche}',niche)
+        score=min(95,80+int(random.random()*15)) if i<count/2 else min(90,60+int(random.random()*25))
+        out.append({'title':title,'time':t[1],'heat':t[2],'score':score,'formula':CIM_FORMULAS[i%len(CIM_FORMULAS)],'note':t[3]})
+    out.sort(key=lambda x:-x['score'])
+    return out
+
+def content_idea_miner(i):
+    niche=(i.get('niche') or '').strip()
+    if not niche: raise ValueError('niche required')
+    count=max(3,min(12,int(i.get('count') or 6)))
+    ideas=cim_mine(niche,(i.get('audience') or '').strip(),count)
+    return {'niche':i.get('niche'),'count':len(ideas),'ideas':ideas}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
          'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix,
-         'faq-generator':faq_generator,'i18n-checker':i18n_checker,'test-case-gen':test_case_gen}
+         'faq-generator':faq_generator,'i18n-checker':i18n_checker,'test-case-gen':test_case_gen,
+         'content-idea-miner':content_idea_miner}
 
 # ---- entry ----
 def main():
