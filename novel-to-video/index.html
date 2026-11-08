@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小说转短视频生成器 Novel to Video</title>
+<meta name="description" content="小说转短视频生成器：把小说/文章自动切成适合短视频的分段，生成标题+字幕+分镜画面提示+背景音乐建议。自媒体短视频创作者必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:200px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.row>div{flex:1;min-width:140px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.seg{background:#1f2333;border-radius:8px;padding:12px;margin-bottom:10px}
+.seg .st{font-size:14px;font-weight:600;color:#c4b5fd;margin-bottom:6px}
+.seg .meta{font-size:12px;color:#9ca3af}
+.seg .txt{font-size:13px;margin-top:6px;border-left:3px solid #8b5cf6;padding-left:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/novel-to-video/">小说转短视频生成器</a>
+    <a href="?tool=novel-to-video&input={\"title\":\"月影狼女\",\"text\":\"她独自在森林中，月光洒落，一个银色的身影向她走来。\"}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>小说转短视频生成器</h1>
+  <p class="sub">把小说/文章自动切成适合短视频的分段，生成标题+字幕+分镜画面提示+背景音乐建议。自媒体短视频创作者必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>自媒体人要把小说做成短视频涨粉变现——<b>小说太长，不知道怎么切；每段要 60 秒内；标题要抓人；画面要有分镜提示</b>。本工具自动把长文切成短视频分段（每段≤60秒），附标题+字幕+分镜+配乐建议，直接进剪辑。
+  </div>
+
+  <div class="card">
+    <h2>输入小说/文章</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample()">示例</div>
+    </div>
+    <div class="row">
+      <div><label>作品标题</label><input id="title" placeholder="例如：月影狼女"></div>
+      <div><label>每段目标字数</label><input id="per" type="number" value="180" min="80" max="300"></div>
+    </div>
+    <textarea id="text" placeholder="粘贴小说/文章正文..."></textarea>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">切成短视频分段</button>
+      <button class="btn ghost" onclick="document.getElementById('text').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>小说作者/自媒体做短视频变现；推文转视频。<b>痛点：</b>长文不好切、每段超60秒、标题弱、无分镜。<b>用法：</b>粘贴正文 → 自动切分段（每段≤60秒）+ 标题 + 字幕 + 分镜提示 + 配乐建议。
+    </div>
+    <div class="scene">
+      <b>实例：</b>粘贴小说段落，生成：分段1"她独自在森林中..."（标题：月影狼女·第1话，配乐：低沉悬疑）、分段2...每段字幕+分镜画面提示（森林夜景/月光/狼影）。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=novel-to-video&input={"title":"月影狼女","text":"..."}&format=json</code> 返回 JSON（分段数组+标题+配乐），Agent 可直接读入剪辑流程。
+    </div>
+  </div>
+</div>
+
+<script>
+const titleEl=document.getElementById('title');
+const textEl=document.getElementById('text');
+const out=document.getElementById('out');
+
+function loadSample(){
+  titleEl.value='月影狼女';
+  textEl.value='她独自站在森林边缘，月光像一层薄纱，洒在每一片树叶上。她听见了狼嚎，低沉而悠长，像是从很远的地方传来。她握紧了手中的银色项链，那是母亲留给她的唯一遗物。突然，灌木丛动了。一双银色的眼睛，在黑暗中亮起。他一步步走来，高大，优雅，像月亮的化身。他停在她面前，低头看着她。"你终于来了，"他说，"我等了你二十年。"她的心猛地一跳。她认出了那双眼——和她项链上刻着的狼一模一样。';
+  run();
+}
+
+// 按目标字数切段，每段<=60秒（~180字/45秒，留缓冲）
+function segment(text,per){
+  const paras=text.split(/\r?\n+/).map(s=>s.trim()).filter(s=>s);
+  const segs=[];let cur='';
+  paras.forEach(p=>{
+    if((cur+p).length>per){ if(cur)segs.push(cur); cur=p; }
+    else cur=(cur?cur+'\n':'')+p;
+  });
+  if(cur)segs.push(cur);
+  // 超长段再按句切
+  const final=[];
+  segs.forEach(s=>{
+    if(s.length<=per){final.push(s);return;}
+    const sentences=s.split(/(?<=[。！？.!?])\s*/).filter(x=>x);
+    let t='';
+    sentences.forEach(sn=>{
+      if((t+sn).length>per){ if(t)final.push(t); t=sn; }
+      else t=(t?t+' ':'')+sn;
+    });
+    if(t)final.push(t);
+  });
+  return final;
+}
+
+// 推断配乐/风格
+function styleOf(text){
+  const t=text.toLowerCase();
+  if(/狼|月|暗|血|魔|鬼|杀|复仇/.test(t))return {music:'低沉悬疑/史诗',mood:'暗黑奇幻',palette:'深蓝紫+月光银'};
+  if(/爱|吻|心|情|恋/.test(t))return {music:'浪漫钢琴',mood:'言情',palette:'暖粉+柔光'};
+  if(/科|未来|机械|AI|星/.test(t))return {music:'电子/科幻',mood:'科幻',palette:'青色+霓虹'};
+  return {music:'轻快流行',mood:'日常',palette:'明亮+暖色'};
+}
+
+function makeSegs(title,text,per){
+  const segs=segment(text,per);
+  const style=styleOf(text);
+  return segs.map((s,i)=>({
+    n:i+1,
+    title:title+' · 第'+(i+1)+'话',
+    subtitle:s.length>60?s.slice(0,60)+'…':s,
+    text:s,
+    scene:'镜头'+(i+1)+'：'+style.palette+' · 节奏'+(i%2?'渐进':'平缓'),
+    music:style.music,
+    seconds:Math.max(15,Math.round(s.length/4))
+  }));
+}
+
+function run(){
+  const title=titleEl.value.trim()||'未命名作品';
+  const text=textEl.value.trim();
+  if(!text){out.style.display='block';out.textContent='请粘贴小说/文章正文。';return;}
+  const per=Math.max(80,Math.min(300,+document.getElementById('per').value||180));
+  const segs=makeSegs(title,text,per);
+  out.style.display='block';
+  const totalSec=segs.reduce((a,s)=>a+s.seconds,0);
+  out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">🎬 '+title+' — 短视频分段（'+segs.length+'段 · 共约'+totalSec+'秒）</div>'+
+    '<div style="font-size:12px;color:#9ca3af;margin-bottom:10px">配乐风格：'+styleOf(text).music+' · 色调：'+styleOf(text).palette+'</div>'+
+    segs.map(s=>'<div class="seg"><div class="st">第'+s.n+'段 · '+s.title+'</div>'+
+      '<div class="meta">时长约 '+s.seconds+'秒 · '+s.scene+' · 配乐：'+s.music+'</div>'+
+      '<div class="txt">'+s.text+'</div></div>').join('')+
+    '<div style="margin-top:12px"><button class="btn ghost" onclick="copyOut()">复制分段脚本</button></div>';
+}
+
+function copyOut(){
+  const ta=document.createElement('textarea');ta.value=out.innerText;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert('已复制');
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      if(!parsed.text||!parsed.text.trim())throw new Error('text required');
+      const per=Math.max(80,Math.min(300,+parsed.per||180));
+      const segs=makeSegs(parsed.title||'未命名',parsed.text.trim(),per);
+      const total=segs.reduce((a,s)=>a+s.seconds,0);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,title:parsed.title,count:segs.length,totalSeconds:total,style:styleOf(parsed.text),segments:segs},null,2)+'</pre>';
+      document.title='novel-to-video JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
