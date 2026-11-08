@@ -365,6 +365,25 @@ function quizGenerator(input){
   return {topic,count,tiered:items.reduce((a,q)=>{a[q.tier]=(a[q.tier]||0)+1;return a},{}),questions:items};
 }
 
+// ---- priority-matrix ----
+function pmCompute(items){
+  return items.map(it=>{
+    const v=+it.value||0,c=+it.cost||0,r=+it.risk||0,d=+it.dep||0;
+    const score=v*2-c-r-d*0.5;
+    let prio;
+    if(score>=13)prio='P0';
+    else if(score>=9)prio='P1';
+    else if(score>=5)prio='P2';
+    else prio='P3';
+    return {name:it.name,value:v,cost:c,risk:r,dep:d,score:Math.round(score*10)/10,priority:prio};
+  }).sort((a,b)=>b.score-a.score);
+}
+function priorityMatrix(input){
+  if(!input.items||!input.items.length) throw new Error('items required');
+  const res=pmCompute(input.items);
+  return {count:res.length,ranked:res};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -376,7 +395,8 @@ const TOOLS={
   'api-contract':apiContract,
   'marketing-score':marketingScore,
   'data-quality':dataQuality,
-  'quiz-generator':quizGenerator
+  'quiz-generator':quizGenerator,
+  'priority-matrix':priorityMatrix
 };
 
 // ---- entry ----
