@@ -544,6 +544,52 @@ function contentIdeaMiner(input){
   return {niche:input.niche,count:ideas.length,ideas};
 }
 
+// ---- novel-to-video ----
+function ntvSegment(text,per){
+  const paras=text.split(/\r?\n+/).map(s=>s.trim()).filter(s=>s);
+  const segs=[];let cur='';
+  paras.forEach(p=>{
+    if((cur+p).length>per){ if(cur)segs.push(cur); cur=p; }
+    else cur=(cur?cur+'\n':'')+p;
+  });
+  if(cur)segs.push(cur);
+  const final=[];
+  segs.forEach(s=>{
+    if(s.length<=per){final.push(s);return;}
+    const sentences=s.split(/(?<=[。！？.!?])\s*/).filter(x=>x);
+    let t='';
+    sentences.forEach(sn=>{
+      if((t+sn).length>per){ if(t)final.push(t); t=sn; }
+      else t=(t?t+' ':'')+sn;
+    });
+    if(t)final.push(t);
+  });
+  return final;
+}
+function ntvStyle(text){
+  const t=text.toLowerCase();
+  if(/狼|月|暗|血|魔|鬼|杀|复仇/.test(t))return {music:'低沉悬疑/史诗',mood:'暗黑奇幻',palette:'深蓝紫+月光银'};
+  if(/爱|吻|心|情|恋/.test(t))return {music:'浪漫钢琴',mood:'言情',palette:'暖粉+柔光'};
+  if(/科|未来|机械|AI|星/.test(t))return {music:'电子/科幻',mood:'科幻',palette:'青色+霓虹'};
+  return {music:'轻快流行',mood:'日常',palette:'明亮+暖色'};
+}
+function ntvMake(title,text,per){
+  const segs=ntvSegment(text,per);
+  const style=ntvStyle(text);
+  return segs.map((s,i)=>({
+    n:i+1,title:title+' · 第'+(i+1)+'话',
+    subtitle:s.length>60?s.slice(0,60)+'…':s,
+    text:s,scene:'镜头'+(i+1)+'：'+style.palette+' · 节奏'+(i%2?'渐进':'平缓'),
+    music:style.music,seconds:Math.max(15,Math.round(s.length/4))
+  }));
+}
+function novelToVideo(input){
+  if(!input.text||!input.text.trim()) throw new Error('text required');
+  const per=Math.max(80,Math.min(300,+input.per||180));
+  const segs=ntvMake(input.title||'未命名',input.text.trim(),per);
+  return {title:input.title||'未命名',count:segs.length,totalSeconds:segs.reduce((a,s)=>a+s.seconds,0),style:ntvStyle(input.text),segments:segs};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -560,7 +606,8 @@ const TOOLS={
   'faq-generator':faqGenerator,
   'i18n-checker':i18nChecker,
   'test-case-gen':testCaseGen,
-  'content-idea-miner':contentIdeaMiner
+  'content-idea-miner':contentIdeaMiner,
+  'novel-to-video':novelToVideo
 };
 
 // ---- entry ----
