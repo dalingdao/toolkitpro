@@ -622,12 +622,43 @@ def novel_to_video(i):
     segs=ntv_make(title,text.strip(),per)
     return {'title':title,'count':len(segs),'totalSeconds':sum(s['seconds'] for s in segs),'style':ntv_style(text),'segments':segs}
 
+ACC_BAN=[
+    {'w':'国家级','fix':'行业标准'},{'w':'世界级','fix':'国际领先'},{'w':'最高级','fix':'领先水平'},
+    {'w':'顶级','fix':'优质'},{'w':'最佳','fix':'优秀'},{'w':'最优','fix':'领先'},{'w':'最好','fix':'口碑领先'},
+    {'w':'最强','fix':'实力突出'},{'w':'最大','fix':'规模领先'},{'w':'最新','fix':'新款'},{'w':'第一','fix':'领先'},
+    {'w':'首个','fix':'率先'},{'w':'独家','fix':'特色'},{'w':'唯一','fix':'特色'},{'w':'绝无仅有','fix':'稀缺'},
+    {'w':'空前绝后','fix':'前所未有'},{'w':'史无前例','fix':'罕见'},{'w':'万能','fix':'多功能'},
+    {'w':'100%','fix':'完全'}
+]
+
+def acc_check(text):
+    found=[]
+    for b in ACC_BAN:
+        idx=0
+        while True:
+            idx=text.find(b['w'],idx)
+            if idx==-1: break
+            found.append({'word':b['w'],'fix':b['fix'],'ctx':text[max(0,idx-12):idx+len(b['w'])+12]})
+            idx+=len(b['w'])
+    seen=set(); uniq=[]
+    for f in found:
+        k=f['word']+'|'+f['ctx']
+        if k not in seen: seen.add(k); uniq.append(f)
+    return uniq
+
+def ad_compliance(i):
+    text=(i.get('text') or '')
+    if not text.strip(): raise ValueError('text required')
+    v=acc_check(text)
+    return {'passed':len(v)==0,'count':len(v),'violations':v,'replacements':[{'from':x['word'],'to':x['fix']} for x in v]}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
          'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix,
          'faq-generator':faq_generator,'i18n-checker':i18n_checker,'test-case-gen':test_case_gen,
-         'content-idea-miner':content_idea_miner,'novel-to-video':novel_to_video}
+         'content-idea-miner':content_idea_miner,'novel-to-video':novel_to_video,
+         'ad-compliance-checker':ad_compliance}
 
 # ---- entry ----
 def main():
