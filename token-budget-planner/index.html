@@ -41,5 +41,10 @@ function alloc(){
 }
 (function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const bud=+d.budget||200000;const ws=(d.weights||[2,3,3,4]).map(x=>+x).filter(x=>x>0);const ns=d.names||[];const tot=ws.reduce((a,b)=>a+b,0);const alloc=ws.map((w,i)=>({step:ns[i]||i+1,budget:Math.round(bud*w/tot),pct:Math.round(w/tot*100)}));document.body.textContent=JSON.stringify({tool:'token-budget-planner',input:d,output:{total:bud,alloc,remain:0}})}catch(e){document.body.textContent=JSON.stringify({tool:'token-budget-planner',error:'invalid input'})}}})();
 </script>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin:16px auto;max-width:720px;font-size:13px;line-height:1.7;color:#cbd5e1">
+<b style="color:#60a5fa">💡 实用场景：</b>多步 AI 任务预算分配：按步骤权重分配总 token，防超支。<br>
+<b style="color:#60a5fa">示例：</b>输入 <code>{"budget":200000,"weights":[2,3,3,4]}</code><br>→ <code>每步预算+占比(总=budget)</code>
+</div>
 </body>
 </html>
