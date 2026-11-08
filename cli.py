@@ -572,12 +572,62 @@ def content_idea_miner(i):
     ideas=cim_mine(niche,(i.get('audience') or '').strip(),count)
     return {'niche':i.get('niche'),'count':len(ideas),'ideas':ideas}
 
+def ntv_segment(text,per):
+    paras=[s.strip() for s in re.split(r'\r?\n+',text) if s.strip()]
+    segs=[]; cur=''
+    for p in paras:
+        if len(cur+p)>per:
+            if cur: segs.append(cur)
+            cur=p
+        else:
+            cur=(cur+'\n' if cur else '')+p
+    if cur: segs.append(cur)
+    final=[]
+    for s in segs:
+        if len(s)<=per: final.append(s); continue
+        sentences=[x for x in re.split(r'(?<=[。！？.!?])\s*',s) if x]
+        t=''
+        for sn in sentences:
+            if len(t+sn)>per:
+                if t: final.append(t)
+                t=sn
+            else:
+                t=(t+' ' if t else '')+sn
+        if t: final.append(t)
+    return final
+
+def ntv_style(text):
+    t=text.lower()
+    if re.search(r'狼|月|暗|血|魔|鬼|杀|复仇',t): return {'music':'低沉悬疑/史诗','mood':'暗黑奇幻','palette':'深蓝紫+月光银'}
+    if re.search(r'爱|吻|心|情|恋',t): return {'music':'浪漫钢琴','mood':'言情','palette':'暖粉+柔光'}
+    if re.search(r'科|未来|机械|AI|星',t): return {'music':'电子/科幻','mood':'科幻','palette':'青色+霓虹'}
+    return {'music':'轻快流行','mood':'日常','palette':'明亮+暖色'}
+
+def ntv_make(title,text,per):
+    segs=ntv_segment(text,per)
+    style=ntv_style(text)
+    out=[]
+    for i,s in enumerate(segs):
+        out.append({'n':i+1,'title':title+' · 第'+str(i+1)+'话',
+                    'subtitle':(s[:60]+'…' if len(s)>60 else s),
+                    'text':s,'scene':'镜头'+str(i+1)+'：'+style['palette']+' · 节奏'+('渐进' if i%2 else '平缓'),
+                    'music':style['music'],'seconds':max(15,round(len(s)/4))})
+    return out
+
+def novel_to_video(i):
+    text=(i.get('text') or '')
+    if not text.strip(): raise ValueError('text required')
+    per=max(80,min(300,int(i.get('per') or 180)))
+    title=i.get('title') or '未命名'
+    segs=ntv_make(title,text.strip(),per)
+    return {'title':title,'count':len(segs),'totalSeconds':sum(s['seconds'] for s in segs),'style':ntv_style(text),'segments':segs}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
          'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
          'data-quality':data_quality,'quiz-generator':quiz_generator,'priority-matrix':priority_matrix,
          'faq-generator':faq_generator,'i18n-checker':i18n_checker,'test-case-gen':test_case_gen,
-         'content-idea-miner':content_idea_miner}
+         'content-idea-miner':content_idea_miner,'novel-to-video':novel_to_video}
 
 # ---- entry ----
 def main():
