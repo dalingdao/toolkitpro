@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ 智能整理器 FAQ Organizer</title>
+<meta name="description" content="FAQ智能整理器：输入零散问答，自动归类分组、合并重复问题、生成可搜索FAQ文档。客服知识库整理、帮助中心搭建必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+textarea{width:100%;min-height:220px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.cat{background:#1f2333;border-radius:8px;padding:12px;margin-bottom:10px}
+.cat h3{font-size:14px;color:#c4b5fd;margin-bottom:8px}
+.qa{border-bottom:1px solid #2a2e3d;padding:8px 0}
+.qa .q{font-weight:600;font-size:13px}
+.qa .a{font-size:12px;color:#9ca3af;margin-top:3px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/faq-generator/">FAQ 智能整理器</a>
+    <a href="?tool=faq-generator&input={\"qa\":[{\"q\":\"怎么退款？\",\"a\":\"7天无理由\"}]}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>FAQ 智能整理器</h1>
+  <p class="sub">输入零散问答 → 自动归类分组 + 合并重复问题 + 生成可搜索 FAQ 文档。客服知识库整理、帮助中心搭建必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>客服整理知识库，收到几百条零散问答——<b>同一问题被问几十次、问题无分类、答案不统一</b>。本工具自动归类（按关键词）、合并重复问题、输出可搜索分组 FAQ，直接进帮助中心。
+  </div>
+
+  <div class="card">
+    <h2>输入问答（每行：问题|答案）</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample()">示例</div>
+    </div>
+    <textarea id="input" placeholder="每行：问题|答案&#10;例如：&#10;怎么退款？|7天无理由退货，在订单页申请&#10;退款多久到账？|3-5个工作日原路退回&#10;怎么退款？|联系客服即可申请退货"></textarea>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">整理 FAQ</button>
+      <button class="btn ghost" onclick="document.getElementById('input').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>客服知识库整理；产品帮助中心搭建。<b>痛点：</b>问答零散、重复多、无分类，搜索找不到。<b>用法：</b>粘贴问答 → 自动归类+合并重复 → 输出分组 FAQ + 重复统计。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入多条问答（含重复"怎么退款"），点整理：自动按"退款/支付/配送/账号"归类，合并重复问题（标记重复次数），生成可搜索 FAQ 文档。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=faq-generator&input={"qa":[{"q":"怎么退款？","a":"7天无理由"}]}&format=json</code> 返回 JSON（分组+合并+重复统计），Agent 可直接读入知识库。
+    </div>
+  </div>
+</div>
+
+<script>
+const input=document.getElementById('input');
+const out=document.getElementById('out');
+
+function loadSample(){
+  input.value='怎么退款？|7天无理由退货，在订单页申请\n退款多久到账？|3-5个工作日原路退回\n怎么退款？|联系客服申请退货\n支持哪些支付？|微信、支付宝、银行卡\n支付失败怎么办？|检查余额后重试\n多久发货？|48小时内发货\n怎么查物流？|订单页查看物流单号\n怎么查物流？|个人中心-我的订单-物流\n账号密码忘了？|点登录页忘记密码\n支持哪些支付？|微信、支付宝、花呗';
+  run();
+}
+
+// 分类关键词（按问题内容匹配）
+const CATS=[
+  {name:'退款',kw:['退款','退钱','退货','退换','七天','到账']},
+  {name:'支付',kw:['支付','付款','付钱','余额','花呗','银行卡','微信']},
+  {name:'配送',kw:['发货','物流','快递','配送','到货','运输']},
+  {name:'账号',kw:['账号','账户','密码','登录','注册','验证码','忘记']},
+  {name:'售后',kw:['售后','维修','保修','换货','质量','损坏']},
+  {name:'发票',kw:['发票','开票','税票','报销']},
+  {name:'其他',kw:[]}
+];
+
+function catOf(q){
+  const t=q.toLowerCase();
+  for(const c of CATS){ if(c.kw.length&&c.kw.some(k=>t.includes(k.toLowerCase())))return c.name; }
+  return '其他';
+}
+
+// 合并重复问题：规范化问题（去标点/空格/小写），相同则合并
+function normQ(q){
+  return q.replace(/[？?！!。.,，\s]/g,'').toLowerCase();
+}
+
+function organize(qa){
+  const merged=[];
+  const seen={};
+  qa.forEach(item=>{
+    const nq=normQ(item.q);
+    if(seen[nq]!==undefined){ merged[seen[nq]].count++; merged[seen[nq]].answers.push(item.a); }
+    else{ seen[nq]=merged.length; merged.push({q:item.q,answers:[item.a],count:1,cat:catOf(item.q)}); }
+  });
+  // 分组
+  const groups={};
+  merged.forEach(m=>{ if(!groups[m.cat])groups[m.cat]=[]; groups[m.cat].push(m); });
+  const cats=Object.keys(groups);
+  return {total_input:qa.length,unique:merged.length,duplicates:qa.length-merged.length,groups,catOrder:cats};
+}
+
+function run(){
+  const text=input.value.trim();
+  if(!text){out.style.display='block';out.textContent='请先输入问答（每行：问题|答案）。';return;}
+  const qa=[];
+  text.split(/\r?\n/).forEach(line=>{
+    const parts=line.split('|').map(s=>s.trim());
+    if(parts.length>=2&&parts[0])qa.push({q:parts[0],a:parts[1]});
+  });
+  if(!qa.length){out.style.display='block';out.textContent='未解析到有效问答行。';return;}
+  const res=organize(qa);
+  out.style.display='block';
+  out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">📋 FAQ 整理结果</div>'+
+    '<div style="font-size:13px;color:#9ca3af;margin-bottom:10px">输入 '+res.total_input+' 条 → 唯一 '+res.unique+' 条 · 合并重复 '+res.duplicates+' 条</div>'+
+    res.catOrder.map(cat=>'<div class="cat"><h3>📁 '+cat+'（'+res.groups[cat].length+'条）</h3>'+
+      res.groups[cat].map(m=>'<div class="qa"><div class="q">'+m.q+(m.count>1?' <span class="chip" style="padding:2px 8px;font-size:10px">重复×'+m.count+'</span>':'')+'</div>'+
+        '<div class="a">'+m.answers[0]+(m.answers.length>1?'（另有'+m.answers.length+'个答案：'+m.answers.slice(1).join('；')+'）':'')+'</div></div>').join('')
+      +'</div>').join('')+
+    '<div style="margin-top:12px"><button class="btn ghost" onclick="copyOut()">复制全部</button></div>';
+}
+
+function copyOut(){
+  const t=out.innerText;
+  const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+  alert('已复制');
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      if(!parsed.qa||!parsed.qa.length)throw new Error('qa required');
+      const res=organize(parsed.qa);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,total:res.total_input,unique:res.unique,duplicates:res.duplicates,categories:res.groups},null,2)+'</pre>';
+      document.title='faq-generator JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
