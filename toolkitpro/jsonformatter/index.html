@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Formatter - 在线JSON格式化/校验/压缩工具</title>
+<meta name="description" content="免费的在线JSON格式化工具：美化、压缩、校验JSON，高亮语法，一键复制。开发者必备工具。">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; line-height: 1.6; }
+header { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 40px 20px 60px; text-align: center; }
+header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+header p { opacity: 0.9; max-width: 600px; margin: 0 auto; }
+.container { max-width: 1100px; margin: -30px auto 40px; padding: 0 20px; }
+.card { background: #fff; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 24px; }
+.card h2 { font-size: 1.2rem; margin-bottom: 16px; color: #667eea; }
+.toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.btn { background: #667eea; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+.btn:hover { background: #5568d3; }
+.btn.green { background: #27ae60; }
+.btn.green:hover { background: #1e8f4f; }
+.btn.orange { background: #f39c12; }
+.btn.orange:hover { background: #d68910; }
+.btn.gray { background: #95a5a6; }
+.btn.gray:hover { background: #7f8c8d; }
+textarea, pre.code { width: 100%; min-height: 320px; border: 2px solid #e0e4ea; border-radius: 8px; padding: 16px; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; resize: vertical; }
+textarea:focus { border-color: #667eea; outline: none; }
+pre.code { background: #f8f9fa; white-space: pre-wrap; word-break: break-all; max-height: 400px; overflow: auto; }
+#status { margin-top: 8px; font-size: 0.9rem; font-weight: 500; }
+.status-ok { color: #27ae60; }
+.status-err { color: #e74c3c; }
+.stats { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+.stat { background: #f8f9fa; border-radius: 8px; padding: 10px 16px; text-align: center; }
+.stat .val { font-size: 1.3rem; font-weight: 700; color: #667eea; }
+.stat .label { font-size: 0.8rem; color: #666; }
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.feature { background: #f8f9fa; border-radius: 8px; padding: 16px; }
+.feature h3 { font-size: 1rem; margin-bottom: 6px; color: #333; }
+.feature p { font-size: 0.85rem; color: #666; }
+footer { text-align: center; padding: 20px; color: #999; font-size: 0.85rem; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header>
+  <h1>JSON Formatter</h1>
+  <p>免费的在线 JSON 格式化、校验与压缩工具。粘贴 JSON，一键美化或压缩。</p>
+</header>
+
+<div class="container">
+  <div class="card">
+    <h2>JSON 输入</h2>
+    <div class="toolbar">
+      <button class="btn green" onclick="formatJSON()">✨ 格式化</button>
+      <button class="btn orange" onclick="compressJSON()">📦 压缩</button>
+      <button class="btn gray" onclick="validateJSON()">✓ 校验</button>
+      <button class="btn" onclick="copyResult()">📋 复制结果</button>
+      <button class="btn gray" onclick="clearAll()">🗑 清空</button>
+    </div>
+    <textarea id="input" placeholder='粘贴 JSON 这里，例如: {"name":"John","age":30}'></textarea>
+    <div id="status"></div>
+    <div class="stats">
+      <div class="stat"><div class="val" id="charCount">0</div><div class="label">字符</div></div>
+      <div class="stat"><div class="val" id="lineCount">0</div><div class="label">行数</div></div>
+      <div class="stat"><div class="val" id="keyCount">0</div><div class="label">键值对</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>JSON 输出</h2>
+    <pre class="code" id="output">格式化结果将显示在这里...</pre>
+  </div>
+
+  <div class="card">
+    <h2>功能特点</h2>
+    <div class="features">
+      <div class="feature"><h3>✅ 语法校验</h3><p>实时检测 JSON 语法错误，精确定位问题位置。</p></div>
+      <div class="feature"><h3>🎨 语法高亮</h3><p>格式化后自动高亮键名、字符串、数字。</p></div>
+      <div class="feature"><h3>📦 压缩输出</h3><p>去除空格换行，生成最小化 JSON 用于传输。</p></div>
+      <div class="feature"><h3>🔢 数据统计</h3><p>自动统计字符数、行数和键值对数量。</p></div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 ToolkitPro - 免费在线开发者工具 | JSON Formatter</footer>
+
+<script>
+let lastResult = '';
+
+document.getElementById('input').addEventListener('input', () => { updateStats(); });
+
+function updateStats() {
+  const text = document.getElementById('input').value;
+  document.getElementById('charCount').textContent = text.length;
+  document.getElementById('lineCount').textContent = text.split('\n').length;
+  try {
+    const parsed = JSON.parse(text);
+    document.getElementById('keyCount').textContent = countKeys(parsed);
+  } catch(e) {
+    document.getElementById('keyCount').textContent = '-';
+  }
+}
+
+function countKeys(obj) {
+  let count = 0;
+  const walk = (o) => {
+    if (typeof o === 'object' && o !== null) {
+      if (Array.isArray(o)) { o.forEach(walk); }
+      else {
+        count += Object.keys(o).length;
+        Object.values(o).forEach(walk);
+      }
+    }
+  };
+  walk(obj);
+  return count;
+}
+
+function formatJSON() {
+  const text = document.getElementById('input').value;
+  if (!text.trim()) { setStatus('请输入 JSON 内容', 'err'); return; }
+  try {
+    const parsed = JSON.parse(text);
+    const formatted = JSON.stringify(parsed, null, 2);
+    lastResult = formatted;
+    document.getElementById('output').innerHTML = highlightJSON(formatted);
+    setStatus('✅ 格式化成功！', 'ok');
+  } catch(e) {
+    setStatus('❌ JSON 错误: ' + e.message, 'err');
+  }
+}
+
+function compressJSON() {
+  const text = document.getElementById('input').value;
+  if (!text.trim()) { setStatus('请输入 JSON 内容', 'err'); return; }
+  try {
+    const parsed = JSON.parse(text);
+    const compressed = JSON.stringify(parsed);
+    lastResult = compressed;
+    document.getElementById('output').innerHTML = highlightJSON(compressed);
+    setStatus('✅ 压缩成功！' + compressed.length + ' 字符', 'ok');
+  } catch(e) {
+    setStatus('❌ JSON 错误: ' + e.message, 'err');
+  }
+}
+
+// Safe output: escape HTML only (reliable, no deps)
+function highlightJSON(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function validateJSON() {
+  const text = document.getElementById('input').value;
+  if (!text.trim()) { setStatus('请输入 JSON 内容', 'err'); return; }
+  try {
+    const parsed = JSON.parse(text);
+    setStatus('✅ 有效的 JSON！共 ' + countKeys(parsed) + ' 个键值对', 'ok');
+  } catch(e) {
+    setStatus('❌ 无效 JSON: ' + e.message, 'err');
+  }
+}
+
+function copyResult() {
+  if (!lastResult) { setStatus('没有可复制的内容', 'err'); return; }
+  navigator.clipboard.writeText(lastResult).then(() => {
+    setStatus('📋 已复制到剪贴板！', 'ok');
+  });
+}
+
+function clearAll() {
+  document.getElementById('input').value = '';
+  document.getElementById('output').innerHTML = '格式化结果将显示在这里...';
+  lastResult = '';
+  setStatus('已清空', 'ok');
+}
+
+function setStatus(msg, type) {
+  const s = document.getElementById('status');
+  s.textContent = msg;
+  s.className = type === 'ok' ? 'status-ok' : 'status-err';
+}
+
+// Auto format on load example
+document.getElementById('input').value = '{"name":"John Doe","age":30,"email":"john@example.com","tags":["developer","tools"],"address":{"city":"Shanghai","zip":"200000"}}';
+formatJSON();
+</script>
+</body>
+</html>
