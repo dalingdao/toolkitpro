@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chart Generator Pro - 免费在线图表生成器（柱状/折线/饼图）</title>
+<meta name="description" content="免费在线图表生成器，柱状图/折线图/饼图，输入数据即时生成，导出 PNG，纯前端，无需注册。">
+<meta name="keywords" content="图表生成,chart generator,柱状图,折线图,饼图,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:760px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+textarea{width:100%;min-height:100px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;font-family:monospace;resize:vertical}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+select{padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px}
+.btn{background:#3b82f6;color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{background:#2563eb}
+.btn.green{background:#22c55e}
+#chartWrap{text-align:center;margin:16px 0;overflow-x:auto}
+canvas{max-width:100%}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📊 Chart Generator Pro</h1>
+  <p>免费在线图表生成器—— 柱状图/折线图/饼图，输入数据即时生成，导出 PNG。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">3图表</span><span class="badge">PNG</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>数据（每行：标签,数值）</label><textarea id="data">一月,120
+二月,200
+三月,160
+四月,250
+五月,180</textarea></div>
+    <div class="row">
+      <select id="type"><option value="bar">柱状图</option><option value="line">折线图</option><option value="pie">饼图</option></select>
+      <button class="btn" onclick="draw()">📊 生成</button>
+      <button class="btn green" onclick="dl()">💾 导出 PNG</button>
+    </div>
+    <div id="chartWrap"><canvas id="cv" width="600" height="360"></canvas></div>
+  </div>
+</div>
+<footer>ToolkitPro · Chart Generator Pro · 纯前端</footer>
+<script>
+const colors=['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#84cc16'];
+function parseData(){
+  return document.getElementById('data').value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const p=s.split(',');return{label:p[0],val:+p[1]||0}});
+}
+function draw(){
+  const data=parseData(),type=document.getElementById('type').value;
+  const cv=document.getElementById('cv'),x=cv.getContext('2d');
+  x.clearRect(0,0,600,360);
+  if(type==='bar')drawBar(x,data);else if(type==='line')drawLine(x,data);else drawPie(x,data);
+}
+function drawBar(x,d){
+  const pad=40,max=Math.max(...d.map(i=>i.val)),w=(600-pad*2)/d.length;
+  x.font='12px sans-serif';
+  d.forEach((i,n)=>{
+    const h=(i.val/max)*260;
+    x.fillStyle=colors[n%colors.length];
+    x.fillRect(pad+n*w+10,300-h,w-20,h);
+    x.fillStyle='#333';x.fillText(i.label,pad+n*w+10,318);
+    x.fillText(i.val,pad+n*w+10,292-h);
+  });
+}
+function drawLine(x,d){
+  const pad=40,max=Math.max(...d.map(i=>i.val)),step=(600-pad*2)/(d.length-1);
+  x.strokeStyle=colors[0];x.lineWidth=3;
+  d.forEach((i,n)=>{
+    const px=pad+n*step,py=300-(i.val/max)*260;
+    if(n>0){x.lineTo(px,py)}else{x.moveTo(px,py)}
+  });
+  x.stroke();
+  x.fillStyle=colors[0];
+  d.forEach((i,n)=>{
+    const px=pad+n*step,py=300-(i.val/max)*260;
+    x.beginPath();x.arc(px,py,5,0,7);x.fill();
+    x.font='12px sans-serif';x.fillStyle='#333';x.fillText(i.label,px-15,320);x.fillText(i.val,px-8,py-10);x.fillStyle=colors[0];
+  });
+}
+function drawPie(x,d){
+  const total=d.reduce((s,i)=>s+i.val,0);let a=-Math.PI/2;
+  d.forEach((i,n)=>{
+    const slice=i.val/total*Math.PI*2;
+    x.fillStyle=colors[n%colors.length];
+    x.beginPath();x.moveTo(300,180);x.arc(300,180,130,a,a+slice);x.closePath();x.fill();
+    a+=slice;
+  });
+  x.font='13px sans-serif';x.fillStyle='#333';
+  let ly=340;
+  d.forEach((i,n)=>{x.fillStyle=colors[n%colors.length];x.fillRect(360,ly-12,14,14);x.fillStyle='#333';x.fillText(i.label+' '+i.val,380,ly);ly+=20});
+}
+function dl(){
+  draw();const a=document.createElement('a');a.href=document.getElementById('cv').toDataURL('image/png');a.download='chart-'+Date.now()+'.png';a.click();
+}
+draw();
+</script>
+</body>
+</html>
