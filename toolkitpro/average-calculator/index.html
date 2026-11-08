@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Average Calculator Pro - 免费在线平均数/中位数/众数计算器</title>
+<meta name="description" content="免费在线统计计算器，计算平均数/中位数/众数/极差/标准差，纯前端，无需注册。">
+<meta name="keywords" content="平均数计算,average calculator,中位数,众数,标准差,统计计算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:560px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+textarea{width:100%;min-height:100px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px;font-family:monospace;resize:vertical}
+.result{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.box{background:#eff6ff;border-radius:10px;padding:14px;text-align:center}
+.box .label{font-size:12px;color:#64748b}
+.box .value{font-size:20px;font-weight:800;color:#2563eb;margin-top:4px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📊 Average Calculator Pro</h1>
+  <p>免费在线统计计算器—— 平均数/中位数/众数/极差/标准差。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">5统计</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>输入数字（逗号/空格分隔）</label><textarea id="nums" oninput="calc()">10,20,30,40,50</textarea></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Average Calculator Pro · 纯前端</footer>
+<script>
+function calc(){
+  const nums=document.getElementById('nums').value.split(/[,\s]+/).map(Number).filter(n=>!isNaN(n));
+  if(!nums.length){document.getElementById('res').innerHTML='<div class="box"><div class="label">输入数字</div></div>';return}
+  const sum=nums.reduce((a,b)=>a+b,0);
+  const avg=sum/nums.length;
+  const sorted=[...nums].sort((a,b)=>a-b);
+  const mid=Math.floor(sorted.length/2);
+  const median=sorted.length%2?sorted[mid]:(sorted[mid-1]+sorted[mid])/2;
+  const freq={};let mode=[],max=0;
+  nums.forEach(n=>{freq[n]=(freq[n]||0)+1;if(freq[n]>max)max=freq[n]});
+  if(max>1)mode=Object.keys(freq).filter(k=>freq[k]===max).map(Number);
+  const range=sorted[sorted.length-1]-sorted[0];
+  const sd=Math.sqrt(nums.reduce((a,b)=>a+(b-avg)*(b-avg),0)/nums.length);
+  document.getElementById('res').innerHTML='<div class="box"><div class="label">平均数</div><div class="value">'+r(avg)+'</div></div><div class="box"><div class="label">中位数</div><div class="value">'+r(median)+'</div></div><div class="box"><div class="label">众数</div><div class="value">'+(mode.length?mode.join(','):'无')+'</div></div><div class="box"><div class="label">极差</div><div class="value">'+r(range)+'</div></div><div class="box"><div class="label">标准差</div><div class="value">'+r(sd)+'</div></div><div class="box"><div class="label">个数</div><div class="value">'+nums.length+'</div></div>';
+}
+function r(n){return Math.round(n*1000)/1000}
+calc();
+</script>
+</body>
+</html>
