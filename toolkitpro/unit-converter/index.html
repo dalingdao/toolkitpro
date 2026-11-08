@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Converter Pro - 免费在线单位转换器（长度/重量/温度/面积/体积）</title>
+<meta name="description" content="免费在线单位转换器，支持长度、重量、温度、面积、体积等常用单位互转，实时计算，纯前端，无需注册。">
+<meta name="keywords" content="单位转换,unit converter,长度转换,重量转换,温度转换,面积转换,体积转换,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{flex:1;min-width:100px;padding:10px;text-align:center;border:2px solid #e2e8f0;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:#475569}
+.tab.active{border-color:#3b82f6;background:#eff6ff;color:#2563eb}
+.field{margin-bottom:16px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.row{display:flex;gap:12px;align-items:flex-end}
+.row .field{flex:1}
+.eq{font-size:22px;color:#64748b;padding-bottom:10px}
+.result{background:#eff6ff;border-radius:10px;padding:16px;text-align:center;margin-top:16px}
+.result b{font-size:24px;color:#2563eb}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>📏 Unit Converter Pro</h1>
+  <p>免费在线单位转换器—— 长度/重量/温度/面积/体积/速度，实时计算，纯前端。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">6类</span><span class="badge">实时</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="tabs" id="tabs"></div>
+    <div class="row">
+      <div class="field"><label>数值</label><input type="number" id="val" value="1" oninput="calc()"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>从</label><select id="from" onchange="calc()"></select></div>
+      <div class="eq">⇄</div>
+      <div class="field"><label>到</label><select id="to" onchange="calc()"></select></div>
+    </div>
+    <div class="result">结果：<b id="res">—</b></div>
+  </div>
+</div>
+<footer>ToolkitPro · Unit Converter Pro · 纯前端</footer>
+<script>
+const cats={
+  length:{label:'长度',units:{m:1,km:1000,cm:0.01,mm:0.001,mi:1609.344,yd:0.9144,ft:0.3048,in:0.0254}},
+  weight:{label:'重量',units:{kg:1,g:0.001,mg:1e-6,t:1000,lb:0.453592,oz:0.0283495}},
+  temperature:{label:'温度',units:{c:1,f:1,k:1},special:true},
+  area:{label:'面积',units:{m2:1,km2:1e6,cm2:1e-4,ha:1e4,acre:4046.86,ft2:0.092903}},
+  volume:{label:'体积',units:{l:1,ml:0.001,m3:1000,gal:3.78541,floz:0.0295735}},
+  speed:{label:'速度',units:{ms:1,kmh:0.277778,mph:0.44704,kn:0.514444}}
+};
+let cur='length';
+function init(){
+  const tabs=document.getElementById('tabs');
+  tabs.innerHTML=Object.keys(cats).map(k=>'<div class="tab'+(k===cur?' active':'')+'" onclick="setCat(\''+k+'\')">'+cats[k].label+'</div>').join('');
+  fill();
+}
+function setCat(c){cur=c;document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',Object.keys(cats)[i]===c));fill();calc()}
+function fill(){
+  const u=Object.keys(cats[cur].units);
+  document.getElementById('from').innerHTML=u.map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+  document.getElementById('to').innerHTML=u.map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+  if(u[1])document.getElementById('to').value=u[1];
+}
+function calc(){
+  const v=parseFloat(document.getElementById('val').value)||0;
+  const f=document.getElementById('from').value,t=document.getElementById('to').value;
+  let out=v;
+  if(cats[cur].special){
+    if(cur==='temperature'){let c=v;if(f==='f')c=(v-32)*5/9;else if(f==='k')c=v-273.15;if(t==='f')out=c*9/5+32;else if(t==='k')out=c+273.15;else out=c}
+  } else {
+    out=v*cats[cur].units[f]/cats[cur].units[t];
+  }
+  document.getElementById('res').textContent=(Math.round(out*1e8)/1e8)+' '+t;
+}
+init();calc();
+</script>
+</body>
+</html>
