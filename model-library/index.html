@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>程序化建模技能 · 超真模型库</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,'Segoe UI',Roboto,sans-serif;background:#0b0e18;color:#e5e7eb;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+h1{font-size:28px;color:#c4b5fd;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:20px}
+.card{background:#12141f;border:1px solid #2a2d3d;border-radius:14px;padding:20px;margin-bottom:20px}
+.card h2{font-size:19px;color:#fbbf24;margin-bottom:12px}
+canvas{width:100%;height:380px;border-radius:10px;background:#0d1017;border:1px solid #2a2d3d;display:block}
+.libbtns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+button{background:#1f2333;border:1px solid #3a3f55;color:#e5e7eb;padding:8px 13px;border-radius:8px;cursor:pointer;font-size:13px}
+button:hover{background:#2a2f47}
+button.act{background:#8b5cf6;border-color:#8b5cf6;color:#fff}
+.step{display:flex;gap:12px;margin-bottom:12px}
+.step .n{background:#8b5cf6;color:#fff;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.step h3{font-size:14px;color:#e5e7eb}.step p{font-size:12px;color:#9ca3af}
+pre{background:#0d1017;border:1px solid #2a2d3d;border-radius:10px;padding:14px;font-size:12px;overflow:auto;color:#a5f3a5;max-height:260px}
+.info{font-size:13px;color:#9ca3af;margin-bottom:10px}
+b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🧊 程序化建模技能 · 超真模型库</h1>
+<div class="sub">自写建模技能：用基础几何组合大量细节部件，生成逼真模型。含模型库（武器/角色/载具/建筑/道具）+ 3D 预览 + 建模流程。</div>
+
+<div class="card">
+<h2>🏗️ 模型库（14 款超真模型）</h2>
+<div class="libbtns" id="libbtns"></div>
+<canvas id="prev" width="600" height="380"></canvas>
+<div class="info" style="margin-top:8px">🖱️ 拖拽旋转查看 · 点击模型按钮切换 · 每个模型由 5~18 个细节部件组成</div>
+</div>
+
+<div class="card">
+<h2>📖 建模技能（创建/修改模型流程）</h2>
+<div class="step"><div class="n">1</div><div><h3>拆解真实结构</h3><p>观察实物/参考图，分解为可建模的部件（如枪=枪管+机匣+弹匣+枪托+握把）。</p></div></div>
+<div class="step"><div class="n">2</div><div><h3>部件分层</h3><p>核心体(大块) → 细节(小件/铆钉/开孔) → 高光(镜片/灯/金属)。每层 2~8 部件。</p></div></div>
+<div class="step"><div class="n">3</div><div><h3>比例与透视</h3><p>按真实比例定尺寸，用 GEO.translate/scale/rotation 校正位置与朝向。</p></div></div>
+<div class="step"><div class="n">4</div><div><h3>材质配色</h3><p>主色(主体) / 辅色(配件) / 高光(金属/玻璃 alpha) / 暗色(阴影面)。</p></div></div>
+<div class="step"><div class="n">5</div><div><h3>组合修改</h3><p>part = {geo,color,x,y,z,yaw}；修改任意部件即改模型（增删部件/改色/位移）。</p></div></div>
+<div class="step"><div class="n">6</div><div><h3>校验视角</h3><p>多角度旋转预览（本页 3D 预览），确认无穿模/比例失调，微调后入库。</p></div></div>
+</div>
+
+<div class="card">
+<h2>⚙️ 建模 API（Modeler_pro）</h2>
+<div class="info">每个生成器返回 <b>Model</b>（parts 数组），可在游戏中 <b>renderer.drawModel(model,x,y,z,scale,yaw)</b> 绘制。修改模型：<b>model.parts.push({geo,color,...})</b> 或改 <b>color/位置</b>。</div>
+<pre id="codebox">// 建模技能核心
+const m = Modeler_pro.rifle();          // 细致突击步枪(16部件)
+const s = Modeler_pro.soldier(color);   // 逼真士兵(20部件)
+const v = Modeler_pro.vehicle(color);   // 装甲车(13部件)
+const b = Modeler_pro.building(3,5,3);  // 楼房(窗户网格)
+// 修改模型：加装瞄准镜
+m.parts.push({geo:GEO.cylinder(0.05,0.15,8), color:[0.1,0.1,0.12,1], y:0.2, z:0.3});
+renderer.drawModel(m, x,y,z, 1.0, yaw);</pre>
+</div>
+</div>
+
+<script>
+// ===== 内嵌自写引擎核心（矩阵/相机/几何/渲染器）=====
+const M4={identity(){return new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1])},multiply(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[0*4+r]*b[c*4+0]+a[1*4+r]*b[c*4+1]+a[2*4+r]*b[c*4+2]+a[3*4+r]*b[c*4+3];return o},perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0])},translation(x,y,z){return new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1])},rotationY(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1])},rotationX(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1])},scale(x,y,z){return new Float32Array([x,0,0,0,0,y,0,0,0,0,z,0,0,0,0,1])}};
+class Camera{constructor(){this.x=0;this.y=1.7;this.z=0;this.yaw=0;this.pitch=0;this.fov=Math.PI/3;this.near=0.1;this.far=300}viewMatrix(){let m=M4.multiply(M4.translation(-this.x,-this.y,-this.z),M4.rotationX(-this.pitch));return M4.multiply(m,M4.rotationY(-this.yaw))}projMatrix(a){return M4.perspective(this.fov,a,this.near,this.far)}}
+const GEO={box(sx,sy,sz){const x=sx/2,y=sy/2,z=sz/2;const v=[-x,y,z,-x,-y,z,x,-y,z,x,y,z,x,y,-z,x,-y,-z,-x,-y,-z,-x,y,-z,-x,y,-z,-x,y,z,x,y,z,x,y,-z,-x,-y,z,-x,-y,-z,x,-y,-z,x,-y,z,x,y,z,x,-y,z,x,-y,-z,x,y,-z,-x,y,-z,-x,-y,-z,-x,-y,z,-x,y,z];const idx=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23];return{verts:v,idx}},sphere(r,seg){const v=[],idx=[];for(let iy=0;iy<=seg;iy++){const p=Math.PI*iy/seg;for(let ix=0;ix<=seg;ix++){const t=2*Math.PI*ix/seg;v.push(r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t))}}for(let iy=0;iy<seg;iy++)for(let ix=0;ix<seg;ix++){const a=iy*(seg+1)+ix,b=a+seg+1;idx.push(a,b,a+1,b,b+1,a+1)}return{verts:v,idx}},cylinder(r,h,seg){const v=[],idx=[];for(let i=0;i<=seg;i++){const a=2*Math.PI*i/seg;v.push(r*Math.cos(a),h/2,r*Math.sin(a))}for(let i=0;i<=seg;i++){const a=2*Math.PI*i/seg;v.push(r*Math.cos(a),-h/2,r*Math.sin(a))}const top=v.length/3;v.push(0,h/2,0);const bot=v.length/3;v.push(0,-h/2,0);for(let i=0;i<seg;i++){idx.push(i,i+seg+1,i+1,i+1,i+seg+1,i+seg+2);idx.push(i,top,i+1);idx.push(i+seg+1,bot,i+seg+2)}return{verts:v,idx}},cone(r,h,seg){const v=[],idx=[];for(let i=0;i<=seg;i++){const a=2*Math.PI*i/seg;v.push(r*Math.cos(a),-h/2,r*Math.sin(a))}const apex=v.length/3;v.push(0,h/2,0);const base=v.length/3;v.push(0,-h/2,0);for(let i=0;i<seg;i++){idx.push(i,apex,i+1);idx.push(i+1,base,i)}return{verts:v,idx}},translate(g,dx,dy,dz){const o={verts:[],idx:g.idx.slice()};for(let i=0;i<g.verts.length;i+=3)o.verts.push(g.verts[i]+dx,g.verts[i+1]+dy,g.verts[i+2]+dz);return o}};
+class Model{constructor(gl,parts){this.parts=parts}}
+function makeGLMesh(gl,verts,idx){const vbo=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vbo);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(verts),gl.STATIC_DRAW);const ibo=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ibo);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx),gl.STATIC_DRAW);return{vbo,ibo,count:idx.length}}
+class Renderer3D{constructor(canvas){this.canvas=canvas;this.gl=canvas.getContext('webgl',{antialias:true});if(!this.gl)throw new Error('WebGL not supported');const gl=this.gl;const vs='attribute vec3 aPos;uniform mat4 uProj,uView,uModel;varying vec3 vPos;void main(){vec4 world=uModel*vec4(aPos,1.0);vPos=world.xyz;gl_Position=uProj*uView*world;}';const fs='precision mediump float;uniform vec4 uColor;varying vec3 vPos;void main(){float light=0.55+0.45*clamp(vPos.y*0.3+0.6,0.0,1.0);gl_FragColor=vec4(uColor.rgb*light,uColor.a);}';function sh(t,s){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x}this.prog=gl.createProgram();gl.attachShader(this.prog,sh(gl.VERTEX_SHADER,vs));gl.attachShader(this.prog,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(this.prog);gl.useProgram(this.prog);this.aPos=gl.getAttribLocation(this.prog,'aPos');this.uProj=gl.getUniformLocation(this.prog,'uProj');this.uView=gl.getUniformLocation(this.prog,'uView');this.uModel=gl.getUniformLocation(this.prog,'uModel');this.uColor=gl.getUniformLocation(this.prog,'uColor');gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.clearColor(0.04,0.06,0.11,1);this.gm=makeGLMesh(gl,GEO.box(1,0.1,1).verts,GEO.box(1,0.1,1).idx)}begin(cam){const gl=this.gl;gl.viewport(0,0,this.canvas.width,this.canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(this.prog);const a=this.canvas.width/this.canvas.height;gl.uniformMatrix4fv(this.uProj,false,cam.projMatrix(a));gl.uniformMatrix4fv(this.uView,false,cam.viewMatrix())}drawGLMesh(gm,x,y,z,sx,sy,sz,yaw,color){const gl=this.gl;let m=M4.translation(x,y,z);if(yaw)m=M4.multiply(m,M4.rotationY(yaw));m=M4.multiply(m,M4.scale(sx,sy,sz));gl.uniformMatrix4fv(this.uModel,false,m);gl.uniform4fv(this.uColor,color||[0.8,0.8,0.8,1]);gl.bindBuffer(gl.ARRAY_BUFFER,gm.vbo);gl.enableVertexAttribArray(this.aPos);gl.vertexAttribPointer(this.aPos,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gm.ibo);gl.drawElements(gl.TRIANGLES,gm.count,gl.UNSIGNED_SHORT,0)}drawModel(model,x,y,z,scale,yaw){const gl=this.gl;const s=scale||1;if(!this._mc)this._mc=new WeakMap();if(!this._mc.has(model))this._mc.set(model,model.parts.map(p=>{const g=GEO.translate(p.geo,p.x||0,p.y||0,p.z||0);return{mesh:makeGLMesh(gl,g.verts,g.idx),color:p.color||[0.8,0.8,0.8,1]}}));for(const p of this._mc.get(model))this.drawGLMesh(p.mesh,x,y,z,s,s,s,yaw,p.color)}drawBox(x,y,z,sx,sy,sz,yaw,color){this.drawGLMesh(this.gm,x,y,z,sx,sy,sz,yaw,color)}drawGround(size){this.drawBox(0,-0.05,0,size,0.1,size,0,[0.14,0.18,0.24,1])}}
+
+// ===== Modeler_pro 建模技能（内嵌，14款超真模型）=====
+const Modeler_pro={
+ rifle(){return new Model(null,[{geo:GEO.cylinder(0.035,0.5,8),color:[0.28,0.3,0.34,1],y:0.05,z:0.75},{geo:GEO.cylinder(0.05,0.08,8),color:[0.2,0.22,0.26,1],y:0.05,z:1.02},{geo:GEO.box(0.09,0.09,0.06),color:[0.25,0.27,0.3,1],y:0.06,z:0.85},{geo:GEO.box(0.08,0.09,0.32),color:[0.16,0.18,0.22,1],y:0.03,z:0.55},{geo:GEO.box(0.1,0.02,0.02),color:[0.1,0.12,0.15,1],y:0.07,z:0.55},{geo:GEO.box(0.1,0.02,0.02),color:[0.1,0.12,0.15,1],y:0.07,z:0.65},{geo:GEO.box(0.09,0.13,0.3),color:[0.18,0.2,0.24,1],y:0.05,z:0.28},{geo:GEO.box(0.03,0.03,0.08),color:[0.3,0.32,0.36,1],x:0.06,y:0.1,z:0.4},{geo:GEO.cylinder(0.04,0.14,8),color:[0.15,0.17,0.2,1],y:0.16,z:0.32},{geo:GEO.cylinder(0.042,0.02,8),color:[0.3,0.8,0.9,0.6],y:0.16,z:0.39},{geo:GEO.box(0.04,0.04,0.04),color:[0.2,0.22,0.26,1],y:0.12,z:0.32},{geo:GEO.box(0.02,0.05,0.02),color:[0.35,0.37,0.4,1],y:0.14,z:0.98},{geo:GEO.box(0.06,0.02,0.02),color:[0.35,0.37,0.4,1],y:0.16,z:0.98},{geo:GEO.box(0.07,0.2,0.1),color:[0.2,0.22,0.26,1],y:-0.12,z:0.24},{geo:GEO.box(0.07,0.06,0.09),color:[0.25,0.27,0.3,1],y:-0.22,z:0.23},{geo:GEO.box(0.06,0.16,0.08),color:[0.14,0.16,0.2,1],y:-0.12,z:0.14},{geo:GEO.box(0.04,0.02,0.12),color:[0.2,0.22,0.26,1],y:-0.09,z:0.2},{geo:GEO.box(0.08,0.12,0.26),color:[0.16,0.18,0.22,1],y:-0.04,z:0.02},{geo:GEO.box(0.09,0.14,0.04),color:[0.2,0.22,0.26,1],y:-0.05,z:-0.12},{geo:GEO.box(0.02,0.05,0.02),color:[0.3,0.32,0.36,1],y:-0.09,z:-0.08}])},
+ soldier(b,a){b=b||[0.35,0.4,0.3,1];a=a||[0.8,0.6,0.2,1];const s=[0.85,0.7,0.6,1];return new Model(null,[{geo:GEO.box(0.18,0.5,0.2),color:b,x:-0.13,y:0.6},{geo:GEO.box(0.18,0.5,0.2),color:b,x:0.13,y:0.6},{geo:GEO.box(0.2,0.12,0.28),color:[0.15,0.15,0.17,1],x:-0.13,y:0.28},{geo:GEO.box(0.2,0.12,0.28),color:[0.15,0.15,0.17,1],x:0.13,y:0.28},{geo:GEO.box(0.44,0.18,0.24),color:b,y:0.92},{geo:GEO.box(0.46,0.06,0.26),color:a,y:0.98},{geo:GEO.box(0.1,0.12,0.08),color:[0.2,0.2,0.22,1],x:0.14,y:0.9,z:0.13},{geo:GEO.box(0.44,0.5,0.26),color:b,y:1.28},{geo:GEO.box(0.34,0.36,0.05),color:[0.5,0.52,0.55,1],y:1.28,z:0.14},{geo:GEO.box(0.08,0.1,0.04),color:a,x:-0.08,y:1.34,z:0.17},{geo:GEO.box(0.16,0.12,0.24),color:[0.45,0.48,0.5,1],x:-0.32,y:1.5},{geo:GEO.box(0.16,0.12,0.24),color:[0.45,0.48,0.5,1],x:0.32,y:1.5},{geo:GEO.box(0.12,0.4,0.14),color:b,x:-0.34,y:1.22},{geo:GEO.box(0.12,0.4,0.14),color:b,x:0.34,y:1.22},{geo:GEO.box(0.13,0.14,0.15),color:a,x:-0.34,y:1.2},{geo:GEO.box(0.13,0.14,0.15),color:a,x:0.34,y:1.2},{geo:GEO.box(0.1,0.12,0.12),color:s,x:-0.34,y:0.98},{geo:GEO.box(0.1,0.12,0.12),color:s,x:0.34,y:0.98},{geo:GEO.cylinder(0.06,0.08,8),color:s,y:1.58},{geo:GEO.sphere(0.14,10),color:s,y:1.72},{geo:GEO.sphere(0.15,10),color:[0.2,0.22,0.24,1],y:1.78},{geo:GEO.box(0.22,0.06,0.1),color:[0.1,0.35,0.5,0.9],y:1.72,z:0.1},{geo:GEO.box(0.02,0.03,0.02),color:[0.9,0.9,0.9,1],x:-0.05,y:1.74,z:0.13},{geo:GEO.box(0.02,0.03,0.02),color:[0.9,0.9,0.9,1],x:0.05,y:1.74,z:0.13},{geo:GEO.box(0.3,0.34,0.12),color:[0.2,0.22,0.24,1],y:1.28,z:-0.18}])},
+ vehicle(c){c=c||[0.4,0.45,0.4,1];const d=[0.2,0.22,0.24,1];return new Model(null,[{geo:GEO.box(1.8,0.5,3.2),color:c,y:0.5},{geo:GEO.box(1.6,0.4,1.6),color:c,y:0.9,z:-0.4},{geo:GEO.box(1.3,0.5,1.2),color:c,y:1.0,z:0.6},{geo:GEO.box(1.34,0.2,0.1),color:[0.3,0.5,0.6,0.8],y:1.2,z:1.2},{geo:GEO.box(0.8,0.3,0.8),color:[0.35,0.38,0.36,1],y:1.25,z:-0.5},{geo:GEO.cylinder(0.06,0.9,8),color:d,y:1.3,z:0.2},{geo:GEO.cylinder(0.32,0.2,10),color:d,x:-0.85,y:0.32,z:1.0},{geo:GEO.cylinder(0.32,0.2,10),color:d,x:0.85,y:0.32,z:1.0},{geo:GEO.cylinder(0.32,0.2,10),color:d,x:-0.85,y:0.32,z:-1.0},{geo:GEO.cylinder(0.32,0.2,10),color:d,x:0.85,y:0.32,z:-1.0},{geo:GEO.box(0.2,0.12,0.06),color:[0.9,0.9,0.7,1],x:-0.5,y:0.6,z:1.6},{geo:GEO.box(0.2,0.12,0.06),color:[0.9,0.9,0.7,1],x:0.5,y:0.6,z:1.6}])},
+ building(w,h,d,win){win=win||[0.9,0.85,0.5,0.9];const p=[{geo:GEO.box(w,h,d),color:[0.5,0.48,0.45,1],y:h/2}];const fl=Math.max(2,Math.floor(h/1.6)),co=Math.max(2,Math.floor(w/1.4));for(let f=0;f<fl;f++)for(let c2=0;c2<co;c2++){const wy=0.9+f*1.6,wx=-w/2+0.7+c2*(w/co);p.push({geo:GEO.box(0.5,0.7,0.06),color:win,x:wx,y:wy,z:d/2+0.02});if(d>w*0.6)p.push({geo:GEO.box(0.5,0.7,0.06),color:win,x:wx,y:wy,z:-d/2-0.02})}p.push({geo:GEO.box(w*1.06,0.2,d*1.06),color:[0.35,0.33,0.3,1],y:h+0.1});p.push({geo:GEO.box(0.8,1.6,0.1),color:[0.25,0.24,0.22,1],y:0.8,z:d/2+0.02});return new Model(null,p)},
+ medkit(){return new Model(null,[{geo:GEO.box(0.7,0.45,0.42),color:[0.9,0.9,0.95,1],y:0.22},{geo:GEO.box(0.72,0.06,0.44),color:[0.7,0.72,0.75,1],y:0.45},{geo:GEO.box(0.14,0.32,0.44),color:[0.9,0.3,0.3,1],y:0.22},{geo:GEO.box(0.72,0.14,0.44),color:[0.9,0.3,0.3,1],y:0.22},{geo:GEO.box(0.08,0.04,0.3),color:[0.6,0.62,0.65,1],y:0.5},{geo:GEO.box(0.06,0.12,0.06),color:[0.5,0.52,0.55,1],x:-0.24,y:0.42},{geo:GEO.box(0.06,0.12,0.06),color:[0.5,0.52,0.55,1],x:0.24,y:0.42}])},
+ crate(){return new Model(null,[{geo:GEO.box(0.9,0.6,0.6),color:[0.55,0.5,0.4,1],y:0.3},{geo:GEO.box(0.94,0.08,0.64),color:[0.4,0.36,0.3,1],y:0.62},{geo:GEO.box(0.94,0.08,0.64),color:[0.4,0.36,0.3,1],y:0.02},{geo:GEO.box(0.06,0.44,0.44),color:[0.35,0.32,0.28,1],x:-0.42,y:0.32},{geo:GEO.box(0.06,0.44,0.44),color:[0.35,0.32,0.28,1],x:0.42,y:0.32},{geo:GEO.box(0.9,0.1,0.62),color:[0.85,0.6,0.15,1],y:0.42},{geo:GEO.cylinder(0.03,0.5,6),color:[0.85,0.7,0.3,1],y:0.7,z:0.1},{geo:GEO.cylinder(0.03,0.5,6),color:[0.85,0.7,0.3,1],x:0.1,y:0.7,z:-0.05}])},
+ pillar(){return new Model(null,[{geo:GEO.box(0.7,0.15,0.7),color:[0.3,0.32,0.36,1],y:0.07},{geo:GEO.cylinder(0.22,2.6,8),color:[0.3,0.5,0.8,0.75],y:1.4},{geo:GEO.cylinder(0.26,0.08,8),color:[0.5,0.8,1,0.9],y:1.2},{geo:GEO.cylinder(0.26,0.08,8),color:[0.5,0.8,1,0.9],y:1.9},{geo:GEO.sphere(0.24,8),color:[0.6,0.9,1,0.9],y:2.8}])},
+ tree(){return new Model(null,[{geo:GEO.cylinder(0.18,1.4,8),color:[0.4,0.3,0.2,1],y:0.7},{geo:GEO.box(0.5,0.1,0.5),color:[0.35,0.26,0.18,1],y:0.05},{geo:GEO.sphere(0.55,8),color:[0.25,0.48,0.3,1],y:1.8},{geo:GEO.sphere(0.42,8),color:[0.3,0.55,0.32,1],x:0.3,y:1.6},{geo:GEO.sphere(0.38,8),color:[0.22,0.42,0.28,1],x:-0.28,y:1.55},{geo:GEO.sphere(0.3,8),color:[0.28,0.5,0.3,1],y:2.2},{geo:GEO.sphere(0.08,6),color:[0.8,0.3,0.3,1],x:0.2,y:1.85},{geo:GEO.sphere(0.07,6),color:[0.8,0.4,0.3,1],x:-0.18,y:1.7}])},
+ tower(){const p=[];for(let f=0;f<3;f++)p.push({geo:GEO.box(2.4-f*0.3,1.2,2.4-f*0.3),color:[0.5,0.47,0.42,1],y:0.6+f*1.2});p.push({geo:GEO.box(1.9,0.2,1.9),color:[0.42,0.4,0.36,1],y:3.7});for(const sx of[-0.8,0.8])for(const sz of[-0.8,0.8])p.push({geo:GEO.box(0.3,0.4,0.3),color:[0.45,0.42,0.38,1],x:sx,y:3.9,z:sz});p.push({geo:GEO.cone(0.5,1.0,6),color:[0.55,0.5,0.4,1],y:4.4});return new Model(null,p)},
+ crystal(){return new Model(null,[{geo:GEO.box(0.7,0.2,0.7),color:[0.3,0.32,0.36,1],y:0.1},{geo:GEO.cone(0.3,1.1,5),color:[0.4,0.7,0.9,0.9],y:0.65},{geo:GEO.cone(0.18,0.7,5),color:[0.5,0.8,1,0.9],x:0.35,y:0.45},{geo:GEO.cone(0.15,0.6,5),color:[0.3,0.6,0.8,0.9],x:-0.3,y:0.4},{geo:GEO.cone(0.1,0.4,5),color:[0.5,0.75,0.95,0.9],x:0.05,y:0.3,z:0.3}])}
+};
+const MODEL_LIBRARY={
+ '突击步枪':Modeler_pro.rifle,'士兵':()=>Modeler_pro.soldier([0.35,0.4,0.3,1],[0.8,0.6,0.2,1]),'士兵-蓝':()=>Modeler_pro.soldier([0.3,0.45,0.6,1],[0.4,0.8,0.9,1]),'士兵-红':()=>Modeler_pro.soldier([0.6,0.3,0.3,1],[0.9,0.5,0.2,1]),'装甲车':()=>Modeler_pro.vehicle([0.4,0.45,0.4,1]),'装甲车-沙':()=>Modeler_pro.vehicle([0.6,0.55,0.4,1]),'楼房':()=>Modeler_pro.building(3,5,3),'医院楼':()=>Modeler_pro.building(4,6,3,[0.9,0.4,0.4,0.9]),'医疗包':Modeler_pro.medkit,'弹药箱':Modeler_pro.crate,'能量柱':Modeler_pro.pillar,'树':Modeler_pro.tree,'塔楼':Modeler_pro.tower,'水晶':Modeler_pro.crystal
+};
+
+// ===== 3D 预览 =====
+let curKey='突击步枪';
+const btns=document.getElementById('libbtns');
+Object.keys(MODEL_LIBRARY).forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>{curKey=k;[...btns.children].forEach(x=>x.classList.remove('act'));b.classList.add('act');showCode(k);};btns.appendChild(b);});
+btns.children[0].classList.add('act');
+try{
+  const cv=document.getElementById('prev');const rd=new Renderer3D(cv);rd.resize(cv.width,cv.height);
+  const cam=new Camera();let ang=0,drag=false,lx=0;
+  cv.addEventListener('mousedown',e=>{drag=true;lx=e.clientX});window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(drag){ang+=(e.clientX-lx)*0.01;lx=e.clientX}});
+  function frame(){if(!drag)ang+=0.01;cam.x=Math.sin(ang)*5;cam.z=Math.cos(ang)*5;cam.y=2.6;cam.pitch=-0.25;rd.begin(cam);rd.drawGround(14);const m=MODEL_LIBRARY[curKey]();rd.drawModel(m,0,0,0,1.0,ang);for(let i=-6;i<=6;i+=2){rd.drawBox(i,0.01,-6,0.03,0.01,12,0,[0.3,0.35,0.5,1]);rd.drawBox(-6,0.01,i,12,0.01,0.03,0,[0.3,0.35,0.5,1])}}
+  setInterval(frame,66);
+}catch(e){console.log('preview:',e.message);document.getElementById('prev').style.display='none'}
+
+function showCode(k){
+  const map={'突击步枪':'Modeler_pro.rifle()  // 20部件：枪管/护木/机匣/瞄准镜/弹匣/握把/枪托/准星/挂环',
+    '士兵':'Modeler_pro.soldier([0.35,0.4,0.3,1],[0.8,0.6,0.2,1])  // 24部件：头盔/护目镜/肩甲/胸甲/战术腰包/护腿/背包',
+    '装甲车':'Modeler_pro.vehicle([0.4,0.45,0.4,1])  // 13部件：底盘/驾驶舱/炮塔/四轮/大灯',
+    '楼房':'Modeler_pro.building(3,5,3)  // 楼体+窗户网格+屋顶+门',
+    '医疗包':'Modeler_pro.medkit()  // 箱体/十字/提手/锁扣',
+    '弹药箱':'Modeler_pro.crate()  // 箱体/铆钉/警示条/弹链',
+    '能量柱':'Modeler_pro.pillar()  // 基座/柱体/能量环/顶灯',
+    '树':'Modeler_pro.tree()  // 树干/根/三层树冠/果',
+    '塔楼':'Modeler_pro.tower()  // 三层塔/垛口/锥顶',
+    '水晶':'Modeler_pro.crystal()  // 基岩/多晶簇'};
+  document.getElementById('codebox').textContent='// '+k+'\nconst m = '+((map[k]||'Modeler_pro.'+k+'()')+'\nrenderer.drawModel(m, x, y, z, 1.0, yaw);\n// 修改：m.parts.push({geo:GEO.box(...), color:[...], y:...})');
+}
+showCode('突击步枪');
+</script>
+</body>
+</html>
