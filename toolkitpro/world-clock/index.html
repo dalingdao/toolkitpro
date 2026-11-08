@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Clock Pro - 免费在线世界时钟/时区转换器</title>
+<meta name="description" content="免费在线世界时钟，显示全球主要城市时间，时区转换，支持自定义城市，纯前端，无需注册。">
+<meta name="keywords" content="世界时钟,world clock,时区转换,全球时间,多时区,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#fff;min-height:100vh}
+.header{text-align:center;padding:36px 20px 20px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#1e293b;color:#93c5fd}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.clock{background:#1e293b;border-radius:14px;padding:18px 22px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.clock .city{font-size:18px;font-weight:700}
+.clock .time{font-size:26px;font-weight:800;color:#22c55e;font-variant-numeric:tabular-nums}
+.clock .date{font-size:12px;color:#64748b;text-align:right}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#475569;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🌍 World Clock Pro</h1>
+  <p>免费在线世界时钟—— 全球主要城市时间，自动更新。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">8城市</span><span class="badge">自动</span></div>
+</div>
+<div class="container" id="list"></div>
+<footer>ToolkitPro · World Clock Pro · 纯前端</footer>
+<script>
+const cities=[
+  ['北京','Asia/Shanghai'],['东京','Asia/Tokyo'],['新加坡','Asia/Singapore'],
+  ['伦敦','Europe/London'],['纽约','America/New_York'],['洛杉矶','America/Los_Angeles'],
+  ['巴黎','Europe/Paris'],['悉尼','Australia/Sydney']
+];
+function render(){
+  const list=document.getElementById('list');list.innerHTML='';
+  cities.forEach(([city,tz])=>{
+    const now=new Date();
+    const fmt=new Intl.DateTimeFormat('zh-CN',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    const dateFmt=new Intl.DateTimeFormat('zh-CN',{timeZone:tz,month:'short',day:'numeric',weekday:'short'});
+    list.innerHTML+='<div class="clock"><div><div class="city">'+city+'</div><div class="date">'+dateFmt.format(now)+'</div></div><div class="time">'+fmt.format(now)+'</div></div>';
+  });
+}
+render();setInterval(render,1000);
+</script>
+</body>
+</html>
