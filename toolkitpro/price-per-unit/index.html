@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Per Unit Calculator - 免费在线单位价格计算器</title>
+<meta name="description" content="免费在线单位价格计算器，计算每单位价格，比较不同规格商品性价比，纯前端，无需注册。">
+<meta name="keywords" content="单位价格,price per unit,性价比计算,商品比较,单价计算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.field{margin-bottom:14px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:6px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:18px;text-align:center}
+.result .big{font-size:28px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:8px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🏷️ Price Per Unit</h1>
+  <p>免费在线单位价格计算器—— 比较不同规格商品性价比。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">单价</span><span class="badge">比较</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field"><label>商品 A 价格（¥）</label><input type="number" id="p1" value="20" oninput="calc()"></div>
+    <div class="field"><label>商品 A 数量</label><input type="number" id="q1" value="500" oninput="calc()"></div>
+    <div class="field"><label>商品 B 价格（¥）</label><input type="number" id="p2" value="15" oninput="calc()"></div>
+    <div class="field"><label>商品 B 数量</label><input type="number" id="q2" value="300" oninput="calc()"></div>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Price Per Unit · 纯前端</footer>
+<script>
+function calc(){
+  const p1=+document.getElementById('p1').value||0,q1=+document.getElementById('q1').value||1;
+  const p2=+document.getElementById('p2').value||0,q2=+document.getElementById('q2').value||1;
+  const u1=p1/q1,u2=p2/q2;
+  const better=u1<u2?'A 更划算（省 '+(u2-u1).toFixed(2)+' 元/单位）':(u2<u1?'B 更划算（省 '+(u1-u2).toFixed(2)+' 元/单位）':'一样划算');
+  document.getElementById('res').innerHTML='<div class="big">A: ¥'+r(u1)+' / 单位</div><div class="sub">B: ¥'+r(u2)+' / 单位<br>'+better+'</div>';
+}
+function r(n){return Math.round(n*100)/100}
+calc();
+</script>
+</body>
+</html>
