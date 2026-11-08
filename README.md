@@ -2,6 +2,11 @@
 
 **200+ 免费在线工具 · 纯前端 · GitHub Pages · Agent-Ready**
 
+![GitHub stars](https://img.shields.io/github/stars/dalingdao/toolkitpro)
+![tools](https://img.shields.io/badge/tools-200-blue)
+![Agent-Ready](https://img.shields.io/badge/Agent-Ready-purple)
+![CLI](https://img.shields.io/badge/CLI-JS%2BPython-green)
+
 > **访问：** <https://dalingdao.github.io/toolkitpro/>
 
 ## 这是什么
@@ -16,6 +21,22 @@
 - **Agent-Ready**：每个工具支持 `?tool=xxx&input=yyy&format=json`，返回结构化 JSON，AI Agent 可直接调用
 - **本地优先**：待办/习惯/日记等状态数据保存在浏览器本地
 - **分类覆盖**：财务计算、健康、数据转换、文本处理、图片、开发者工具等
+
+## 原创差异化工具（Agent-Ready + CLI）
+
+这些不是复制品——针对具体**痛点**原创设计，网页/Agent/CLI 三接口：
+
+| 工具 | 解决什么痛点 | 能改变什么 |
+|---|---|---|
+| **CoT Prompt 生成器** | 普通人不会写 AI 提示词 | 一键生成思维链提示词，AI 输出更可靠 |
+| **Agent 任务规划器** | 模糊目标难执行 | 拆成可执行子任务+token 预算 |
+| **RAG 分块对比** | 选错分块策略 | 三策略对比，检索更准 |
+| **LLM Schema 校验** | AI 输出不可信 | JSON Schema 校验，防幻觉进生产 |
+| **Token 预算分配** | 多步任务超支 | 步骤级预算分配 |
+| **AI 输出质量体检** | AI 内容质量难判断 | 事实性/一致性/完整性/清晰度评分 |
+| **思维结构化器** | 想法混乱难落地 | 模糊想法→可执行框架 |
+
+每个支持：`?tool=xxx&input=yyy&format=json`（网页 JSON）+ `node cli.js` / `python cli.py`（命令行）。
 
 ## Agent 接口
 
