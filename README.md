@@ -27,6 +27,27 @@ https://dalingdao.github.io/toolkitpro/{tool}/?tool={tool}&input={input}&format=
 
 示例：`https://dalingdao.github.io/toolkitpro/bmi-calculator/?tool=bmi-calculator&input={"weight":70,"height":1.75}&format=json`
 
+## CLI 用法
+
+每个原创工具也可**命令行调用**（计算逻辑与页面完全一致，返回 JSON）：
+
+```bash
+# 内联输入（Linux/macOS/bash）
+node cli.js cot-prompt-generator --input '{"task":"帮我写一篇产品介绍","scenario":"writing"}'
+
+# 从文件读输入（跨平台稳定，适合 Windows/CI）
+node cli.js task-planner --input-file input.json
+```
+
+输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
+
+可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`。
+
+```bash
+# 列出全部可用工具
+node cli.js
+```
+
 ## 工具分类
 
 - **财务计算器**：贷款、投资、复利、退休、税费等
