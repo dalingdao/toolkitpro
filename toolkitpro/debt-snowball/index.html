@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debt Snowball - 免费在线债务雪球计算器</title>
+<meta name="description" content="免费在线债务雪球计算器，按雪球法/雪崩法排序还清多笔债务的月数与利息，纯前端，无需注册。">
+<meta name="keywords" content="债务雪球,debt snowball,还债计划,债务还款,雪崩法,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.row{display:grid;grid-template-columns:1fr 110px 110px 34px;gap:8px;margin-bottom:8px;align-items:center}
+.row input{width:100%;padding:9px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px}
+.row .rm{background:#fee2e2;border:none;border-radius:8px;height:38px;cursor:pointer;font-size:16px;color:#dc2626}
+.btn{padding:9px 14px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600}
+.btn.add{background:#e0f2fe;color:#0369a1}
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{flex:1;padding:10px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;cursor:pointer;font-size:14px}
+.seg button.on{background:#2563eb;color:#fff;border-color:#2563eb}
+.result{margin-top:16px;background:#eff6ff;border-radius:12px;padding:24px;text-align:center}
+.result .big{font-size:28px;font-weight:800;color:#2563eb}
+.result .sub{font-size:14px;color:#475569;margin-top:10px;line-height:1.8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>⛰️ Debt Snowball</h1>
+  <p>免费在线债务雪球计算器—— 雪球法（余额小优先）/ 雪崩法（利率高优先）。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">雪球法</span><span class="badge">雪崩法</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="field" style="margin-bottom:10px"><label>每月总还款（元）</label><input type="number" id="budget" value="2000" min="1" oninput="calc()"></div>
+    <div class="seg">
+      <button id="s1" class="on" onclick="mode(1)">雪球法</button>
+      <button id="s2" onclick="mode(2)">雪崩法</button>
+    </div>
+    <div id="rows"></div>
+    <button class="btn add" onclick="add()">+ 添加债务</button>
+    <div class="result" id="res"></div>
+  </div>
+</div>
+<footer>ToolkitPro · Debt Snowball · 纯前端</footer>
+<script>
+var MODE=1,DEBTS=[['信用卡',8000,18],['车贷',15000,6],['学贷',20000,4]];
+function mode(m){MODE=m;document.getElementById('s1').className=MODE===1?'on':'';document.getElementById('s2').className=MODE===2?'on':'';calc();}
+function add(){DEBTS.push(['债务'+(DEBTS.length+1),10000,10]);render();}
+function render(){
+  var el=document.getElementById('rows');el.innerHTML='';
+  DEBTS.forEach(function(d,i){
+    var r=document.createElement('div');r.className='row';
+    r.innerHTML='<input value="'+d[0]+'" oninput="DEBTS['+i+'][0]=this.value"><input type="number" value="'+d[1]+'" oninput="DEBTS['+i+'][1]=+this.value;calc()"><input type="number" value="'+d[2]+'" oninput="DEBTS['+i+'][2]=+this.value;calc()"><button class="rm" onclick="DEBTS.splice('+i+',1);render()">×</button>';
+    el.appendChild(r);
+  });
+  calc();
+}
+function calc(){
+  var budget=+document.getElementById('budget').value||0;
+  var debts=DEBTS.filter(function(d){return d[1]>0}).map(function(d){return {name:d[0],bal:d[1],apr:d[2]};});
+  debts.sort(MODE===1?function(a,b){return a.bal-b.bal}:function(a,b){return b.apr-a.apr});
+  var months=0,interest=0,order=[],i=0;
+  while(debts.length&&months<600){
+    var pay=Math.min(budget,debts.reduce(function(s,d){return s+d.bal},0));
+    i=0;
+    while(pay>0&&i<debts.length){
+      var d=debts[i],int=d.bal*d.apr/100/12;
+      var prin=Math.min(pay-int,d.bal);
+      if(prin<0)prin=0;
+      d.bal-=prin;pay-=int+prin;interest+=int;
+      if(order.length<=i)order.push(0);
+      order[i]++;
+      if(d.bal<=0.01){debts.splice(i,1);}
+      else i++;
+    }
+    months++;
+  }
+  var el=document.getElementById('res');
+  el.innerHTML='<div class="big">'+months+' 个月</div><div class="sub">约 '+Math.floor(months/12)+' 年 '+months%12+' 个月还清<br>总利息 ¥'+interest.toLocaleString('zh-CN',{maximumFractionDigits:0})+'</div>';
+}
+render();
+</script>
+</body>
+</html>
