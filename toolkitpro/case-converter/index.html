@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大小写转换器 - Case Converter - 在线工具</title>
+<meta name="description" content="免费在线大小写转换器。UPPERCASE、lowercase、Title Case、Sentence case、camelCase、snake_case、kebab-case 一键转换，即时生效。">
+<meta name="keywords" content="大小写转换, Case Converter, uppercase, lowercase, camelCase, snake_case, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 120px; }
+textarea:focus { outline: none; border-color: #3182ce; }
+.modes { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.mode { padding: 8px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+.mode:hover, .mode.active { border-color: #3182ce; background: #ebf8ff; color: #2b6cb0; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 14px; font-family: 'SF Mono', Consolas, monospace; word-break: break-all; border: 2px solid #e2e8f0; min-height: 60px; }
+.copy { padding: 8px 20px; border: none; border-radius: 8px; background: #3182ce; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.copy:hover { background: #2b6cb0; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>大小写转换器</h1>
+  <p class="sub">Case Converter - 多种大小写格式一键转换</p>
+  <div class="toolbox">
+    <label>输入文本</label>
+    <textarea id="input" placeholder="输入要转换的文本..."></textarea>
+    <div class="modes">
+      <button class="mode active" data-m="upper">UPPERCASE</button>
+      <button class="mode" data-m="lower">lowercase</button>
+      <button class="mode" data-m="title">Title Case</button>
+      <button class="mode" data-m="sentence">Sentence case</button>
+      <button class="mode" data-m="camel">camelCase</button>
+      <button class="mode" data-m="snake">snake_case</button>
+      <button class="mode" data-m="kebab">kebab-case</button>
+    </div>
+    <label>转换结果</label>
+    <div class="result" id="output">等待输入...</div>
+    <button class="copy" id="copy">复制结果</button>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+function toWords(s) { return s.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').trim().split(/\s+/).filter(Boolean); }
+function convert(mode, s) {
+  if (!s) return '';
+  switch (mode) {
+    case 'upper': return s.toUpperCase();
+    case 'lower': return s.toLowerCase();
+    case 'title': return toWords(s).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+    case 'sentence': return s.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+    case 'camel': { const w = toWords(s); return w.map((x, i) => i === 0 ? x.toLowerCase() : x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(''); }
+    case 'snake': return toWords(s).map(w => w.toLowerCase()).join('_');
+    case 'kebab': return toWords(s).map(w => w.toLowerCase()).join('-');
+    default: return s;
+  }
+}
+let cur = 'upper';
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.mode').forEach(x => x.classList.remove('active')); b.classList.add('active'); cur = b.dataset.m; update(); }));
+function update() { document.getElementById('output').textContent = convert(cur, document.getElementById('input').value) || '等待输入...'; }
+document.getElementById('input').addEventListener('input', update);
+document.getElementById('copy').addEventListener('click', () => { navigator.clipboard.writeText(document.getElementById('output').textContent); document.getElementById('copy').textContent = '已复制!'; setTimeout(() => document.getElementById('copy').textContent = '复制结果', 1500); });
+update();
+</script>
+</body>
+</html>
