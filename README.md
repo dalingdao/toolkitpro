@@ -38,6 +38,7 @@
 | **API 契约生成器** | 手写 Schema 易错 | 示例→JSON Schema 草案+类型推断 |
 | **营销文案评分器** | 文案吸引力难判断 | 长度/关键词/情感/CTA 量化+改进建议 |
 | **数据质量体检器** | 数据分析师难判断数据能否用 | 缺失/重复/异常/类型错误检测+评分+修复建议 |
+| **分层练习生成器** | 教师备课出题慢、难分层 | 知识点→基础/进阶/挑战三层题目+答案+解析 |
 
 每个支持：`?tool=xxx&input=yyy&format=json`（网页 JSON）+ `node cli.js` / `python cli.py`（命令行）。
 
@@ -72,7 +73,7 @@ python cli.py task-planner --input-file input.json
 
 输出：`{ "tool": "...", "input": {...}, "output": {...} }`。
 
-可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`。
+可用工具：`cot-prompt-generator`、`task-planner`、`chunk-comparer`、`llm-schema-checker`、`token-budget-planner`、`ai-output-health`、`thought-organizer`、`api-contract`、`marketing-score`、`data-quality`、`quiz-generator`。
 
 ```bash
 node cli.js        # 列出全部可用工具（cli.py 同理）
