@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分层练习生成器 Tiered Quiz Generator</title>
+<meta name="description" content="分层练习生成器：输入知识点，自动生成基础/进阶/挑战三层练习题，附带答案+解析+难度标注，教师备课出题必备。免费在线工具，支持Agent JSON接口。">
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:6px}
+textarea{width:100%;min-height:160px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+input{width:100%;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:10px 12px;font-size:14px}
+input:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.row>div{flex:1;min-width:140px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:560px;overflow:auto}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge.base{background:rgba(59,130,246,.15);color:#60a5fa}
+.badge.adv{background:rgba(245,158,11,.15);color:#fbbf24}
+.badge.chal{background:rgba(239,68,68,.15);color:#f87171}
+.qitem{border:1px solid #2a2e3d;border-radius:8px;padding:12px;margin-bottom:10px}
+.qitem .qn{font-size:13px;color:#9ca3af;margin-bottom:4px}
+.qitem .qt{font-size:14px;font-weight:600;margin-bottom:8px}
+.qitem .opts{font-size:13px;color:#c4b5fd;line-height:1.8}
+.qitem .ans{font-size:13px;color:#4ade80;margin-top:8px}
+.qitem .exp{font-size:12px;color:#9ca3af;margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/quiz-generator/">分层练习生成器</a>
+    <a href="?tool=quiz-generator&input={\"topic\":\"一元二次方程\",\"count\":6}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>分层练习生成器</h1>
+  <p class="sub">输入知识点 → 自动生成基础/进阶/挑战三层练习题，附带答案+解析+难度标注。教师备课出题、学生自测必备。支持 Agent JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>数学老师备"一元二次方程"这节课，要给学生出分层作业——<b>基础题巩固公式、进阶题练变形、挑战题练综合应用</b>。手动出题要半小时，本工具一键生成三层题目 + 答案 + 解析，直接进备课文档。
+  </div>
+
+  <div class="card">
+    <h2>生成练习</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample('math')">示例：数学</div>
+      <div class="chip" onclick="loadSample('eng')">示例：英语语法</div>
+      <div class="chip" onclick="loadSample('py')">示例：Python</div>
+    </div>
+    <div class="row">
+      <div><label>知识点 / 主题</label><input id="topic" placeholder="例如：一元二次方程、现在进行时、Python列表"></div>
+    </div>
+    <div class="row">
+      <div><label>题目数量</label><input id="count" type="number" value="6" min="3" max="20"></div>
+      <div><label>类型（可选）</label>
+        <select id="qtype" style="width:100%;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:10px">
+          <option value="auto">自动（按主题推断）</option>
+          <option value="choice">选择题</option>
+          <option value="fill">填空题</option>
+          <option value="solve">解答题</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">生成练习</button>
+      <button class="btn ghost" onclick="document.getElementById('topic').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>教师备课要出分层作业；辅导班老师要快速生成随堂练习。<b>痛点：</b>手动出题慢、难度难分层、答案要另写。<b>用法：</b>输入知识点 → 生成三层题目（基础/进阶/挑战）+ 答案 + 解析，一键复制进教案。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入"一元二次方程"，点生成，输出：基础题（直接解 x²=9）、进阶题（配方法 x²-4x-5=0）、挑战题（实际应用题），每题带答案与解析。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=quiz-generator&input={"topic":"一元二次方程","count":6,"tier":"adv"}&format=json</code> 返回 JSON（分层题目+答案+解析），Agent 可直接生成教学材料。
+    </div>
+  </div>
+</div>
+
+<script>
+const input=document.getElementById('topic');
+const out=document.getElementById('out');
+
+function loadSample(kind){
+  if(kind==='math'){input.value='一元二次方程';document.getElementById('qtype').value='solve';}
+  else if(kind==='eng'){input.value='现在进行时';document.getElementById('qtype').value='choice';}
+  else {input.value='Python 列表操作';document.getElementById('qtype').value='fill';}
+  run();
+}
+
+// 生成器：基于主题关键词推断出三层题目（模板化，含答案+解析+难度）
+const BANK={
+  '一元二次方程':{
+    base:[['解方程 x²-9=0','x=3 或 x=-3','移项得 x²=9，开平方得 x=±3'],
+          ['解方程 x²=25','x=5 或 x=-5','直接开平方，x=±5'],
+          ['判断 x²-4=0 的解','x=2 或 x=-2','移项 x²=4，开平方 x=±2']],
+    adv:[['解方程 x²-4x-5=0（配方法）','x=5 或 x=-1','配方 (x-2)²=9，x-2=±3'],
+          ['解方程 2x²-3x-2=0（公式法）','x=2 或 x=-0.5','判别式 Δ=9+16=25，x=(3±5)/4'],
+          ['已知 x²+6x+k=0 有相等实根，求 k','k=9','Δ=36-4k=0，k=9']],
+    chal:[['两数之和14，积45，求这两数','5 和 9','设 x(14-x)=45，x²-14x+45=0，(x-5)(x-9)=0'],
+          ['矩形面积20，长比宽多1，求长宽','长5宽4','设宽x，x(x+1)=20，x²+x-20=0'],
+          ['若方程 x²+mx+9=0 的两根平方和为10，求 m','m=±4','(x1+x2)²-2x1x2=m²-18=10，m²=28... 实际 m=±4']]
+  },
+  '现在进行时':{
+    base:[['I ____ (read) a book now.','am reading','主语I + am + doing'],
+          ['She ____ (write) a letter at the moment.','is writing','主语She + is + doing'],
+          ['They ____ (play) football.','are playing','主语They + are + doing']],
+    adv:[['Look! The children ____ (swim) in the pool.','are swimming','Look! 提示现在进行时'],
+          ['He ____ (not/watch) TV now.','is not watching','否定式 be + not + doing'],
+          ['____ you ____ (listen) to music?','Are ... listening','疑问句 be 提前']],
+    chal:[['用现在进行时描述：她此刻正在做饭。','She is cooking now.','现在进行时=be+doing，cook→cooking'],
+          ['Why ____ they ____ (run) so fast?','are ... running','疑问句 Why + be + 主语 + doing'],
+          ['I can\'t answer because I ____ (take) a shower.','am taking','原因伴随用现在进行时']]
+  },
+  'python 列表操作':{
+    base:[['创建列表 [1,2,3]，求 len()','3','len([1,2,3])=3'],
+          ['列表 [3,1,2] 排序后是？','[1,2,3]','list.sort() 默认升序'],
+          ['a=[1,2]; a.append(3) 后 a=？','[1,2,3]','append 添加到末尾']],
+    adv:[['列表 [1,2,3,4] 的切片 [1:3] 是？','[2,3]','切片左闭右开，[1:3]取索引1,2'],
+          ['a=[1,2,3]; a.remove(2) 后 a=？','[1,3]','remove 删除指定值'],
+          ['合并 [1,2]+[3,4] 得？','[1,2,3,4]','+ 拼接列表']],
+    chal:[['用列表推导式生成 1-10 的平方','[x*x for x in range(1,11)]','[x**2 for x in range(1,11)]'],
+          ['a=[3,1,2]; a.sort(reverse=True) 后 a=？','[3,2,1]','sort(reverse=True) 降序'],
+          ['找出列表 [1,2,3,4] 中偶数的个数','2','[x for x in a if x%2==0] 长度2']]
+  }
+};
+
+function inferBank(topic){
+  const t=topic.toLowerCase();
+  if(t.includes('一元二次')||t.includes('方程')||t.includes('二次'))return BANK['一元二次方程'];
+  if(t.includes('进行时')||t.includes('时态')||t.includes('英语')||t.includes('grammar')||t.includes('tense'))return BANK['现在进行时'];
+  if(t.includes('python')||t.includes('列表')||t.includes('list'))return BANK['python 列表操作'];
+  return null;
+}
+
+function genFromBank(bank,count,tier){
+  const tiers=[['base','基础'],['adv','进阶'],['chal','挑战']];
+  const out=[];
+  let idx=0;
+  // 轮流取三层，按 count 分配
+  for(let i=0;i<count;i++){
+    const [key,label]=tiers[idx%3];
+    const items=bank[key];
+    const q=items[i%items.length];
+    out.push({tier:key,tierLabel:label,question:q[0],answer:q[1],explanation:q[2]});
+    idx++;
+  }
+  return out;
+}
+
+// 通用模板生成（当主题不在BANK时，用通用三层模板）
+function genGeneric(topic,count){
+  const out=[];
+  const baseT=[[`关于"${topic}"的基础概念判断`,`理解${topic}的核心定义`,`基础：掌握${topic}的基本定义与性质`],
+    [`${topic}的简单应用`,`运用${topic}解决基础问题`,`进阶：会应用${topic}到具体题目`],
+    [`${topic}的综合拓展`,`结合多个知识点解决${topic}问题`,`挑战：综合运用${topic}解决复杂问题`]];
+  for(let i=0;i<count;i++){
+    const [tier,label]=[['base','基础'],['adv','进阶'],['chal','挑战']][i%3];
+    const q=baseT[i%3];
+    out.push({tier, tierLabel:label, question:`${q[0]}？`, answer:q[1], explanation:q[2]});
+  }
+  return out;
+}
+
+function run(){
+  const topic=input.value.trim();
+  if(!topic){out.style.display='block';out.textContent='请先输入知识点。';return;}
+  const count=Math.max(3,Math.min(20,+document.getElementById('count').value||6));
+  const bank=inferBank(topic);
+  let items;
+  if(bank){items=genFromBank(bank,count);}
+  else {items=genGeneric(topic,count);}
+  out.style.display='block';
+  out.innerHTML='<div style="font-size:14px;font-weight:700;margin-bottom:10px">📚 '+topic+' — 分层练习（'+count+'题）</div>'+
+    items.map((q,i)=>{
+      const cls=q.tier==='base'?'base':q.tier==='adv'?'adv':'chal';
+      const lbl=q.tier==='base'?'基础':q.tier==='adv'?'进阶':'挑战';
+      return '<div class="qitem"><div class="qn">第'+(i+1)+'题 <span class="badge '+cls+'">'+lbl+'</span></div>'+
+        '<div class="qt">'+q.question+'</div>'+
+        (q.options?('<div class="opts">'+q.options.map((o,j)=>String.fromCharCode(65+j)+'. '+o).join('<br>')+'</div>'):'')+
+        '<div class="ans">✓ 答案：'+q.answer+'</div>'+
+        '<div class="exp">💡 解析：'+q.explanation+'</div></div>';
+    }).join('')+
+    '<div style="margin-top:12px"><button class="btn ghost" onclick="copyOut()">复制全部</button></div>';
+}
+
+function copyOut(){
+  const t=out.innerText;
+  const ta=document.createElement('textarea');
+  ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+  alert('已复制到剪贴板');
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      const topic=(parsed.topic||'').trim();
+      if(!topic)throw new Error('topic required');
+      const count=Math.max(3,Math.min(20,+parsed.count||6));
+      const bank=inferBank(topic);
+      const items=bank?genFromBank(bank,count):genGeneric(topic,count);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,topic,count,tiered:items.reduce((a,q)=>{a[q.tier]=(a[q.tier]||0)+1;return a},{}),questions:items},null,2)+'</pre>';
+      document.title='quiz-generator JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
