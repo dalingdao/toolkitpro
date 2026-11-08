@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Diff - 免费在线JSON对比工具</title>
+<meta name="description" content="免费在线JSON对比工具，比较两个JSON的差异，纯前端，无需注册，支持URL参数供AI Agent调用。">
+<meta name="keywords" content="json diff,JSON对比,差异,比较,免费工具,agent">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:760px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+textarea{width:100%;height:180px;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:13px;font-family:monospace;resize:vertical}
+.btn{padding:9px 16px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;background:#2563eb;color:#fff}
+.result{margin-top:14px;background:#f8fafc;border-radius:12px;padding:16px;font-size:13px;font-family:monospace;max-height:320px;overflow:auto;white-space:pre-wrap;line-height:1.6}
+.add{color:#16a34a}.del{color:#dc2626}.same{color:#94a3b8}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>🔍 JSON Diff</h1>
+  <p>免费在线JSON对比—— 比较两个JSON的差异。支持 ?a= &b= &format=json 供 Agent 调用。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">对比</span><span class="badge">差异</span><span class="badge">Agent可用</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div class="two">
+      <textarea id="a" placeholder='{"name":"Alice","age":30}'>{"name":"Alice","age":30,"city":"NY"}</textarea>
+      <textarea id="b" placeholder='{"name":"Bob","age":30}'>{"name":"Bob","age":31,"city":"NY","zip":"10001"}</textarea>
+    </div>
+    <button class="btn" onclick="diff()">对比差异</button>
+    <div class="result" id="res">点击"对比差异"查看结果。</div>
+  </div>
+</div>
+<footer>ToolkitPro · JSON Diff · 纯前端 · Agent可用</footer>
+<script>
+function parse(s){try{return JSON.parse(s)}catch(e){return null}}
+function deepDiff(a,b,path,out){
+  out=out||[];
+  if(typeof a!==typeof b||a===null||b===null||typeof a!=='object'){
+    if(JSON.stringify(a)!==JSON.stringify(b))out.push({path:path||'(root)',from:a,to:b});
+    return out;
+  }
+  var keys=new Set(Object.keys(a).concat(Object.keys(b)));
+  keys.forEach(function(k){
+    var p=path?path+'.'+k:k;
+    if(!(k in a))out.push({path:p,from:'<missing>',to:b[k]});
+    else if(!(k in b))out.push({path:p,from:a[k],to:'<missing>'});
+    else if(typeof a[k]==='object'&&a[k]&&typeof b[k]==='object'&&b[k])deepDiff(a[k],b[k],p,out);
+    else if(JSON.stringify(a[k])!==JSON.stringify(b[k]))out.push({path:p,from:a[k],to:b[k]});
+  });
+  return out;
+}
+function diff(){
+  var A=parse(document.getElementById('a').value),B=parse(document.getElementById('b').value);
+  var el=document.getElementById('res');
+  if(A===null||B===null){el.innerHTML='<span class="del">错误：JSON 格式不正确</span>';return;}
+  var d=deepDiff(A,B,'');
+  if(!d.length){el.innerHTML='<span class="same">✔ 两个JSON完全一致</span>';return;}
+  el.innerHTML=d.map(function(x){return '<span class="del">- '+x.path+': '+JSON.stringify(x.from)+'</span>\n<span class="add">+ '+x.path+': '+JSON.stringify(x.to)+'</span>';}).join('\n');
+}
+diff();
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('format')==='json'){
+    var A=parse(q.get('a')||''),B=parse(q.get('b')||'');
+    var res={ok:A!==null&&B!==null,equal:false,diff:[]};
+    if(A!==null&&B!==null){res.diff=deepDiff(A,B,'');res.equal=res.diff.length===0;}
+    document.body.innerHTML='<pre style="padding:30px;font-size:15px">'+JSON.stringify(res,null,2)+'</pre>';
+  }
+})();
+</script>
+</body>
+</html>
