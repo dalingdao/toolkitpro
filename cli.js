@@ -201,6 +201,96 @@ function marketingScore(input){
   return {score,grade:score>=85?'A':score>=70?'B':score>=50?'C':'D',lenScore,kwScore,emoScore,ctaScore,length:len,suggestions:sugg,platform:input.platform||'ecommerce'};
 }
 
+// ---- data-quality ----
+function dqType(v){
+  const s=String(v).trim();
+  if(s===''||s.toLowerCase()==='null'||s.toLowerCase()==='unknown'||s.toLowerCase()==='未知'||s==='nan')return'empty';
+  if(!isNaN(Number(s))&&s!=='')return'number';
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)||/^\d{1,2}\/\d{1,2}\/\d{4}/.test(s))return'date';
+  return'string';
+}
+function dqNum(v){
+  const s=String(v).trim();
+  if(s===''||s.toLowerCase()==='null'||s.toLowerCase()==='unknown'||s.toLowerCase()==='未知'||s==='nan')return false;
+  return !isNaN(Number(s));
+}
+function dataQuality(input){
+  let rows=input.rows;
+  if(!rows&&input.csv){
+    const lines=String(input.csv).split(/\r?\n/).filter(l=>l.trim()!=='');
+    if(lines.length<1) throw new Error('csv empty');
+    const header=lines[0].split(',').map(h=>h.trim());
+    rows=[];
+    for(let i=1;i<lines.length;i++){
+      const cells=lines[i].split(',');
+      const row={};
+      header.forEach((h,hi)=>row[h]=cells[hi]!==undefined?cells[hi].trim():'');
+      rows.push(row);
+    }
+  }
+  if(!rows||!rows.length) throw new Error('rows required');
+  const cols=Object.keys(rows[0]||{});
+  const n=rows.length;
+  const numCols=(input.numCols||[]).map(String);
+  const issues=[],repairs=[];
+  let totalScore=100;
+  // duplicate
+  const seen=new Map();let dup=0;
+  rows.forEach((row,ri)=>{
+    const key=cols.map(c=>String(row[c]??'')).join('\u0001');
+    if(seen.has(key)){dup++;repairs.push(`第${ri+1}行与第${seen.get(key)+1}行重复，建议删除（保留一行）`);}
+    else seen.set(key,ri);
+  });
+  if(dup>0){totalScore-=Math.min(20,dup/n*100*0.4);issues.push({type:'duplicate',label:'重复行',count:dup,severity:dup/n>0.05?'bad':dup>0?'warn':'good'});}
+  const colStats={};
+  cols.forEach(c=>{
+    let missing=0,typeErr=0,outlier=0;
+    const vals=[];
+    rows.forEach(row=>{
+      const v=row[c];
+      vals.push(v);
+      if(dqType(v)==='empty')missing++;
+    });
+    // outlier IQR
+    const nums=vals.map(v=>Number(v)).filter(v=>!isNaN(v));
+    if(nums.length>=5&&(numCols.includes(c)||(!numCols.length&&dqNum(vals.find(dqNum))))){
+      const sorted=[...nums].sort((a,b)=>a-b);
+      const q=(p)=>{const idx=(sorted.length-1)*p;const lo=Math.floor(idx),hi=Math.ceil(idx);return sorted[lo]+(sorted[hi]-sorted[lo])*(idx-lo);};
+      const q1=q(0.25),q3=q(0.75),iqr=q3-q1;
+      const lo=q1-1.5*iqr,hi=q3+1.5*iqr;
+      outlier=vals.filter(v=>dqNum(v)&&(Number(v)<lo||Number(v)>hi)).length;
+    }
+    // type error
+    rows.forEach(row=>{
+      const v=row[c],s=String(v).trim();
+      if(s===''||s.toLowerCase()==='null'||s.toLowerCase()==='unknown'||s.toLowerCase()==='未知'||s==='nan')return;
+      const cl=c.toLowerCase();
+      if(cl.includes('email')&&!s.includes('@')){typeErr++;return;}
+      if(cl.includes('age')||cl.includes('price')||cl.includes('amount')){
+        if(!isNaN(Number(s.replace(/[^\d.-]/g,'')))){typeErr++;return;}
+      }
+    });
+    if(missing>0){totalScore-=Math.min(15,missing/n*100*0.3);issues.push({type:'missing',label:`缺失值(${c})`,count:missing,severity:missing/n>0.2?'bad':missing/n>0.05?'warn':'good'});repairs.push(`列"${c}"有${missing}个空值（${(missing/n*100).toFixed(1)}%），建议${missing/n>0.2?'填充或删除该列':'填充默认值/插补'}`);}
+    if(outlier>0){totalScore-=Math.min(15,outlier/n*100*0.3);issues.push({type:'outlier',label:`异常值(${c})`,count:outlier,severity:outlier/n>0.05?'bad':'warn'});repairs.push(`列"${c}"检测到${outlier}个离群值（IQR法），建议核查是否录入错误`);}
+    if(typeErr>0){totalScore-=Math.min(15,typeErr/n*100*0.3);issues.push({type:'type',label:`类型错误(${c})`,count:typeErr,severity:typeErr/n>0.05?'bad':'warn'});repairs.push(`列"${c}"有${typeErr}个类型错误（如数字列混入文本），建议转换为数值`);}
+    colStats[c]={missing,typeErr,outlier};
+  });
+  // uniqueness
+  cols.forEach(c=>{
+    const unique=new Set(rows.map(r=>String(r[c]??'')));
+    const ratio=unique.size/n;
+    if((c.toLowerCase().includes('id')||c.toLowerCase().includes('email'))&&unique.size>1&&ratio<1&&ratio>0.5){
+      totalScore-=Math.min(10,(1-ratio)*20);
+      issues.push({type:'unique',label:`唯一性不足(${c})`,count:n-unique.size,severity:'warn'});
+      repairs.push(`列"${c}"有${n-unique.size}个重复值，建议检查主键唯一性`);
+    }
+  });
+  totalScore=Math.max(0,Math.round(totalScore));
+  const grade=totalScore>=90?'good':totalScore>=70?'warn':'bad';
+  const gradeText=totalScore>=90?'优秀':totalScore>=70?'中等':'较差';
+  return {score:totalScore,grade,gradeText,rows:n,cols:cols.length,issues,repairs:repairs.slice(0,20),colStats};
+}
+
 const TOOLS={
   'cot-prompt-generator':cotPrompt,
   'task-planner':taskPlanner,
@@ -210,7 +300,8 @@ const TOOLS={
   'ai-output-health':aiHealth,
   'thought-organizer':thoughtOrganizer,
   'api-contract':apiContract,
-  'marketing-score':marketingScore
+  'marketing-score':marketingScore,
+  'data-quality':dataQuality
 };
 
 // ---- entry ----
