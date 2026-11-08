@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV 转 JSON 转换器 - 在线工具</title>
+<meta name="description" content="免费在线 CSV 转 JSON 转换工具。CSV 表格转 JSON 数组，自定义分隔符，即时转换，下载导出。">
+<meta name="keywords" content="CSV转JSON, JSON转换, CSV转换, 数据转换, 在线工具">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #eef1f6 100%); min-height: 100vh; padding: 40px 20px; color: #2d3748; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a202c; }
+.sub { text-align: center; color: #718096; margin-bottom: 30px; font-size: 14px; }
+.toolbox { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+label { font-size: 13px; color: #718096; display: block; margin-bottom: 8px; font-weight: 600; }
+textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; resize: vertical; min-height: 140px; }
+textarea:focus { outline: none; border-color: #805ad5; }
+.controls { display: flex; gap: 10px; margin: 16px 0; align-items: center; }
+.btn { padding: 10px 24px; border: none; border-radius: 10px; background: #805ad5; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #6b46c1; }
+input[type=text] { padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; width: 80px; }
+.result { background: #f7fafc; border-radius: 10px; padding: 14px; font-size: 13px; font-family: 'SF Mono', Consolas, monospace; white-space: pre-wrap; word-break: break-all; border: 2px solid #e2e8f0; max-height: 300px; overflow-y: auto; }
+.error { color: #e53e3e; font-size: 13px; margin-top: 8px; }
+footer { text-align: center; margin-top: 30px; color: #a0aec0; font-size: 13px; }
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>CSV 转 JSON 转换器</h1>
+  <p class="sub">CSV 表格 → JSON 数组</p>
+  <div class="toolbox">
+    <label>输入 CSV（首行为表头）</label>
+    <textarea id="csv" placeholder="name,age&#10;Alice,30&#10;Bob,25"></textarea>
+    <div class="controls">
+      <button class="btn" id="convert">转换为 JSON</button>
+      <input type="text" id="sep" value=",">
+      <button class="btn" id="download" style="background:#718096">下载 JSON</button>
+    </div>
+    <label>JSON 结果</label>
+    <div class="result" id="out">等待转换...</div>
+    <div class="error" id="err"></div>
+  </div>
+  <footer>© 2026 ToolkitPro - 免费在线工具集</footer>
+</div>
+<script>
+let json = '';
+document.getElementById('convert').addEventListener('click', () => {
+  const o = document.getElementById('out'), e = document.getElementById('err');
+  e.textContent = '';
+  try {
+    const sep = document.getElementById('sep').value || ',';
+    const lines = document.getElementById('csv').value.split('\n').filter(l => l.trim());
+    if (lines.length < 2) throw new Error('至少需要表头+1行数据');
+    const headers = lines[0].split(sep).map(h => h.trim());
+    const rows = lines.slice(1).map(l => {
+      const vals = l.split(sep);
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = vals[i] || ''; });
+      return obj;
+    });
+    json = JSON.stringify(rows, null, 2);
+    o.textContent = json;
+  } catch (err) { e.textContent = '转换失败: ' + err.message; o.textContent = ''; }
+});
+document.getElementById('download').addEventListener('click', () => { if (!json) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' })); a.download = 'data.json'; a.click(); });
+</script>
+</body>
+</html>
