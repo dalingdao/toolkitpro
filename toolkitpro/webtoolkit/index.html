@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工具箱 Pro - 多合一在线工具集</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--acc:#38bdf8;--acc2:#818cf8;--text:#e2e8f0;--muted:#94a3b8;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{background:linear-gradient(135deg,var(--acc),var(--acc2));padding:20px;text-align:center}
+header h1{font-size:24px;color:#fff}
+header p{color:rgba(255,255,255,.85);font-size:13px;margin-top:4px}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px;background:var(--card);position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border)}
+nav button{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.2s}
+nav button:hover,nav button.active{background:var(--acc);color:#fff;border-color:var(--acc)}
+main{max-width:960px;margin:20px auto;padding:0 16px}
+.panel{display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.panel.active{display:block}
+.panel h2{font-size:17px;margin-bottom:12px;color:var(--acc)}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 5px}
+textarea,input[type=text],input[type=number],input[type=password],select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:14px;font-family:monospace}
+textarea{min-height:140px;resize:vertical}
+input[type=color]{width:60px;height:36px;border:none;background:none;cursor:pointer}
+button.act{background:var(--acc);border:none;color:#fff;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;margin:10px 8px 0 0;transition:.2s}
+button.act:hover{filter:brightness(1.1)}
+button.sec{background:var(--border)}
+.result{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;font-family:monospace;font-size:13px;white-space:pre-wrap;word-break:break-all;min-height:40px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.swatch{display:inline-block;width:90px;height:40px;border-radius:8px;border:2px solid var(--border);vertical-align:middle;margin-left:10px}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+.copied{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#16a34a;color:#fff;padding:8px 20px;border-radius:8px;display:none;z-index:99}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header><h1>🧰 工具箱 Pro</h1><p>多合一在线工具集 · 纯前端 · 数据不出浏览器</p></header>
+<nav id="nav"></nav>
+<main>
+  <div id="panels"></div>
+</main>
+<footer>工具箱 Pro v1.0 · 所有工具本地运行，数据不离开您的设备</footer>
+<div class="copied" id="copied">✓ 已复制</div>
+
+<script>
+const tools = {
+  text: {name:'📝 文本统计', fn: () => {
+    return `<h2>文本统计</h2>
+    <label>输入文本</label><textarea id="t-in" placeholder="粘贴或输入文本…" oninput="calcText()"></textarea>
+    <div class="result" id="t-out">等待输入…</div>`;}},
+  json: {name:'🔍 JSON 格式化', fn: () => {
+    return `<h2>JSON 格式化 / 校验</h2>
+    <textarea id="j-in" placeholder='{"key":"value"}'></textarea>
+    <button class="act" onclick="fmtJson()">格式化</button><button class="sec act" onclick="minJson()">压缩</button><button class="sec act" onclick="cp('j-out')">复制结果</button>
+    <div class="result" id="j-out">输出显示在这里</div>`;}},
+  url: {name:'🔗 URL 编解码', fn: () => {
+    return `<h2>URL 编解码</h2><div class="grid2">
+    <div><label>输入（编码/解码）</label><textarea id="u-in" placeholder="https://… 或 %E4%…"></textarea></div>
+    <div><label>结果</label><textarea id="u-out" readonly></textarea></div></div>
+    <button class="act" onclick="urlEncode()">编码</button><button class="sec act" onclick="urlDecode()">解码</button><button class="sec act" onclick="cp('u-out')">复制</button>`;}},
+  b64: {name:'🅱️ Base64', fn: () => {
+    return `<h2>Base64 编解码</h2><div class="grid2">
+    <div><label>输入</label><textarea id="b-in" placeholder="文本或Base64"></textarea></div>
+    <div><label>结果</label><textarea id="b-out" readonly></textarea></div></div>
+    <button class="act" onclick="b64Enc()">编码</button><button class="sec act" onclick="b64Dec()">解码</button><button class="sec act" onclick="cp('b-out')">复制</button>`;}},
+  pwd: {name:'🔑 密码生成器', fn: () => {
+    return `<h2>密码生成器</h2>
+    <label>长度：<input type="number" id="p-len" value="16" min="4" max="64" style="width:80px"></label>
+    <label><input type="checkbox" id="p-up" checked> 大写字母</label>
+    <label><input type="checkbox" id="p-low" checked> 小写字母</label>
+    <label><input type="checkbox" id="p-num" checked> 数字</label>
+    <label><input type="checkbox" id="p-sym" checked> 特殊字符</label>
+    <button class="act" onclick="genPwd()">生成</button>
+    <div class="result" id="p-out">点击生成…</div>`;}},
+  ts: {name:'🕐 时间戳转换', fn: () => {
+    return `<h2>时间戳转换</h2>
+    <label>时间戳（秒/毫秒）</label><input type="text" id="ts-in" placeholder="1700000000" oninput="tsConvert()">
+    <label>日期时间</label><input type="text" id="ts-out" readonly>
+    <label>当前时间戳</label><div class="result" id="ts-now"></div>`;}},
+  color: {name:'🎨 颜色转换', fn: () => {
+    return `<h2>颜色转换</h2>
+    <label>选择颜色 <input type="color" id="c-pick" value="#38bdf8" oninput="cConvert()"></label>
+    <label>HEX</label><input type="text" id="c-hex" value="#38bdf8" oninput="cFromHex(this.value)">
+    <label>RGB</label><input type="text" id="c-rgb" value="rgb(56,189,248)" readonly>
+    <label>预览 <span class="swatch" id="c-sw"></span></label>`;}},
+  md: {name:'📄 Markdown 预览', fn: () => {
+    return `<h2>Markdown 预览</h2>
+    <div class="grid2"><div><label>Markdown</label><textarea id="m-in" placeholder="# 标题&#10;**加粗** &#10;*斜体*" oninput="mdPreview()"></textarea></div>
+    <div><label>预览</label><div class="result" id="m-out" style="white-space:normal"></div></div></div>`;}},
+};
+const panelEls = {};
+let active = null;
+function init() {
+  const nav = document.getElementById('nav');
+  const panels = document.getElementById('panels');
+  Object.keys(tools).forEach(k => {
+    const b = document.createElement('button');
+    b.textContent = tools[k].name; b.dataset.k = k;
+    b.onclick = () => show(k);
+    nav.appendChild(b);
+    const d = document.createElement('div');
+    d.className = 'panel'; d.id = 'p-' + k;
+    d.innerHTML = tools[k].fn();
+    panels.appendChild(d);
+    panelEls[k] = d;
+  });
+  show('text');
+  setInterval(() => { const n = document.getElementById('ts-now'); if (n) n.textContent = Date.now() + ' (毫秒) / ' + Math.floor(Date.now()/1000) + ' (秒)'; }, 1000);
+}
+function show(k) {
+  if (active) document.getElementById('p-' + active).classList.remove('active');
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.k === k));
+  document.getElementById('p-' + k).classList.add('active');
+  active = k;
+  if (k === 'md') mdPreview();
+  if (k === 'color') cConvert();
+  if (k === 'ts') tsConvert();
+}
+function calcText() {
+  const t = document.getElementById('t-in').value;
+  const chars = t.length, noSpace = t.replace(/\s/g,'').length;
+  const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+  const lines = t ? t.split('\n').length : 0;
+  document.getElementById('t-out').textContent = `字符：${chars}\n不含空格：${noSpace}\n单词：${words}\n行数：${lines}\n字节：${new Blob([t]).size}`;
+}
+function fmtJson() { jRun(2); }
+function minJson() { jRun(0); }
+function jRun(sp) {
+  const el = document.getElementById('j-in');
+  try { const o = JSON.parse(el.value); document.getElementById('j-out').textContent = JSON.stringify(o, null, sp); }
+  catch(e) { document.getElementById('j-out').textContent = '❌ 无效 JSON: ' + e.message; }
+}
+function urlEncode() { document.getElementById('u-out').value = encodeURIComponent(document.getElementById('u-in').value); }
+function urlDecode() { try { document.getElementById('u-out').value = decodeURIComponent(document.getElementById('u-in').value); } catch(e){ document.getElementById('u-out').value = '❌ ' + e.message; } }
+function b64Enc() { try { document.getElementById('b-out').value = btoa(unescape(encodeURIComponent(document.getElementById('b-in').value))); } catch(e){ document.getElementById('b-out').value = '❌ ' + e.message; } }
+function b64Dec() { try { document.getElementById('b-out').value = decodeURIComponent(escape(atob(document.getElementById('b-in').value))); } catch(e){ document.getElementById('b-out').value = '❌ 无效 Base64'; } }
+function genPwd() {
+  const len = Math.max(4, Math.min(64, +document.getElementById('p-len').value || 16));
+  let sets = '';
+  if (document.getElementById('p-up').checked) sets += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (document.getElementById('p-low').checked) sets += 'abcdefghijklmnopqrstuvwxyz';
+  if (document.getElementById('p-num').checked) sets += '0123456789';
+  if (document.getElementById('p-sym').checked) sets += '!@#$%^&*()-_=+[]{};:,.<>?';
+  if (!sets) { document.getElementById('p-out').textContent = '请至少勾选一类字符'; return; }
+  let p = '';
+  const arr = new Uint32Array(len);
+  crypto.getRandomValues(arr);
+  for (let i = 0; i < len; i++) p += sets[arr[i] % sets.length];
+  document.getElementById('p-out').textContent = p;
+  document.getElementById('p-out').dataset.v = p;
+}
+function tsConvert() {
+  const v = document.getElementById('ts-in').value.trim();
+  if (!v) { document.getElementById('ts-out').value = ''; return; }
+  let ms = /^\d{13}$/.test(v) ? +v : +v * 1000;
+  const d = new Date(ms);
+  document.getElementById('ts-out').value = isNaN(d) ? '无效' : d.toLocaleString('zh-CN') + ' (' + d.toISOString() + ')';
+}
+function cConvert() {
+  const h = document.getElementById('c-pick').value;
+  cFromHex(h);
+}
+function cFromHex(h) {
+  h = h.replace('#','');
+  if (h.length === 3) h = h.split('').map(c=>c+c).join('');
+  const n = parseInt(h, 16);
+  if (isNaN(n)) return;
+  const r = (n>>16)&255, g = (n>>8)&255, b = n&255;
+  document.getElementById('c-hex').value = '#' + h;
+  document.getElementById('c-rgb').value = `rgb(${r},${g},${b})`;
+  document.getElementById('c-sw').style.background = '#' + h;
+}
+function mdPreview() {
+  const t = document.getElementById('m-in').value;
+  document.getElementById('m-out').innerHTML = md2html(t);
+}
+function md2html(t) {
+  return t.split('\n').map(line => {
+    if (/^### /.test(line)) return `<h3>${line.slice(4)}</h3>`;
+    if (/^## /.test(line)) return `<h2>${line.slice(3)}</h2>`;
+    if (/^# /.test(line)) return `<h1>${line.slice(2)}</h1>`;
+    if (/^[-*] /.test(line)) return `<li>${line.slice(2)}</li>`;
+    if (/^\d+\. /.test(line)) return `<li>${line.replace(/^\d+\. /,'')}</li>`;
+    let s = line.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>').replace(/`(.+?)`/g,'<code>$1</code>');
+    return `<p>${s}</p>`;
+  }).join('');
+}
+function cp(id) {
+  const el = document.getElementById(id);
+  const v = el.value || el.textContent || '';
+  if (navigator.clipboard) navigator.clipboard.writeText(v).then(()=>toast());
+  else { el.select(); document.execCommand('copy'); toast(); }
+}
+function toast() { const c = document.getElementById('copied'); c.style.display='block'; setTimeout(()=>c.style.display='none',1500); }
+init();
+</script>
+</body>
+</html>
