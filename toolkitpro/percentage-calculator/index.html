@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Calculator Pro - 免费在线百分比/折扣/增减计算器</title>
+<meta name="description" content="免费在线百分比计算器，百分比增减、占比、折扣计算，纯前端，即时结果，无需注册。">
+<meta name="keywords" content="百分比计算,percentage calculator,折扣计算,增减计算,免费工具">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{text-align:center;padding:36px 20px 24px}
+.header h1{font-size:28px;font-weight:800;color:#0f172a;margin-bottom:8px}
+.header p{color:#64748b;font-size:14px;max-width:640px;margin:0 auto}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+.container{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:14px}
+.card h3{font-size:15px;margin-bottom:12px;color:#0f172a}
+.field{margin-bottom:12px}
+.field label{font-size:13px;color:#475569;display:block;margin-bottom:5px;font-weight:600}
+input{width:100%;padding:11px;border-radius:8px;border:1px solid #cbd5e1;font-size:15px}
+.result{background:#eff6ff;border-radius:10px;padding:14px;margin-top:10px;font-size:15px;color:#1e40af;text-align:center}
+.result b{font-size:22px}
+.back{display:inline-block;margin:20px;font-size:13px;color:#64748b;text-decoration:none}
+footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
+</style>
+<script data-goatcounter="https://dalingdao.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="back" href="/toolkitpro/">← 返回工具箱</a>
+<div class="header">
+  <h1>💯 Percentage Calculator Pro</h1>
+  <p>免费在线百分比/折扣/增减计算器—— 纯前端，即时结果。</p>
+  <div class="badges"><span class="badge">纯前端</span><span class="badge">3模式</span><span class="badge">即时</span></div>
+</div>
+<div class="container">
+  <div class="card">
+    <h3>📈 X 的 Y% 是多少</h3>
+    <div class="field"><label>数值 X</label><input type="number" id="a1" value="100" oninput="c1()"></div>
+    <div class="field"><label>百分比 Y%</label><input type="number" id="a2" value="15" oninput="c1()"></div>
+    <div class="result" id="r1">—</div>
+  </div>
+  <div class="card">
+    <h3>📊 一个数是另一个数的百分之几</h3>
+    <div class="field"><label>数值 A</label><input type="number" id="b1" value="30" oninput="c2()"></div>
+    <div class="field"><label>数值 B</label><input type="number" id="b2" value="150" oninput="c2()"></div>
+    <div class="result" id="r2">—</div>
+  </div>
+  <div class="card">
+    <h3>🛒 折扣计算（原价 × 折扣 = 现价）</h3>
+    <div class="field"><label>原价</label><input type="number" id="d1" value="200" oninput="c3()"></div>
+    <div class="field"><label>折扣（%，如 8 折填 20）</label><input type="number" id="d2" value="20" oninput="c3()"></div>
+    <div class="result" id="r3">—</div>
+  </div>
+</div>
+<footer>ToolkitPro · Percentage Calculator Pro · 纯前端</footer>
+<script>
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function c1(){const x=v('a1'),p=v('a2');document.getElementById('r1').innerHTML='<b>'+fmt(x*p/100)+'</b>（'+x+' 的 '+p+'%）'}
+function c2(){const a=v('b1'),b=v('b2');document.getElementById('r2').innerHTML=b?'<b>'+fmt(a/b*100)+'%</b>（'+a+' 是 '+b+' 的）':'—'}
+function c3(){const p=v('d1'),d=v('d2');const s=p*(1-d/100);document.getElementById('r3').innerHTML='<b>¥'+fmt(s)+'</b>（原价 ¥'+fmt(p)+'，省 ¥'+fmt(p-s)+'，'+d+'% off）'}
+function fmt(n){return Math.round(n*100)/100}
+</script>
+</body>
+</html>
