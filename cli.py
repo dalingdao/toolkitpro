@@ -208,9 +208,110 @@ def marketing_score(i):
             'lenScore':len_score,'kwScore':kw_score,'emoScore':emo_score,'ctaScore':cta_score,
             'length':ln,'suggestions':sugg,'platform':platform}
 
+def dq_type(v):
+    s=str(v).strip()
+    low=s.lower()
+    if s=='' or low in ('null','unknown','未知','nan'): return 'empty'
+    if s.replace('-','',1).isdigit() and s!='': return 'number'
+    try:
+        float(s); return 'number'
+    except ValueError: pass
+    if re.match(r'^\d{4}-\d{2}-\d{2}',s) or re.match(r'^\d{1,2}/\d{1,2}/\d{4}',s): return 'date'
+    return 'string'
+
+def dq_num(v):
+    s=str(v).strip()
+    low=s.lower()
+    if s=='' or low in ('null','unknown','未知','nan'): return False
+    try:
+        float(s); return True
+    except ValueError: return False
+
+def data_quality(i):
+    rows=i.get('rows')
+    if not rows and i.get('csv'):
+        lines=[l for l in str(i['csv']).splitlines() if l.strip()!='']
+        if not lines: raise ValueError('csv empty')
+        header=[h.strip() for h in lines[0].split(',')]
+        rows=[]
+        for line in lines[1:]:
+            cells=line.split(',')
+            row={}
+            for idx,h in enumerate(header): row[h]=cells[idx].strip() if idx<len(cells) else ''
+            rows.append(row)
+    if not rows or not len(rows): raise ValueError('rows required')
+    cols=list(rows[0].keys())
+    n=len(rows)
+    num_cols=[str(x) for x in (i.get('numCols') or [])]
+    issues=[]; repairs=[]; total=100
+    seen={}; dup=0
+    for ri,row in enumerate(rows):
+        key='\u0001'.join(str(row.get(c,'')) for c in cols)
+        if key in seen:
+            dup+=1; repairs.append(f'第{ri+1}行与第{seen[key]+1}行重复，建议删除（保留一行）')
+        else: seen[key]=ri
+    if dup>0:
+        total-=min(20,dup/n*100*0.4)
+        issues.append({'type':'duplicate','label':'重复行','count':dup,'severity':'bad' if dup/n>0.05 else 'warn'})
+    col_stats={}
+    for c in cols:
+        missing=0; type_err=0; outlier=0
+        vals=[]
+        for row in rows:
+            v=row.get(c,'')
+            vals.append(v)
+            if dq_type(v)=='empty': missing+=1
+        nums=[]
+        for v in vals:
+            try: nums.append(float(v))
+            except (ValueError,TypeError): pass
+        if len(nums)>=5 and (c in num_cols or (not num_cols and any(dq_num(v) for v in vals))):
+            srt=sorted(nums)
+            def q(p):
+                idx=(len(srt)-1)*p; lo=math.floor(idx); hi=math.ceil(idx)
+                return srt[lo]+(srt[hi]-srt[lo])*(idx-lo)
+            q1=q(0.25); q3=q(0.75); iqr=q3-q1
+            lo=q1-1.5*iqr; hi=q3+1.5*iqr
+            outlier=sum(1 for v in vals if dq_num(v) and (float(v)<lo or float(v)>hi))
+        for row in rows:
+            v=row.get(c,''); s=str(v).strip(); low=s.lower()
+            if s=='' or low in ('null','unknown','未知','nan'): continue
+            cl=c.lower()
+            if 'email' in cl and '@' not in s: type_err+=1; continue
+            if 'age' in cl or 'price' in cl or 'amount' in cl:
+                try:
+                    float(re.sub(r'[^\d.-]','',s)); type_err+=1
+                except ValueError: pass
+        if missing>0:
+            total-=min(15,missing/n*100*0.3)
+            issues.append({'type':'missing','label':f'缺失值({c})','count':missing,'severity':'bad' if missing/n>0.2 else 'warn' if missing/n>0.05 else 'good'})
+            repairs.append(f'列"{c}"有{missing}个空值（{missing/n*100:.1f}%），建议{"填充或删除该列" if missing/n>0.2 else "填充默认值/插补"}')
+        if outlier>0:
+            total-=min(15,outlier/n*100*0.3)
+            issues.append({'type':'outlier','label':f'异常值({c})','count':outlier,'severity':'bad' if outlier/n>0.05 else 'warn'})
+            repairs.append(f'列"{c}"检测到{outlier}个离群值（IQR法），建议核查是否录入错误')
+        if type_err>0:
+            total-=min(15,type_err/n*100*0.3)
+            issues.append({'type':'type','label':f'类型错误({c})','count':type_err,'severity':'bad' if type_err/n>0.05 else 'warn'})
+            repairs.append(f'列"{c}"有{type_err}个类型错误（如数字列混入文本），建议转换为数值')
+        col_stats[c]={'missing':missing,'typeErr':type_err,'outlier':outlier}
+    for c in cols:
+        uniq=len(set(str(row.get(c,'')) for row in rows))
+        ratio=uniq/n
+        cl=c.lower()
+        if ('id' in cl or 'email' in cl) and uniq>1 and ratio<1 and ratio>0.5:
+            total-=min(10,(1-ratio)*20)
+            issues.append({'type':'unique','label':f'唯一性不足({c})','count':n-uniq,'severity':'warn'})
+            repairs.append(f'列"{c}"有{n-uniq}个重复值，建议检查主键唯一性')
+    total=max(0,math.floor(total+0.5))
+    grade_text='优秀' if total>=90 else '中等' if total>=70 else '较差'
+    return {'score':total,'grade':'good' if total>=90 else 'warn' if total>=70 else 'bad','gradeText':grade_text,
+            'rows':n,'cols':len(cols),'issues':issues,'repairs':repairs[:20],'colStats':col_stats}
+
 TOOLS = {'cot-prompt-generator':cot_prompt,'task-planner':task_planner,'chunk-comparer':chunk_comparer,
          'llm-schema-checker':schema_check,'token-budget-planner':token_budget,'ai-output-health':ai_health,
-         'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score}
+         'thought-organizer':thought_organizer,'api-contract':api_contract,'marketing-score':marketing_score,
+         'data-quality':data_quality}
 
 # ---- entry ----
 def main():
