@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据质量体检器 Data Quality Checker</title>
+<meta name="description" content="数据质量体检器：检测缺失值、重复行、异常值、类型错误、空字符串、唯一性，输出质量评分与修复建议。免费在线工具，支持Agent JSON接口。">
+<script defer data-domain="toolkitpro" src="https://plausible.io/js/script.js"></script>
+<script defer data-goatcounter="https://toolkitpro.goatcounter.com/count" src="https://gc.zgo.at/count.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f1117;color:#e5e7eb;line-height:1.6;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+a{color:#8b5cf6;text-decoration:none}a:hover{text-decoration:underline}
+.nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:20px}
+.nav a{color:#9ca3af}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:22px}
+.card{background:#1a1d29;border:1px solid #2a2e3d;border-radius:12px;padding:20px;margin-bottom:20px}
+.card h2{font-size:17px;margin-bottom:12px;color:#c4b5fd}
+label{display:block;font-size:13px;color:#9ca3af;margin-bottom:6px}
+textarea{width:100%;min-height:220px;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.btn{background:#8b5cf6;color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn:hover{background:#7c3aed}
+.btn.ghost{background:transparent;border:1px solid #2a2e3d;color:#9ca3af}
+.result{background:#0f1117;border:1px solid #2a2e3d;border-radius:8px;padding:16px;margin-top:16px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:520px;overflow:auto}
+.score-big{font-size:40px;font-weight:800;color:#8b5cf6}
+.score-label{font-size:13px;color:#9ca3af}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge.good{background:rgba(34,197,94,.15);color:#4ade80}
+.badge.warn{background:rgba(245,158,11,.15);color:#fbbf24}
+.badge.bad{background:rgba(239,68,68,.15);color:#f87171}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.tbl th,.tbl td{border:1px solid #2a2e3d;padding:7px 10px;text-align:left}
+.tbl th{background:#1f2333;color:#9ca3af}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#1f2333;border:1px solid #2a2e3d;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:#c4b5fd}
+.chip:hover{border-color:#8b5cf6}
+.note{font-size:12px;color:#6b7280;margin-top:10px}
+.hint{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:16px}
+.scene{background:#1f2333;border-radius:8px;padding:14px;margin-bottom:12px;font-size:14px}
+.scene b{color:#c4b5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/toolkitpro/">← 首页</a>
+    <a href="/toolkitpro/data-quality/">数据质量体检器</a>
+    <a href="?tool=data-quality&input={\"cols\":[\"id\",\"name\",\"age\",\"email\"]}&format=json" target="_blank">Agent JSON 示例</a>
+  </nav>
+  <h1>数据质量体检器</h1>
+  <p class="sub">检测缺失值、重复行、异常值、类型错误、空字符串、唯一性 → 质量评分 + 修复建议。支持 CSV/JSON 输入，Agent 可直接调用 JSON 接口。</p>
+
+  <div class="hint">
+    <b>实用场景：</b>数据分析师接到新数据集，第一步不是建模，而是判断数据能不能用——<b>这张表有30%缺失、10万行里2000行重复、年龄字段混进"未知"字符串</b>。本工具一键体检，告诉你评分、问题清单、修复建议，避免把烂数据送进模型。
+  </div>
+
+  <div class="card">
+    <h2>输入数据（CSV 或 JSON 数组）</h2>
+    <div class="chips">
+      <div class="chip" onclick="loadSample('csv')">示例CSV</div>
+      <div class="chip" onclick="loadSample('json')">示例JSON</div>
+      <div class="chip" onclick="loadSample('dirty')">脏数据示例</div>
+    </div>
+    <textarea id="input" placeholder="粘贴 CSV（首行为列名）或 JSON 数组...&#10;例如：&#10;id,name,age,email&#10;1,张三,25,a@x.com&#10;2,李四,,b@x.com&#10;3,王五,25,a@x.com"></textarea>
+    <div class="row">
+      <div>
+        <label>数值列（可选，逗号分隔，用于异常值检测）</label>
+        <input id="numcols" style="width:100%;background:#0f1117;color:#e5e7eb;border:1px solid #2a2e3d;border-radius:8px;padding:10px" placeholder="例如：age,price">
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:0">
+      <button class="btn" onclick="run()">开始体检</button>
+      <button class="btn ghost" onclick="document.getElementById('input').value=''">清空</button>
+    </div>
+    <div class="result" id="out" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>实用场景与实例</h2>
+    <div class="scene">
+      <b>场景：</b>你接手一个电商订单表，准备做用户画像。<b>痛点：</b>发现 email 有 12 个空值、user_id 有 4 个重复、age 里有 3 个"未知"字符串。<b>用法：</b>粘贴 CSV → 点体检 → 看到评分与问题清单 → 按建议清洗。
+    </div>
+    <div class="scene">
+      <b>实例：</b>输入 CSV（首行列名），点体检，输出：总分、每列缺失率、重复行数、异常值数、类型错误数、空字符串数，以及逐项修复建议。
+    </div>
+    <div class="scene">
+      <b>Agent 用法：</b>访问 <code>?tool=data-quality&input={"cols":["id","name","age"],"rows":[[1,"张三",25],[2,"李四",null]]}&format=json</code> 返回 JSON（评分+问题+建议），Agent 可直接读取，无需浏览器界面。
+    </div>
+  </div>
+</div>
+
+<script>
+const input=document.getElementById('input');
+const out=document.getElementById('out');
+
+function loadSample(kind){
+  if(kind==='csv'){
+    input.value='id,name,age,email,price\n1,张三,25,a@x.com,100\n2,李四,,b@x.com,200\n3,王五,25,a@x.com,150\n4,赵六,未知,c@x.com,\n5,钱七,25,d@x.com,180\n5,钱七,25,d@x.com,180\n6,孙八,30,e@x.com,220\n7,周九,,f@x.com,250';
+  } else if(kind==='json'){
+    input.value='[{"id":1,"name":"张三","age":25,"email":"a@x.com"},{"id":2,"name":"李四","age":null,"email":"b@x.com"},{"id":3,"name":"王五","age":25,"email":"a@x.com"}]';
+  } else {
+    input.value='order_id,customer,amount,status\n1001,Alice,50,paid\n1002,Bob,,pending\n1003,Alice,50,paid\n1004,Carol,abc,shipped\n1005,David,70,paid\n1002,Bob,,pending\n1006,Alice,未知,paid\n1007,Frank,80,paid\n1008,Grace,90,paid\n1009,Heidi,,paid';
+  }
+  run();
+}
+
+function isNumericCol(v){
+  const s=String(v).trim();
+  if(s===''||s.toLowerCase()==='null'||s.toLowerCase()==='unknown'||s.toLowerCase()==='未知'||s==='nan')return false;
+  return !isNaN(Number(s));
+}
+
+function detectType(v){
+  const s=String(v).trim();
+  if(s===''||s.toLowerCase()==='null'||s.toLowerCase()==='unknown'||s.toLowerCase()==='未知'||s==='nan')return 'empty';
+  if(!isNaN(Number(s))&&s!=='')return 'number';
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)||/^\d{1,2}\/\d{1,2}\/\d{4}/.test(s))return 'date';
+  return 'string';
+}
+
+function analyze(data, numCols){
+  const issues=[];
+  const cols=Object.keys(data[0]||{});
+  const n=data.length;
+  const colStats={};
+  let dupRows=0;
+  const seen=new Map();
+  let totalScore=100;
+  const repairs=[];
+
+  data.forEach((row,ri)=>{
+    const key=cols.map(c=>String(row[c]??'')).join('\u0001');
+    if(seen.has(key)){dupRows++;repairs.push(`第${ri+1}行与第${seen.get(key)+1}行重复，建议删除（保留一行）`);}
+    else seen.set(key,ri);
+  });
+  if(dupRows>0){totalScore-=Math.min(20,dupRows/n*100*0.4);issues.push({type:'duplicate',label:'重复行',count:dupRows,severity:dupRows/n>0.05?'bad':dupRows>0?'warn':'good'});}
+
+  const missingByCol={}, emptyByCol={}, typeErrByCol={}, outlierByCol={};
+  cols.forEach(c=>{
+    let missing=0,empty=0,typeErr=0,outlier=0;
+    const vals=[];
+    data.forEach(row=>{
+      const v=row[c];
+      const t=detectType(v);
+      vals.push(v);
+      if(t==='empty')missing++;
+    });
+    missingByCol[c]=missing; emptyByCol[c]=empty;
+    if(missing>0){totalScore-=Math.min(15,missing/n*100*0.3);issues.push({type:'missing',label:`缺失值(${c})`,count:missing,severity:missing/n>0.2?'bad':missing/n>0.05?'warn':'good'});repairs.push(`列"${c}"有${missing}个空值（${(missing/n*100).toFixed(1)}%），建议${missing/n>0.2?'填充或删除该列':'填充默认值/插补'}`);}
+
+    // 数值列异常值 (IQR)
+    if(numCols.includes(c)||(!numCols.length&&isNumericCol(vals.find(isNumericCol)))){
+      const nums=vals.map(v=>Number(v)).filter(v=>!isNaN(v));
+      if(nums.length>=5){
+        const sorted=[...nums].sort((a,b)=>a-b);
+        const q=(p)=>{const idx=(sorted.length-1)*p;const lo=Math.floor(idx);const hi=Math.ceil(idx);return sorted[lo]+(sorted[hi]-sorted[lo])*(idx-lo);};
+        const q1=q(0.25),q3=q(0.75),iqr=q3-q1;
+        const lo=q1-1.5*iqr,hi=q3+1.5*iqr;
+        const outs=vals.filter((v,i)=>isNumericCol(v)&&(Number(v)<lo||Number(v)>hi));
+        outlier=outs.length;
+        if(outlier>0){totalScore-=Math.min(15,outlier/n*100*0.3);issues.push({type:'outlier',label:`异常值(${c})`,count:outlier,severity:outlier/n>0.05?'bad':'warn'});repairs.push(`列"${c}"检测到${outlier}个离群值（IQR法），建议核查是否录入错误`);}
+      }
+    }
+
+    // 类型错误
+    data.forEach(row=>{
+      const v=row[c];
+      const s=String(v).trim();
+      if(s===''||s.toLowerCase()==='null'||s.toLowerCase()==='unknown'||s.toLowerCase()==='未知'||s==='nan')return;
+      if(c.toLowerCase().includes('email')&&!s.includes('@')){typeErr++;return;}
+      if(c.toLowerCase().includes('age')||c.toLowerCase().includes('price')||c.toLowerCase().includes('amount')){
+        if(isNaN(Number(s))&&!isNaN(Number(s.replace(/[^\d.-]/g,'')))){typeErr++;return;}
+        if(isNaN(Number(s))){typeErr++;}
+      }
+    });
+    typeErrByCol[c]=typeErr;
+    if(typeErr>0){totalScore-=Math.min(15,typeErr/n*100*0.3);issues.push({type:'type',label:`类型错误(${c})`,count:typeErr,severity:typeErr/n>0.05?'bad':'warn'});repairs.push(`列"${c}"有${typeErr}个类型错误（如数字列混入文本），建议转换为数值`);}
+    colStats[c]={missing,empty:empty,typeErr,outlier};
+  });
+
+  // 唯一性检查
+  cols.forEach(c=>{
+    const unique=new Set(data.map(r=>String(r[c]??'')));
+    const uniqRatio=unique.size/n;
+    if(c.toLowerCase().includes('id')||c.toLowerCase().includes('email')&&unique.size>1){
+      if(uniqRatio<1&&uniqRatio>0.5){totalScore-=Math.min(10,(1-uniqRatio)*20);issues.push({type:'unique',label:`唯一性不足(${c})`,count:n-unique.size,severity:'warn'});repairs.push(`列"${c}"有${n-unique.size}个重复值，建议检查主键唯一性`);}
+    }
+  });
+
+  totalScore=Math.max(0,Math.round(totalScore));
+  const grade=totalScore>=90?'good':totalScore>=70?'warn':'bad';
+  const gradeText=totalScore>=90?'优秀':totalScore>=70?'中等':'较差';
+  return {score:totalScore,grade,gradeText,rows:n,cols:cols.length,issues,repairs:repairs.slice(0,20),colStats};
+}
+
+function run(){
+  let text=input.value.trim();
+  if(!text){out.style.display='block';out.textContent='请先输入数据。';return;}
+  let data;
+  if(text.startsWith('[')){
+    try{data=JSON.parse(text);}catch(e){out.style.display='block';out.textContent='JSON解析失败：'+e.message;return;}
+  } else {
+    const lines=text.split(/\r?\n/).filter(l=>l.trim()!=='');
+    if(lines.length<1){out.style.display='block';out.textContent='CSV为空。';return;}
+    const header=lines[0].split(',').map(h=>h.trim());
+    data=[];
+    for(let i=1;i<lines.length;i++){
+      const cells=lines[i].split(',');
+      const row={};
+      header.forEach((h,hi)=>row[h]=cells[hi]!==undefined?cells[hi].trim():'');
+      data.push(row);
+    }
+  }
+  const numCols=(document.getElementById('numcols').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const res=analyze(data,numCols);
+  out.style.display='block';
+  const gradeCls=res.grade==='good'?'good':res.grade==='warn'?'warn':'bad';
+  out.innerHTML=`<div class="score-big">${res.score}<span class="score-label">/100 数据质量评分</span></div>
+    <div style="margin:10px 0"><span class="badge ${gradeCls}">${res.gradeText}</span> <span style="font-size:13px;color:#9ca3af">共${res.rows}行 × ${res.cols}列</span></div>
+    <div class="note">问题清单（${res.issues.length}项）</div>
+    <table class="tbl"><tr><th>问题</th><th>数量</th><th>严重度</th></tr>
+    ${res.issues.map(i=>`<tr><td>${i.label}</td><td>${i.count}</td><td><span class="badge ${i.severity}">${i.severity==='good'?'正常':i.severity==='warn'?'注意':'严重'}</span></td></tr>`).join('')}
+    </table>
+    <div class="note">修复建议</div>
+    <div>${res.repairs.length?res.repairs.map(r=>'• '+r).join('<br>'):'<span class="badge good">无明显问题，数据可用</span>'}</div>
+    <div class="note">列统计</div>
+    <table class="tbl"><tr><th>列</th><th>缺失</th><th>类型错误</th><th>异常值</th></tr>
+    ${Object.entries(res.colStats).map(([c,s])=>`<tr><td>${c}</td><td>${s.missing}</td><td>${s.typeErr}</td><td>${s.outlier||0}</td></tr>`).join('')}
+    </table>`;
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Agent JSON 接口
+(function(){
+  const qs=new URLSearchParams(location.search);
+  const fmt=qs.get('format');
+  const tool=qs.get('tool');
+  const inp=qs.get('input');
+  if(fmt==='json'&&inp){
+    try{
+      const parsed=JSON.parse(inp);
+      let data;
+      if(Array.isArray(parsed)){data=parsed;}
+      else if(parsed.rows&&parsed.cols){data=parsed.rows.map(r=>{const o={};parsed.cols.forEach((c,i)=>o[c]=r[i]);return o;});}
+      const res=analyze(data,parsed.numCols||[]);
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:true,score:res.score,grade:res.gradeText,rows:res.rows,cols:res.cols,issues:res.issues,repairs:res.repairs,cols_stats:res.colStats},null,2)+'</pre>';
+      document.title='data-quality JSON result';
+      return;
+    }catch(e){
+      document.body.innerHTML='<pre style="padding:20px;white-space:pre-wrap">'+JSON.stringify({ok:false,error:e.message},null,2)+'</pre>';
+      return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
