@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Web3D 游戏开发工具包 · 引擎+建模+测评+流程+技能</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,'Segoe UI',Roboto,sans-serif;background:#0b0e18;color:#e5e7eb;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+h1{font-size:30px;color:#c4b5fd;margin-bottom:6px}
+.sub{color:#9ca3af;font-size:14px;margin-bottom:24px}
+.card{background:#12141f;border:1px solid #2a2d3d;border-radius:14px;padding:22px;margin-bottom:22px}
+.card h2{font-size:20px;color:#fbbf24;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.tag{display:inline-block;background:#8b5cf6;color:#fff;font-size:11px;padding:2px 8px;border-radius:6px;margin-right:6px}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.sec-grid{grid-template-columns:1fr}}
+canvas{width:100%;height:300px;border-radius:10px;background:#0d1017;border:1px solid #2a2d3d;display:block}
+.modelbtns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+button{background:#1f2333;border:1px solid #3a3f55;color:#e5e7eb;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+button:hover{background:#2a2f47}
+button.act{background:#8b5cf6;border-color:#8b5cf6;color:#fff}
+input,select{background:#1a1e2c;border:1px solid #3a3f55;color:#e5e7eb;padding:8px;border-radius:8px;font-size:13px;width:100%}
+label{font-size:12px;color:#9ca3af;display:block;margin:8px 0 3px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.frow{grid-template-columns:1fr}}
+.report{background:#0d1017;border:1px solid #2a2d3d;border-radius:10px;padding:16px;margin-top:14px}
+.report h3{color:#fbbf24;margin-bottom:8px}
+.overall{font-size:34px;font-weight:800;color:#c4b5fd}
+.grade{font-size:20px;font-weight:700}
+.step{display:flex;gap:14px;margin-bottom:14px}
+.step .n{background:#8b5cf6;color:#fff;min-width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.step h3{font-size:15px;color:#e5e7eb}
+.step p{font-size:13px;color:#9ca3af}
+.skill{display:flex;flex-wrap:wrap;gap:8px}
+.skill span{background:#1f2333;border:1px solid #3a3f55;padding:6px 12px;border-radius:20px;font-size:13px}
+.skill span b{color:#c4b5fd}
+ul{margin-left:18px;font-size:13px;color:#9ca3af}
+.issue{color:#f87171;font-size:12px;margin-top:4px}
+.ok{color:#34d399}
+pre{background:#0d1017;border:1px solid #2a2d3d;border-radius:10px;padding:14px;font-size:12px;overflow:auto;color:#a5f3a5;max-height:220px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🎮 Web3D 游戏开发工具包</h1>
+<div class="sub">自写 3D 引擎 · 程序化建模工具 · 游戏测评工具 · 开发流程 · 技能清单 —— 面向网页 3D 游戏开发与测评</div>
+
+<div class="card">
+<h2>⚙️ 1. 3D 引擎（自写 WebGL，无 Three.js）</h2>
+<div class="sec-grid">
+<div>
+<p style="font-size:13px;color:#9ca3af;margin-bottom:10px">原生 WebGL 自写引擎：矩阵数学(M4)、透视相机(Camera)、几何生成器(GEO: 立方体/球/圆柱/圆锥)、WebGL 渲染器(Renderer3D)、复合模型(Model)、碰撞(circleCollides)。</p>
+<div class="modelbtns" id="mbtns"></div>
+<canvas id="prev" width="500" height="300"></canvas>
+<p style="font-size:12px;color:#6b7280;margin-top:6px">拖拽旋转查看 Modeler 生成的模型</p>
+</div>
+<div>
+<h3 style="color:#fbbf24;font-size:14px;margin-bottom:8px">引擎 API 一览</h3>
+<ul>
+<li><b>M4</b> — 矩阵：identity/multiply/perspective/translation/rotationX/rotationY/scale</li>
+<li><b>Camera</b> — 第一人称相机：viewMatrix/projMatrix/forward/right</li>
+<li><b>GEO</b> — 几何生成器：box/sphere/cylinder/cone/translate/scale/merge</li>
+<li><b>Renderer3D</b> — 渲染器：begin/drawGLMesh/drawModel/drawBox/drawGround</li>
+<li><b>Model</b> — 复合模型：parts(几何+颜色+偏移)</li>
+<li><b>circleCollides</b> — 圆形 vs AABB 碰撞（XZ）</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>🧱 2. 程序化建模工具（Modeler）</h2>
+<p style="font-size:13px;color:#9ca3af;margin-bottom:12px">用基础几何（立方体/球/圆柱/圆锥）组合出复杂模型，逐部件配色。内置生成器：</p>
+<div class="skill">
+<span><b>robot()</b> 机器人</span><span><b>gun()</b> 枪</span><span><b>tree()</b> 树</span>
+<span><b>tower()</b> 塔楼</span><span><b>crystal()</b> 水晶</span><span><b>crate()</b> 箱子</span>
+<span><b>medkit()</b> 医疗包</span><span><b>pillar()</b> 能量柱</span>
+</div>
+</div>
+
+<div class="card">
+<h2>📊 3. 游戏测评工具（GameQA）</h2>
+<p style="font-size:13px;color:#9ca3af;margin-bottom:12px">输入实测数据 → 输出性能/可玩性/难度/稳定性评分 + 综合报告 + 优化建议。</p>
+<div class="frow">
+<div>
+<label>帧率 FPS（如 60）</label><input id="q_fps" type="number" value="60">
+<label>帧时间 ms（如 16.7）</label><input id="q_frame" type="number" value="16.7">
+<label>绘制调用（如 30）</label><input id="q_draw" type="number" value="30">
+<label>内存 MB（如 150）</label><input id="q_mem" type="number" value="150">
+</div>
+<div>
+<label>操作响应 1-5</label><input id="q_resp" type="number" value="4" min="1" max="5">
+<label>控制直观 1-5</label><input id="q_int" type="number" value="4" min="1" max="5">
+<label>反馈强度 1-5</label><input id="q_fb" type="number" value="4" min="1" max="5">
+<label>舒适度 1-5</label><input id="q_comf" type="number" value="4" min="1" max="5">
+</div>
+</div>
+<div class="frow" style="margin-top:12px">
+<div>
+<label>玩家胜率 %（如 60）</label><input id="q_win" type="number" value="60">
+<label>每分钟死亡（如 0.8）</label><input id="q_death" type="number" value="0.8">
+</div>
+<div>
+<label>挑战感 1-5</label><input id="q_chal" type="number" value="4" min="1" max="5">
+<label>崩溃次数</label><input id="q_crash" type="number" value="0">
+</div>
+</div>
+<div class="frow" style="margin-top:12px">
+<div><label>JS 报错次数</label><input id="q_err" type="number" value="0"></div>
+<div><label>加载时间 s</label><input id="q_load" type="number" value="2"></div>
+</div>
+<button id="qbtn" style="margin-top:14px;background:#8b5cf6;border:none;font-size:15px;font-weight:700;padding:10px 22px">运行测评</button>
+<div class="report" id="report"><h3>测评报告</h3><p style="color:#6b7280;font-size:13px">填写上方数据后点击"运行测评"。</p></div>
+</div>
+
+<div class="card">
+<h2>🔄 4. 开发流程</h2>
+<div class="step"><div class="n">1</div><div><h3>需求与设计</h3><p>明确玩法/目标/平台(PC+手机)，设计核心循环、美术风格、数值框架。</p></div></div>
+<div class="step"><div class="n">2</div><div><h3>搭建引擎</h3><p>自写 WebGL 渲染管线：矩阵/相机/网格/光照/碰撞，或选型轻量引擎。</p></div></div>
+<div class="step"><div class="n">3</div><div><h3>程序化建模</h3><p>用 Modeler 几何生成器(立方体/球/圆柱/圆锥)组合场景/角色/道具/NPC 模型。</p></div></div>
+<div class="step"><div class="n">4</div><div><h3>游戏逻辑</h3><p>输入(键鼠/触摸)、实体系统、AI、射击/命中、UI/HUD、状态机。</p></div></div>
+<div class="step"><div class="n">5</div><div><h3>测评优化</h3><p>用 GameQA 测性能/可玩性/难度/稳定性，针对问题优化(合批/低多边形/平衡)。</p></div></div>
+<div class="step"><div class="n">6</div><div><h3>发布</h3><p>打包(静态/压缩)、部署(GitHub Pages/CDN)、移动端适配、埋点观测。</p></div></div>
+</div>
+
+<div class="card">
+<h2>🛠️ 5. 技能清单</h2>
+<div class="skill">
+<span><b>WebGL</b> 着色器/缓冲</span><span><b>矩阵数学</b> 变换/投影</span>
+<span><b>3D 几何</b> 网格/碰撞</span><span><b>程序化建模</b> 几何组合</span>
+<span><b>游戏循环</b> rAF/物理</span><span><b>输入系统</b> 键鼠/触摸</span>
+<span><b>游戏 AI</b> 状态/寻路</span><span><b>性能优化</b> 合批/剔除</span>
+<span><b>移动端适配</b> 响应式/触控</span><span><b>测评</b> 性能/可玩性</span>
+<span><b>发布部署</b> 静态托管</span><span><b>数据分析</b> 埋点/留存</span>
+</div>
+</div>
+
+<div class="card">
+<h2>📦 6. 模块下载</h2>
+<p style="font-size:13px;color:#9ca3af;margin-bottom:10px">可复用模块源码（独立文件，可并入你的游戏工程）：</p>
+<pre id="codebox">选择上方模型，这里展示对应模块代码。引擎/建模/测评均可独立复用。</pre>
+</div>
+</div>
+
+<script>
+// ===== 内嵌自写 3D 引擎（engine3d.js 完整版）=====
+const M4={identity(){return new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1])},multiply(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[0*4+r]*b[c*4+0]+a[1*4+r]*b[c*4+1]+a[2*4+r]*b[c*4+2]+a[3*4+r]*b[c*4+3];return o},perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0])},translation(x,y,z){return new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1])},rotationY(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1])},rotationX(a){const c=Math.cos(a),s=Math.sin(a);return new Float32Array([1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1])},scale(x,y,z){return new Float32Array([x,0,0,0,0,y,0,0,0,0,z,0,0,0,0,1])}};
+class Camera{constructor(){this.x=0;this.y=1.7;this.z=0;this.yaw=0;this.pitch=0;this.fov=Math.PI/3;this.near=0.1;this.far=300}viewMatrix(){let m=M4.multiply(M4.translation(-this.x,-this.y,-this.z),M4.rotationX(-this.pitch));return M4.multiply(m,M4.rotationY(-this.yaw))}projMatrix(a){return M4.perspective(this.fov,a,this.near,this.far)}forward(){return{x:-Math.sin(this.yaw),z:-Math.cos(this.yaw)}}right(){return{x:Math.cos(this.yaw),z:-Math.sin(this.yaw)}}}
+const GEO={box(sx,sy,sz){const x=sx/2,y=sy/2,z=sz/2;const v=[-x,y,z,-x,-y,z,x,-y,z,x,y,z,x,y,-z,x,-y,-z,-x,-y,-z,-x,y,-z,-x,y,-z,-x,y,z,x,y,z,x,y,-z,-x,-y,z,-x,-y,-z,x,-y,-z,x,-y,z,x,y,z,x,-y,z,x,-y,-z,x,y,-z,-x,y,-z,-x,-y,-z,-x,-y,z,-x,y,z];const idx=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23];return{verts:v,idx}},sphere(r,seg){const v=[],idx=[];for(let iy=0;iy<=seg;iy++){const phi=Math.PI*iy/seg;for(let ix=0;ix<=seg;ix++){const th=2*Math.PI*ix/seg;v.push(r*Math.sin(phi)*Math.cos(th),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(th))}}for(let iy=0;iy<seg;iy++)for(let ix=0;ix<seg;ix++){const a=iy*(seg+1)+ix,b=a+seg+1;idx.push(a,b,a+1,b,b+1,a+1)}return{verts:v,idx}},cylinder(r,h,seg){const v=[],idx=[];for(let i=0;i<=seg;i++){const a=2*Math.PI*i/seg;v.push(r*Math.cos(a),h/2,r*Math.sin(a))}for(let i=0;i<=seg;i++){const a=2*Math.PI*i/seg;v.push(r*Math.cos(a),-h/2,r*Math.sin(a))}const top=v.length/3;v.push(0,h/2,0);const bot=v.length/3;v.push(0,-h/2,0);for(let i=0;i<seg;i++){idx.push(i,i+seg+1,i+1,i+1,i+seg+1,i+seg+2);idx.push(i,top,i+1);idx.push(i+seg+1,bot,i+seg+2)}return{verts:v,idx}},cone(r,h,seg){const v=[],idx=[];for(let i=0;i<=seg;i++){const a=2*Math.PI*i/seg;v.push(r*Math.cos(a),-h/2,r*Math.sin(a))}const apex=v.length/3;v.push(0,h/2,0);const base=v.length/3;v.push(0,-h/2,0);for(let i=0;i<seg;i++){idx.push(i,apex,i+1);idx.push(i+1,base,i)}return{verts:v,idx}},translate(g,dx,dy,dz){const o={verts:[],idx:g.idx.slice()};for(let i=0;i<g.verts.length;i+=3)o.verts.push(g.verts[i]+dx,g.verts[i+1]+dy,g.verts[i+2]+dz);return o},scale(g,sx,sy,sz){const o={verts:[],idx:g.idx.slice()};for(let i=0;i<g.verts.length;i+=3)o.verts.push(g.verts[i]*sx,g.verts[i+1]*sy,g.verts[i+2]*sz);return o},merge(...gs){let verts=[],idx=[],off=0;for(const g of gs){verts=verts.concat(g.verts);for(const i of g.idx)idx.push(i+off);off+=g.verts.length/3}return{verts,idx}}};
+class Model{constructor(gl,parts){this.parts=parts}}
+function makeGLMesh(gl,verts,idx){const vbo=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vbo);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(verts),gl.STATIC_DRAW);const ibo=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ibo);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx),gl.STATIC_DRAW);return{vbo,ibo,count:idx.length}}
+class Renderer3D{constructor(canvas){this.canvas=canvas;this.gl=canvas.getContext('webgl',{antialias:true});if(!this.gl)throw new Error('WebGL not supported');const gl=this.gl;const vs='attribute vec3 aPos;uniform mat4 uProj,uView,uModel;varying vec3 vPos;void main(){vec4 world=uModel*vec4(aPos,1.0);vPos=world.xyz;gl_Position=uProj*uView*world;}';const fs='precision mediump float;uniform vec4 uColor;varying vec3 vPos;void main(){float light=0.55+0.45*clamp(vPos.y*0.3+0.6,0.0,1.0);gl_FragColor=vec4(uColor.rgb*light,uColor.a);}';function sh(t,s){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));return x}this.prog=gl.createProgram();gl.attachShader(this.prog,sh(gl.VERTEX_SHADER,vs));gl.attachShader(this.prog,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(this.prog);gl.useProgram(this.prog);this.aPos=gl.getAttribLocation(this.prog,'aPos');this.uProj=gl.getUniformLocation(this.prog,'uProj');this.uView=gl.getUniformLocation(this.prog,'uView');this.uModel=gl.getUniformLocation(this.prog,'uModel');this.uColor=gl.getUniformLocation(this.prog,'uColor');gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.clearColor(0.04,0.06,0.11,1);this.groundMesh=makeGLMesh(gl,GEO.box(1,0.1,1).verts,GEO.box(1,0.1,1).idx)}resize(w,h){this.canvas.width=w;this.canvas.height=h}begin(cam){const gl=this.gl;gl.viewport(0,0,this.canvas.width,this.canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(this.prog);const a=this.canvas.width/this.canvas.height;gl.uniformMatrix4fv(this.uProj,false,cam.projMatrix(a));gl.uniformMatrix4fv(this.uView,false,cam.viewMatrix())}drawGLMesh(gm,x,y,z,sx,sy,sz,yaw,color){const gl=this.gl;let m=M4.translation(x,y,z);if(yaw)m=M4.multiply(m,M4.rotationY(yaw));m=M4.multiply(m,M4.scale(sx,sy,sz));gl.uniformMatrix4fv(this.uModel,false,m);gl.uniform4fv(this.uColor,color||[0.8,0.8,0.8,1]);gl.bindBuffer(gl.ARRAY_BUFFER,gm.vbo);gl.enableVertexAttribArray(this.aPos);gl.vertexAttribPointer(this.aPos,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gm.ibo);gl.drawElements(gl.TRIANGLES,gm.count,gl.UNSIGNED_SHORT,0)}drawModel(model,x,y,z,scale,yaw){const gl=this.gl;const s=scale||1;if(!this._mc)this._mc=new WeakMap();if(!this._mc.has(model))this._mc.set(model,model.parts.map(p=>{const g=GEO.translate(p.geo,p.x||0,p.y||0,p.z||0);return{mesh:makeGLMesh(gl,g.verts,g.idx),color:p.color||[0.8,0.8,0.8,1]}}));for(const p of this._mc.get(model))this.drawGLMesh(p.mesh,x,y,z,s,s,s,yaw,p.color)}drawBox(x,y,z,sx,sy,sz,yaw,color){this.drawGLMesh(this.groundMesh,x,y,z,sx,sy,sz,yaw,color)}drawGround(size){this.drawBox(0,-0.05,0,size,0.1,size,0,[0.14,0.18,0.24,1])}}
+const Modeler={robot(bc,ac){const c1=bc||[0.6,0.65,0.7,1],c2=ac||[0.9,0.4,0.4,1];return new Model(null,[{geo:GEO.box(0.5,0.6,0.4),color:c1,y:1.5},{geo:GEO.box(0.42,0.36,0.4),color:c1,y:2.05},{geo:GEO.box(0.44,0.1,0.3),color:c2,y:1.85},{geo:GEO.box(0.16,0.5,0.16),color:c2,x:-0.36,y:1.45},{geo:GEO.box(0.16,0.5,0.16),color:c2,x:0.36,y:1.45},{geo:GEO.box(0.18,0.55,0.18),color:c1,x:-0.14,y:0.8},{geo:GEO.box(0.18,0.55,0.18),color:c1,x:0.14,y:0.8},{geo:GEO.box(0.12,0.12,0.7),color:[0.2,0.2,0.25,1],x:0.36,y:1.45,z:0.4}])},gun(){return new Model(null,[{geo:GEO.box(0.12,0.14,0.6),color:[0.18,0.2,0.24,1],z:0.5},{geo:GEO.box(0.1,0.3,0.12),color:[0.15,0.17,0.2,1],y:-0.22,z:0.3},{geo:GEO.box(0.06,0.08,0.2),color:[0.3,0.7,0.5,1],y:0.06,z:0.82}])},tree(){return new Model(null,[{geo:GEO.cylinder(0.2,1.2,6),color:[0.35,0.25,0.18,1],y:0.6},{geo:GEO.sphere(0.6,8),color:[0.25,0.5,0.3,1],y:1.7},{geo:GEO.sphere(0.4,6),color:[0.3,0.55,0.32,1],x:0.35,y:1.5},{geo:GEO.sphere(0.35,6),color:[0.22,0.45,0.28,1],x:-0.3,y:1.45}])},tower(){return new Model(null,[{geo:GEO.box(2,4,2),color:[0.45,0.42,0.38,1],y:2},{geo:GEO.box(2.4,0.3,2.4),color:[0.5,0.47,0.42,1],y:4.1},{geo:GEO.cone(1.4,1.6,4),color:[0.4,0.3,0.25,1],y:5.2}])},crystal(){return new Model(null,[{geo:GEO.cone(0.35,1.2,5),color:[0.4,0.7,0.9,0.9],y:0.6},{geo:GEO.cone(0.2,0.7,5),color:[0.5,0.8,1,0.9],x:0.4,y:0.4},{geo:GEO.cone(0.15,0.5,5),color:[0.3,0.6,0.8,0.9],x:-0.3,y:0.3}])},crate(){return new Model(null,[{geo:GEO.box(0.9,0.7,0.7),color:[0.5,0.45,0.35,1],y:0.35},{geo:GEO.box(0.94,0.12,0.74),color:[0.4,0.35,0.28,1],y:0.7}])},medkit(){return new Model(null,[{geo:GEO.box(0.7,0.5,0.4),color:[0.9,0.9,0.95,1],y:0.25},{geo:GEO.box(0.15,0.4,0.42),color:[0.9,0.3,0.3,1],y:0.25},{geo:GEO.box(0.72,0.15,0.42),color:[0.9,0.3,0.3,1],y:0.25}])},pillar(){return new Model(null,[{geo:GEO.cylinder(0.3,3,6),color:[0.3,0.5,0.8,0.85],y:1.5},{geo:GEO.sphere(0.35,6),color:[0.5,0.8,1,0.9],y:3}])}};
+function circleCollides(x,z,r,boxes){for(const b of boxes){const hw=b.w*0.8/2,hd=b.d*0.8/2;const cx=Math.max(b.x-hw,Math.min(x,b.x+hw));const cz=Math.max(b.z-hd,Math.min(z,b.z+hd));const dx=x-cx,dz=z-cz;if(dx*dx+dz*dz<r*r)return true}return false}
+
+// ===== 游戏测评工具（GameQA）=====
+const GameQA={
+  perf(fps,fm,dc,mem){let s=0,iss=[];if(fps>=60)s+=30;else if(fps>=30){s+=20;iss.push('帧率30-60，中端设备可优化')}else{s+=8;iss.push('帧率<30，需低多边形/合批')}if(fm<=16.7)s+=25;else if(fm<=33){s+=15;iss.push('帧时间16-33ms需优化')}else{s+=5;iss.push('帧时间>33ms卡顿')}if(dc<=50)s+=25;else if(dc<=150){s+=15;iss.push('绘制调用多可合批')}else{s+=6;iss.push('绘制调用过多需合批/实例化')}if(mem<=200)s+=20;else if(mem<=500){s+=12;iss.push('内存占用较高')}else{s+=5;iss.push('内存超500MB需释放')}return{name:'性能',score:s,max:100,grade:s>=80?'优':s>=60?'良':s>=40?'中':'差',issues:iss}},
+  playable(r,i,f,c){let s=0,iss=[];s+=r>=4?22:r>=3?15:8;if(r<3)iss.push('操作响应慢') ;s+=i>=4?22:i>=3?15:8;if(i<3)iss.push('控制不直观需教程');s+=f>=4?20:f>=3?14:8;if(f<3)iss.push('反馈不足需增强');s+=c>=4?18:c>=3?12:6;if(c<3)iss.push('舒适度低需调视野/灵敏度');return{name:'可玩性',score:s,max:82,grade:s>=66?'优':s>=49?'良':s>=33?'中':'差',issues:iss}},
+  difficulty(w,d,ch){let s=0,iss=[];if(w>=50&&w<=80)s+=25;else if(w>80){s+=12;iss.push('玩家胜率>80%过易')}else if(w<30){s+=8;iss.push('玩家胜率<30%过难')}else s+=18;if(d<=1)s+=25;else if(d<=3)s+=15;else{s+=6;iss.push('死亡频率高需平衡')}if(ch>=4)s+=22;else if(ch>=3){s+=14;iss.push('挑战感一般')}else s+=8;return{name:'难度平衡',score:s,max:72,grade:s>=58?'优':s>=43?'良':s>=29?'中':'差',issues:iss}},
+  stability(cr,er,ld){let s=0,iss=[];s+=cr===0?30:cr<=1?15:5;if(cr>1)iss.push('有崩溃需排查');s+=er===0?25:er<=3?15:5;if(er>3)iss.push('JS报错多需修复');s+=ld<=3?25:ld<=6?15:6;if(ld>6)iss.push('加载>6s需压缩');return{name:'稳定性',score:s,max:80,grade:s>=64?'优':s>=48?'良':s>=32?'中':'差',issues:iss}},
+  report(inp){const p=this.perf(inp.fps,inp.frameMs,inp.drawCalls,inp.memMB);const pl=this.playable(inp.response,inp.intuitive,inp.feedback,inp.comfort);const d=this.difficulty(inp.winRate,inp.deathsPerMin,inp.challenge);const s=this.stability(inp.crash,inp.errors,inp.loadTime);const total=p.score+pl.score+d.score+s.score,max=p.max+pl.max+d.max+s.max;const overall=Math.round(total/max*100);return{overall,grade:overall>=80?'优':overall>=60?'良':overall>=40?'中':'差',sections:[p,pl,d,s],advice:overall>=80?'游戏整体质量高，可发布。':overall>=60?'质量良好，建议修复上述问题后发布。':'需针对性优化后重测。'}}
+};
+
+// ===== 3D 预览（轨道旋转 Modeler 模型）=====
+const models={robot:Modeler.robot([0.85,0.3,0.3,1],[0.95,0.6,0.2,1]),gun:Modeler.gun(),tree:Modeler.tree(),tower:Modeler.tower(),crystal:Modeler.crystal(),crate:Modeler.crate(),medkit:Modeler.medkit(),pillar:Modeler.pillar()};
+let curModel=models.robot, curKey='robot';
+const btns=document.getElementById('mbtns');
+Object.keys(models).forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>{curModel=models[k];curKey=k;[...btns.children].forEach(x=>x.classList.remove('act'));b.classList.add('act');showCode(k);};btns.appendChild(b);});
+btns.children[0].classList.add('act');
+try{
+  const cv=document.getElementById('prev');const rd=new Renderer3D(cv);rd.resize(cv.width,cv.height);
+  const cam=new Camera();let ang=0,drag=false,lx=0;
+  cv.addEventListener('mousedown',e=>{drag=true;lx=e.clientX});window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(drag){ang+=(e.clientX-lx)*0.01;lx=e.clientX}});
+  function frame(){if(!drag)ang+=0.012;cam.x=Math.sin(ang)*6;cam.z=Math.cos(ang)*6;cam.y=3.5;cam.pitch=-0.3;rd.begin(cam);rd.drawGround(16);rd.drawModel(curModel,0,0,0,1,ang);for(let i=-8;i<=8;i+=2){rd.drawBox(i,0.01,-8,0.03,0.01,16,0,[0.3,0.35,0.5,1]);rd.drawBox(-8,0.01,i,16,0.01,0.03,0,[0.3,0.35,0.5,1])}}
+  setInterval(frame,66);
+}catch(e){document.getElementById('prev').style.display='none';console.log('preview disabled:',e.message)}
+
+// ===== 测评 UI =====
+document.getElementById('qbtn').onclick=()=>{
+  const g=x=>parseFloat(document.getElementById(x).value)||0;
+  const r=GameQA.report({fps:g('q_fps'),frameMs:g('q_frame'),drawCalls:g('q_draw'),memMB:g('q_mem'),response:g('q_resp'),intuitive:g('q_int'),feedback:g('q_fb'),comfort:g('q_comf'),winRate:g('q_win'),deathsPerMin:g('q_death'),challenge:g('q_chal'),crash:g('q_crash'),errors:g('q_err'),loadTime:g('q_load')});
+  let h='<h3>综合评分：<span class="overall">'+r.overall+'</span> <span class="grade" style="color:'+(r.overall>=80?'#34d399':r.overall>=60?'#fbbf24':'#f87171')+'">'+r.grade+'</span></h3>';
+  h+='<p style="font-size:13px;color:#9ca3af;margin-bottom:10px">'+r.advice+'</p>';
+  r.sections.forEach(s=>{h+='<div style="margin-bottom:8px"><b style="font-size:14px">'+s.name+'</b> <span style="color:'+(s.grade==='优'?'#34d399':s.grade==='良'?'#fbbf24':'#f87171')+'">'+s.score+'/'+s.max+' ('+s.grade+')</span>';s.issues.forEach(i=>{h+='<div class="issue">⚠ '+i+'</div>'});h+='</div>'});
+  document.getElementById('report').innerHTML=h;
+};
+
+// ===== 模块代码展示 =====
+function showCode(k){
+  const snippet={
+    engine:'// 自写 WebGL 引擎核心（engine3d.js）\n// M4 矩阵 · Camera 相机 · GEO 几何 · Renderer3D 渲染 · circleCollides 碰撞\n// 本工具包已内嵌完整可用版本，可复制到你的工程\nconst m = M4.multiply(M4.translation(x,y,z), M4.rotationY(yaw));\nrenderer.drawModel(Modeler.robot(), x, 0, z, 1.6, yaw);',
+    robot:'// Modeler.robot() 程序化建模：基础几何组合成机器人\nconst model = new Model(null, [\n  {geo:GEO.box(0.5,0.6,0.4), color:[0.6,0.65,0.7,1], y:1.5},   // 躯干\n  {geo:GEO.box(0.42,0.36,0.4), color:[0.6,0.65,0.7,1], y:2.05},  // 头\n  {geo:GEO.box(0.16,0.5,0.16), color:[0.9,0.4,0.4,1], x:-0.36,y:1.45}, // 左臂\n  {geo:GEO.box(0.16,0.5,0.16), color:[0.9,0.4,0.4,1], x:0.36,y:1.45},  // 右臂\n]);\nrenderer.drawModel(model, x, 0, z, 1.6, yaw);',
+    gun:'// Modeler.gun() 第一人称枪\nconst gun = Modeler.gun();\nrenderer.drawModel(gun, px+fx*0.5, 1.2, pz+fz*0.5, 1.0, yaw);',
+    tree:'// Modeler.tree()：圆柱干 + 三球冠\nconst tree = Modeler.tree();\nrenderer.drawModel(tree, x, 0, z, 1.2, yaw);',
+    tower:'// Modeler.tower()：方体塔 + 锥顶\nconst tower = Modeler.tower();\nrenderer.drawModel(tower, x, 0, z, 2.4, 0);',
+    crystal:'// Modeler.crystal()：发光锥体\nconst c = Modeler.crystal();\nrenderer.drawModel(c, x, 0, z, 1.5, 0);',
+    crate:'// Modeler.crate()：弹药箱\nconst c = Modeler.crate();\nrenderer.drawModel(c, x, 0, z, 4.0, 0);',
+    medkit:'// Modeler.medkit()：医疗包\nconst m = Modeler.medkit();\nrenderer.drawModel(m, x, 0, z, 1.0, 0);',
+    pillar:'// Modeler.pillar()：能量柱\nconst p = Modeler.pillar();\nrenderer.drawModel(p, x, 0, z, 2.0, 0);'
+  };
+  document.getElementById('codebox').textContent = snippet[k]||snippet.engine;
+}
+showCode('robot');
+</script>
+</body>
+</html>
