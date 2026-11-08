@@ -65,5 +65,10 @@ ${steps.map((s,i)=>`${i+1}. ${s}`).join('\n')}
 }
 (function(){const u=new URL(location.href);if(u.searchParams.get('format')==='json'){try{const d=JSON.parse(u.searchParams.get('input')||'{}');const idea=(d.idea||'').trim();if(!idea){document.body.textContent=JSON.stringify({tool:'thought-organizer',error:'idea required'});return}const sc=d.scene||'creative';document.body.textContent=JSON.stringify({tool:'thought-organizer',input:d,output:{scene:sc,framework:build(idea,sc)}})}catch(e){document.body.textContent=JSON.stringify({tool:'thought-organizer',error:'invalid input'})}}})();
 </script>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:16px;margin:16px auto;max-width:720px;font-size:13px;line-height:1.7;color:#cbd5e1">
+<b style="color:#60a5fa">💡 实用场景：</b>创作者理清思路：把模糊想法变成可执行框架，为写作/项目做准备。<br>
+<b style="color:#60a5fa">示例：</b>输入 <code>{"idea":"我想做一个关于环保的网站","scene":"creative"}</code><br>→ <code>目标/受众/核心模块/行动步骤/检验标准</code>
+</div>
 </body>
 </html>
